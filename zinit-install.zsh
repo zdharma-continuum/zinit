@@ -423,18 +423,29 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         } elif [[ $tpe = local ]] {
             # `$plugin` contains the full source path from the zinit call
             # `$local_path` contains the target path inside $ZINIT[PLUGINS_DIR]
-            +zi-log "{info}Symlinking local plugin from {file}$plugin{rst} {info}to {file}$local_path{rst}"
             
-            # Create a symlink from the dotfiles location to the zinit plugins dir
-            # This makes zinit "aware" of it for all subsequent operations.
-            command ln -s "$plugin" "$local_path"
+            # Check for the EXISTING `link` ice-mod for consistency with snippets.
+            if (( ${+ICE[link]} )); then
+                # If `link` ice is present, create a symlink.
+                +zi-log "{info}Symlinking local plugin from {file}$plugin{rst} {info}to {file}$local_path{rst}"
+                command ln -s "$plugin" "$local_path"
+            else
+                # Otherwise, the default behavior is to copy the directory.
+                +zi-log "{info}Copying local plugin from {file}$plugin{rst} {info}to {file}$local_path{rst}"
+                command cp -R "$plugin" "$local_path"
+            fi
             
             # Create the ._zinit directory so zinit recognizes it as a managed plugin
             command mkdir -p "$local_path/._zinit" && echo '*' > "$local_path/._zinit/.gitignore"
             [[ -d "$local_path/._zinit" ]] || return 2
             
-            # Store a flag indicating this is a local, symlinked plugin
-            builtin print -r -- "symlink" >! "$local_path/._zinit/is_local"
+            # Store a flag indicating this is a local plugin
+            # and whether it was copied or linked.
+            if (( ${+ICE[link]} )); then
+                builtin print -r -- "symlink" >! "$local_path/._zinit/is_local"
+            else
+                builtin print -r -- "copy" >! "$local_path/._zinit/is_local"
+            fi
         } elif [[ $tpe = github ]] {
             case ${ICE[proto]} in
                 (|ftp(|s)|git|http(|s)|rsync|ssh)
