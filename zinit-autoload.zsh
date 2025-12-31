@@ -683,6 +683,10 @@ ZINIT[EXTENDED_GLOB]=""
     .zinit-compinit >/dev/null
 } # ]]]
 
+#
+# User-exposed functions
+#
+
 # FUNCTION: .zinit-pager [[[
 # BusyBox less lacks the -X and -i options, so it can use more
 .zinit-pager() {
