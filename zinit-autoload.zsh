@@ -3265,9 +3265,9 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         if [[ -n ${(v)ice[(I)(mv|cp|atpull|ps-on-update|cargo)]} || $+ice[sbin]$+ice[make]$+ice[extract]$+ice[configure] -ne 0 ]] {
             if (( !OPTS[opt_-q,--quiet] && ZINIT[annex-multi-flag:pull-active] == 1 )) {
                 if (( ${+ice[run-atpull]} )); then
-                    +zi-log "{pre}[update]{rst} No new commits found, but running post-update hooks as requested by the {ice}run-atpull{apo}{rst} ice."
+                    +zi-log "{info}[{pre}update{info}]{rst} No new commits found, but running post-update hooks as requested by the {ice}run-atpull{apo}{rst} ice."
                 else
-                    +zi-log "{pre}[update]{rst} No new commits found, but running post-update hooks as requested by the {opt}-u{rst}/{opt}--urge{rst} option."
+                    +zi-log "{info}[{pre}update{info}]{rst} No new commits found, but running post-update hooks as requested by the {opt}-u{rst}/{opt}--urge{rst} option."
                 fi
             }
         }
