@@ -931,7 +931,7 @@ ____
 
 ____
 
-Has 14 line(s). Doesn't call other functions.
+Has 24 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
