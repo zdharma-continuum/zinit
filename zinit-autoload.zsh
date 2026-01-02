@@ -1969,14 +1969,19 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         [[ $1 = -q ]] && +zi-log "{pre}[self-update]{info} updating zinit repository{msg2}" \
 
         local nl=$'\n' escape=$'\x1b['
+        # Dynamically get the current branch name for logging and pulling
         local current_branch=$(command git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
-        # local current_branch='main'
+        # Warn if user is not on main (requested by maintainer)
+        if [[ -n $current_branch && $current_branch != main ]]; then
+            +zi-log "{pre}[self-update]{warn} non-{obj}main{warn} branch detected: {obj}${current_branch}{warn}. Self-update will pull from the branch’s configured upstream.{rst}"
+        fi
         local -a lines
         (
             builtin cd -q "$ZINIT[BIN_DIR]" \
             && +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$current_branch{info} branch$nl{rst}" \
             && command git fetch --quiet \
-            && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..origin/HEAD)"} )
+            && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..@\{u\})"} )
+            # Use '..@{u}' which refers to the configured upstream branch, instead of '..origin/HEAD'
             if (( ${#lines} > 0 )); then
                 # Remove the (origin/main ...) segments, to expect only tags to appear
                 lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
@@ -1992,10 +1997,11 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 builtin print -rl -- "${lines[@]}" | .zinit-pager
                 builtin print
             fi
+            # Do not use hardcoded 'origin main' to let git use the configured upstream
             if [[ $1 != -q ]] {
-                command git pull --no-stat --ff-only origin main
+                command git pull --no-stat --ff-only
             } else {
-                command git pull --no-stat --quiet --ff-only origin main
+                command git pull --no-stat --quiet --ff-only
             }
         )
         if [[ $1 != -q ]] {
