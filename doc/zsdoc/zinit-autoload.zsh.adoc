@@ -1096,7 +1096,7 @@ ____
 
 ____
 
-Has 44 line(s). Calls functions:
+Has 47 line(s). Calls functions:
 
  .zinit-self-update
  |-- .zi-check-for-git-changes
