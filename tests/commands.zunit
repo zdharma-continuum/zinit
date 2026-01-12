@@ -67,6 +67,7 @@
   assert $output contains 'Already up-to-date.'
   assert $state equals 0
 }
+
 @test 'set-debug' {
   ZINIT+=(DEBUG 'true')
   run +zi-log -n '{dbg} message'
@@ -77,3 +78,5 @@
   run +zi-log -n '{m} message'
   assert $output contains 'message'; assert $state equals 0
 }
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
