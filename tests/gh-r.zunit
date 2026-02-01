@@ -97,7 +97,7 @@
 @test 'calico' { # Cloud native networking and network security
   run zinit lbin'!* -> calico' for @projectcalico/calico; assert $state equals 0
   local calico="$ZBIN/calico"; assert "$calico" is_executable
-  run "$calico" --help; assert $state equals 0
+  run "$calico" version; assert $state equals 0
 }
 @test 'certificates' { # An opinionated helper for generating tls certificates
   run zinit lbin'!* -> certificates' for @mvmaasakkers/certificates; assert $state equals 0
@@ -216,7 +216,7 @@
   [[ $OSTYPE =~ 'darwin*' ]] && skip "on $os_type"
   run zinit ver'v0.31.0' for @pkolaczk/fclones; assert $state equals 0
   local fclones="$ZBIN/fclones"; assert "$fclones" is_executable
-  run "$fclones" --help; assert $state equals 0
+  run "$fclones" --version; assert $state equals 0
 }
 @test 'fd' { # A fast, simple, and user-friendly alternative to find
   run zinit for @sharkdp/fd; assert $state equals 0
@@ -453,11 +453,6 @@
   local krew="$ZBIN/krew"; assert "$krew" is_executable
   run $krew version; assert $state equals 0
 }
-@test 'kubedb' { # `kubectl` plugin for KubeDB
-  run zinit for lbin'!kube*->kubedb' @kubedb/cli; assert $state equals 0
-  local cli="$ZBIN/kubedb"; assert "$cli" is_executable
-  run "$cli" version; assert $state equals 0
-}
 @test 'kubectl-plugins' { # Faster way to switch between clusters and namespaces in kubectl
   [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
   load_bin_gem_node
@@ -467,6 +462,11 @@
     prog="$ZBIN/${bin}"; assert "$prog" is_executable;
     run "$prog" --help; assert $state equals 0
   done
+}
+@test 'kubedb' { # `kubectl` plugin for KubeDB
+  run zinit for lbin'!kube*->kubedb' @kubedb/cli; assert $state equals 0
+  local cli="$ZBIN/kubedb"; assert "$cli" is_executable
+  run "$cli" version; assert $state equals 0
 }
 @test 'lazygit' { # simple terminal UI for git commands
   run zinit for @jesseduffield/lazygit; assert $state equals 0
@@ -536,7 +536,7 @@
   assert $state equals 127; assert $output contains 'no such file or directory'
 }
 @test 'micro' { # A modern and intuitive terminal-based text editor
-  run zinit for @zyedidia/micro; assert $state equals 0
+  run zinit for @micro-editor/micro; assert $state equals 0
   local micro="$ZBIN/micro"; assert "$micro" is_executable
   run $micro --version; assert $state equals 0
 }
@@ -544,7 +544,7 @@
   [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
   run zinit lbin'!* -> miniserve' for @svenstaro/miniserve; assert $state equals 0
   local miniserve="$ZBIN/miniserve"; assert "$miniserve" is_executable
-  run $miniserve --help; assert $state equals 0
+  run $miniserve --version; assert $state equals 0
 }
 @test 'mkcert' { # A simple zero-config tool to make locally trusted development certificates
   run zinit lbin'!* -> mkcert' for @FiloSottile/mkcert; assert $state equals 0
@@ -712,7 +712,7 @@
   run $shfmt --version; assert $state equals 0
 }
 @test 'skim' { # Fuzzy Finder in rust
-  run zinit for @skim-rs/skim; assert $state equals 0
+  run zinit for lbin'!sk->sk' @skim-rs/skim; assert $state equals 0
   local skim="$ZBIN/sk"; assert "$skim" is_executable
   run "$skim" --version; assert $state equals 0
 }
@@ -805,7 +805,7 @@
 }
 @test 'yabai' { # A tiling window manager for macOS based on binary space partitioning
   [[ $OSTYPE =~ 'linux*' ]] && skip 'Yabai skipped on Linux'
-  run zinit for @koekeishiya/yabai; assert $state equals 0
+  run zinit for @asmvik/yabai; assert $state equals 0
   local yabai="$ZBIN/yabai"; assert "$yabai" is_executable
   run $yabai --version; assert $state equals 0
 }
