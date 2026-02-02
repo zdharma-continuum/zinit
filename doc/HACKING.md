@@ -63,51 +63,51 @@ To add a new test case:
 
 1. Install [zunit](https://zunit.xyz) and [revolver](https://github.com/molovo/revolver):
 
-    ```zsh
-    zinit for \
-        as"program" \
-        atclone"ln -sfv revolver.zsh-completion _revolver" \
-        atpull"%atclone" \
-        pick"revolver" \
-      @molovo/revolver \
-        as"completion" \
-        atclone"./build.zsh; ln -sfv zunit.zsh-completion _zunit" \
-        atpull"%atclone" \
-        sbin"zunit" \
-      @zunit-zsh/zunit
-    ```
+```zsh
+zinit for \
+    as"program" \
+    atclone"ln -sfv revolver.zsh-completion _revolver" \
+    atpull"%atclone" \
+    pick"revolver" \
+  @molovo/revolver \
+    as"completion" \
+    atclone"./build.zsh; ln -sfv zunit.zsh-completion _zunit" \
+    atpull"%atclone" \
+    sbin"zunit" \
+  @zunit-zsh/zunit
+```
 
 2. Create a new `.zunit` file in the `tests/` dir. Here's a template:
 
-    ```zsh
-    #!/usr/bin/env zunit
+```zsh
+#!/usr/bin/env zunit
 
-    @setup {
-      load setup
-      setup
-    }
+@setup {
+  load setup
+  setup
+}
 
-    @teardown {
-      load teardown
-      teardown
-    }
+@teardown {
+  load teardown
+  teardown
+}
 
-    @test 'zinit-annex-bin-gem-node installation' {
-      # This spawns the official zinit container and executes a single zinit command
-      # inside it
-      run ./scripts/docker-run.sh --wrap --debug --zunit \
-        zinit light as"null" for zdharma-continuum/null
+@test 'zinit-annex-bin-gem-node installation' {
+  # This spawns the official zinit container and executes a single zinit command
+  # inside it
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    zinit light as"null" for zdharma-continuum/null
 
-      # Verify the exit code of the command above
-      assert $state equals 0
-      assert "$output" contains "Downloading"
+  # Verify the exit code of the command above
+  assert $state equals 0
+  assert "$output" contains "Downloading"
 
-      local artifact="${PLUGINS_DIR}/zdharma-continuum---null/readme.md"
-      # Check if we downloaded the file correctly and if it is readable
-      assert "$artifact" is_file
-      assert "$artifact" is_readable
-    }
-    ```
+  local artifact="${PLUGINS_DIR}/zdharma-continuum---null/readme.md"
+  # Check if we downloaded the file correctly and if it is readable
+  assert "$artifact" is_file
+  assert "$artifact" is_readable
+}
+```
 
 You should, of course, also check out the existing tests ;)
 
