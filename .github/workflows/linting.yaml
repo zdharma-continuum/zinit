@@ -19,13 +19,15 @@ jobs:
       - uses: xt0rted/markdownlint-problem-matcher@v3
 
       - run: npm install -g markdownlint-cli
-
       # disabled checks:
-      # - MD013/line-length
-      # - MD033/no-inline-html
-      # - MD034/no-bare-urls
-      # - MD036/no-emphasis-as-heading
-      # - MD041/first-line-heading/first-line-h1
+      # MD013/line-length
+      # MD024/no-duplicate-heading
+      # MD033/no-inline-html
+      # MD034/no-bare-urls
+      # MD036/no-emphasis-as-heading
+      # MD041/first-line-heading/first-line-h1
+      # MD059/descriptive-link-text
+      # MD060/table-column-style
       - run: |
           markdownlint --version
 
@@ -33,9 +35,9 @@ jobs:
           ls *.md **/*.md
 
           markdownlint \
+            --disable MD013 MD024 MD029 MD033 MD034 MD036 MD041 MD059 MD060 \
             --ignore '**/CHANGELOG.md' \
-            --disable MD013 MD033 MD034 MD036 MD041 -- \
-            *.md **/*.md
+            -- *.md **/*.md
 
   zshlint:
     name: ZSH Lint

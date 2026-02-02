@@ -677,9 +677,9 @@ your `~/.zshrc` there if it contains Zinit commands.
 You can also check out the [Gallery of Zinit Invocations](https://zdharma-continuum.github.io/zinit/wiki/GALLERY/) for
 some additional examples.
 
-Also, two articles on the Wiki present an example setup
-[here](https://zdharma-continuum.github.io/zinit/wiki/Example-Minimal-Setup/) and
-[here](https://zdharma-continuum.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/).
+Also, two articles on the Wiki present a
+[Minimal Setup](https://zdharma-continuum.github.io/zinit/wiki/Example-Minimal-Setup/) and
+[Oh-My-Zsh Setup](https://zdharma-continuum.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/).
 
 # How to Use<a name="how-to-use"></a>
 
@@ -1058,7 +1058,7 @@ skip_global_compinit=1
 On NixOS, the global `compinit` call can be disabled system-wide by setting the following option in your
 `/etc/nixos/configuration.nix`:
 
-```
+```nix
 # Disable global completion init to speed up `compinit` call in `~/.zshrc`.
 programs.zsh.enableGlobalCompInit = false;
 ```
