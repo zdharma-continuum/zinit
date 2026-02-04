@@ -342,7 +342,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         if [[ -z $update ]] {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
             local pid_hl='{pid}' id_msg_part=" (at label: {id-as}$id_as{rst})"
-            +zi-log "{nl}{i} Downloading {b}{file}$user${user:+/}$plugin{rst} ${${${id_as:#$user/$plugin}}:+$id_msg_part}{rst}"
+
+            if [[ "$tpe" = "local" ]]; then
+                # Print a message appropriate for local plugins
+                +zi-log "{nl}{i} Installing local plugin from {b}{file}$plugin{rst} ${${${id_as:#$user/$plugin}}:+$id_msg_part}{rst}"
+            else
+                # Print the original message for all other types (github, gitlab, etc.)
+                +zi-log "{nl}{i} Downloading {b}{file}$user${user:+/}$plugin{rst} ${${${id_as:#$user/$plugin}}:+$id_msg_part}{rst}"
+            fi
         }
 
         local site
@@ -413,6 +420,32 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 builtin print -r -- $REPLY >! ._zinit/is_release
                 ziextract "$REPLY"
             ) || return $?
+        } elif [[ $tpe = local ]] {
+            # `$plugin` contains the full source path from the zinit call
+            # `$local_path` contains the target path inside $ZINIT[PLUGINS_DIR]
+            
+            # Check for the EXISTING `link` ice-mod for consistency with snippets.
+            if (( ${+ICE[link]} )); then
+                # If `link` ice is present, create a symlink.
+                +zi-log "{info}Symlinking local plugin from {file}$plugin{rst} {info}to {file}$local_path{rst}"
+                command ln -s "$plugin" "$local_path"
+            else
+                # Otherwise, the default behavior is to copy the directory.
+                +zi-log "{info}Copying local plugin from {file}$plugin{rst} {info}to {file}$local_path{rst}"
+                command cp -R "$plugin" "$local_path"
+            fi
+            
+            # Create the ._zinit directory so zinit recognizes it as a managed plugin
+            command mkdir -p "$local_path/._zinit" && echo '*' > "$local_path/._zinit/.gitignore"
+            [[ -d "$local_path/._zinit" ]] || return 2
+            
+            # Store a flag indicating this is a local plugin
+            # and whether it was copied or linked.
+            if (( ${+ICE[link]} )); then
+                builtin print -r -- "symlink" >! "$local_path/._zinit/is_local"
+            else
+                builtin print -r -- "copy" >! "$local_path/._zinit/is_local"
+            fi
         } elif [[ $tpe = github ]] {
             case ${ICE[proto]} in
                 (|ftp(|s)|git|http(|s)|rsync|ssh)
@@ -1110,13 +1143,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     "${${(M)OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"; retval=4; }
                 }
             } else {
-                if (( $+commands[realpath] )) {
+                # Check for GNU realpath by testing its --version flag before using it.
+                # This prevents errors on systems with BSD realpath (like macOS).
+                if (( $+commands[realpath] )) && command realpath --version >/dev/null 2>&1; then
+                    # We have GNU realpath, so we can try to create a relative link.
                     local rpv="$(realpath --version | head -n1 | sed -E 's/realpath (\(.*\))?//g')"
                     if is-at-least 8.23 $rpv; then
                         rel_url="$(realpath --relative-to="$local_dir/$dirname" "$url")" && \
                             { url="$rel_url" }
                     fi
-                }
+                fi
                 if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
                     +zi-log "{msg}Linking {file}$filename{msg}{…}{rst}"
                     command ln -svf "$url" "$local_dir/$dirname/$filename" || \
@@ -2434,4 +2470,4 @@ __zinit-cmake-base-hook () {
     }
 } # ]]]
 
-# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker
+# vim: ft=zsh sw=4 ts=4 et foldmarker=[[[,]]] foldmethod=marker
