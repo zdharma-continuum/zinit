@@ -1969,6 +1969,10 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     +zi-log "{dbg} checking $1"
     if command git --work-tree "$1" rev-parse --is-inside-work-tree &> /dev/null; then
         if command git --work-tree "$1" rev-parse --abbrev-ref @'{u}' &> /dev/null; then
+            REPLY=$(command git -C "$1" rev-parse --abbrev-ref HEAD)
+            local nl=$'\n'
+            +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$REPLY{info} branch$nl{rst}"
+            command git -C "$1" fetch --quiet 2> /dev/null
             local count="$(command git --work-tree "$1" rev-list --left-right --count HEAD...@'{u}' 2> /dev/null)"
             local down="$count[(w)2]"
             if [[ $down -gt 0 ]]; then
@@ -1986,20 +1990,19 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     setopt extendedglob typesetsilent warncreateglobal
 
     if .zi-check-for-git-changes "$ZINIT[BIN_DIR]"; then
+        # Store branch name resolved by .zi-check-for-git-changes via $REPLY
+        local current_branch=$REPLY
+        
         [[ $1 = -q ]] && +zi-log "{pre}[self-update]{info} updating zinit repository{msg2}" \
 
         local nl=$'\n' escape=$'\x1b['
-        # Dynamically get the current branch name for logging and pulling
-        local current_branch=$(command git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
         # Warn if user is not on main (requested by maintainer)
         if [[ -n $current_branch && $current_branch != main ]]; then
-            +zi-log "{pre}[self-update]{warn} non-{obj}main{warn} branch detected: {obj}${current_branch}{warn}. Self-update will pull from the branch’s configured upstream.{rst}"
+            +zi-log "{pre}[self-update]{warn} non-{obj}main{warn} branch detected: {obj}${current_branch}{warn}. Self-update will pull from the branch's configured upstream.{rst}"
         fi
         local -a lines
         (
             builtin cd -q "$ZINIT[BIN_DIR]" \
-            && +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$current_branch{info} branch$nl{rst}" \
-            && command git fetch --quiet \
             && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..@\{u\})"} )
             # Use '..@{u}' which refers to the configured upstream branch, instead of '..origin/HEAD'
             if (( ${#lines} > 0 )); then
