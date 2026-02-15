@@ -1967,13 +1967,13 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 # $1 - Absolute path to Git repository"
 .zi-check-for-git-changes() {
     +zi-log "{dbg} checking $1"
-    if command git --work-tree "$1" rev-parse --is-inside-work-tree &> /dev/null; then
-        if command git --work-tree "$1" rev-parse --abbrev-ref @'{u}' &> /dev/null; then
+    if command git -C "$1" rev-parse --is-inside-work-tree &> /dev/null; then
+        if command git -C "$1" rev-parse --abbrev-ref @'{u}' &> /dev/null; then
             REPLY=$(command git -C "$1" rev-parse --abbrev-ref HEAD)
             local nl=$'\n'
             +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$REPLY{info} branch$nl{rst}"
             command git -C "$1" fetch --quiet 2> /dev/null
-            local count="$(command git --work-tree "$1" rev-list --left-right --count HEAD...@'{u}' 2> /dev/null)"
+            local count="$(command git -C "$1" rev-list --left-right --count HEAD...@'{u}' 2> /dev/null)"
             local down="$count[(w)2]"
             if [[ $down -gt 0 ]]; then
                 return 0
