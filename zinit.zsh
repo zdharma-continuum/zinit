@@ -2950,7 +2950,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     .zinit-show-times "${@[2-correct,-1]}"
                     ;;
                 (self-update)
-                    .zinit-self-update
+                    .zinit-self-update "${@[2-correct,-1]}"
                     ;;
                 (unload)
                     (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
