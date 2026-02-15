@@ -1966,12 +1966,16 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 #
 # $1 - Absolute path to Git repository"
 .zi-check-for-git-changes() {
+    local quiet=0
+    [[ $1 = -q ]] && { quiet=1; shift; }
     +zi-log "{dbg} checking $1"
     if command git -C "$1" rev-parse --is-inside-work-tree &> /dev/null; then
         if command git -C "$1" rev-parse --abbrev-ref @'{u}' &> /dev/null; then
             REPLY=$(command git -C "$1" rev-parse --abbrev-ref HEAD)
-            local nl=$'\n'
-            +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$REPLY{info} branch$nl{rst}"
+            if (( ! quiet )); then
+                local nl=$'\n'
+                +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$REPLY{info} branch$nl{rst}"
+            fi
             command git -C "$1" fetch --quiet 2> /dev/null
             local count="$(command git -C "$1" rev-list --left-right --count HEAD...@'{u}' 2> /dev/null)"
             local down="$count[(w)2]"
@@ -1979,7 +1983,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 return 0
             fi
         fi
-        builtin print -P -- "Already up-to-date."
+        (( ! quiet )) && builtin print -P -- "Already up-to-date."
         return 1
     fi
 } # ]]]
@@ -1989,7 +1993,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent warncreateglobal
 
-    if .zi-check-for-git-changes "$ZINIT[BIN_DIR]"; then
+    if .zi-check-for-git-changes ${1:+"$1"} "$ZINIT[BIN_DIR]"; then
         # Store branch name resolved by .zi-check-for-git-changes via $REPLY
         local current_branch=$REPLY
         
