@@ -1,4 +1,4 @@
-name: Lint
+name: lint
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   mdlint:
-    name: Markdown Lint
+    name: markdown
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -40,13 +40,13 @@ jobs:
             -- *.md **/*.md
 
   zshlint:
-    name: ZSH Lint
+    name: zsh
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        task: [zsh-noexec, zsh-zcompile]
+        task: [noexec, zcompile]
 
     steps:
       - uses: actions/checkout@v6
@@ -63,11 +63,11 @@ jobs:
       - name: "run lint (${{ matrix.task }})"
         run: |
           case "${{ matrix.task }}" in
-            zsh-noexec)
+            noexec)
               find . -name '*.zsh' -type f -print0 \
                 | xargs -0 -n1 -P4 zsh -n
               ;;
-            zsh-zcompile)
+            zcompile)
               find . -name '*.zsh' -type f \
                 -exec zsh -fc "zcompile {}" \;
               ;;
