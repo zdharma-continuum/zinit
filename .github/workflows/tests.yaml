@@ -1,4 +1,4 @@
-name: Unit Tests
+name: tests
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -24,6 +24,7 @@ on:
 
 jobs:
   zunit-tests:
+    name: ${{ matrix.zunit_test }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
