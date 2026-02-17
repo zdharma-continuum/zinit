@@ -1,10 +1,10 @@
-name: Labeler
-
+name: label
 on:
   pull_request_target: # https://securitylab.github.com/research/github-actions-preventing-pwn-requests
 
 jobs:
   label-pull-requests:
+    name: "pull requests"
 
     permissions:
       contents: read
