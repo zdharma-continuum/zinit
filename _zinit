@@ -98,7 +98,7 @@ __zinit_installed_plugins(){
 __zinit_installed_snippets(){
   # [[ -prefix '-' ]] && return 0
   typeset -a snippets
-  local expl snippet
+  local expl
   snippets=( "${ZINIT[SNIPPETS_DIR]}"/**/._zinit(D/:h) )
   snippets=( ${(Q)snippets[@]#${ZINIT[SNIPPETS_DIR]}/} )
   # formulae=( ${(qq)formulae[@]/(#b)(http|https|ftp|ftps|scp)--/${match[1]}://} )
@@ -320,13 +320,15 @@ _zinit_unload(){
 # FUNCTION: _zinit_update [[[
 _zinit_update(){
   _arguments \
-    '--help[Show this help message]' \
-    '--no-pager[Don'\''t automatically install dependencies]' \
-    '--quiet[Turn off messages from the operation]' \
-    '--reset[Reset repository or delete downloadremove single-file snippets and gh-r plugins)]' \
-    '--urge[Cause all the hooks like: atpull'', cp'', etc. to execute even when there aren'\''t any new commits / any new version of the gh-r file / etc.… available for download↔ simulate a non-empty update]' \
+    '(-h --help)'{-h,--help}'[Show this help message]' \
+    '(-n --no-pager)'{-n,--no-pager}'[Disable the use of the pager]' \
+    '(-q --quiet)'{-q,--quiet}'[Turn off almost-all messages from the update operation FOR the objects which don'\''t have any new version available]' \
+    '(-r --reset)'{-r,--reset}'[Reset the repository before updating (or remove the files for single-file snippets and gh-r plugins)]' \
+    '(-s --snippets)'{-s,--snippets}'[Update only snippets (i.e.: skip updating plugins)]' \
+    '(-u --urge)'{-u,--urge}'[Cause all the hooks like: atpull'\'\'', cp'\'\'', etc. to execute even when there aren'\''t any new commits / any new version of the gh-r file / etc.… available for download↔ simulate a non-empty update]' \
+    '(-v --verbose)'{-v,--verbose}'[Turn on more messages from the operation]' \
   - set1 \
-      '--parallel[Turn on concurrent, multi-thread update (of all objects)]' \
+      '(-p --parallel)'{-p,--parallel}'[Turn on concurrent, multi-thread update (of all objects)]' \
       '(-a --all)'{-a,--all}'[Update all plugins and snippets]' \
   - set2 \
       '1:installed:__zinit_installed'

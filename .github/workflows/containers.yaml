@@ -15,17 +15,11 @@ jobs:
       fail-fast: false
       matrix:
         zsh_version:
-          - 5.2.4
-          - 5.3.1
-          - 5.4.2
-          - 5.5.1
-          - 5.6.2
-          - 5.7.1
           - 5.8
           - 5.9
     steps:
       - name: check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Grab git slugs (short commit id, branch etc.)
         uses: rlespinasse/github-slug-action@v3.x
@@ -49,7 +43,7 @@ jobs:
 
       - name: build and push
         id: docker_build_zsh_versions
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         timeout-minutes: 90 # compiling older zsh versions take a long time
         with:
           push: ${{ github.event.number == 0 }}
@@ -67,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: get vcs details
         uses: rlespinasse/github-slug-action@v3.x
@@ -91,7 +85,7 @@ jobs:
 
       - name: build & push new image
         id: docker_build_latest
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         if: github.ref == 'refs/heads/main'
         with:
           push: true

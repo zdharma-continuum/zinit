@@ -11,10 +11,10 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Bump Homebrew formulae
-        uses: dawidd6/action-homebrew-bump-formula@v3
+        uses: dawidd6/action-homebrew-bump-formula@v7
         with:
           formula: zinit
           # A Personal Access Token (PAT) is instead of the default

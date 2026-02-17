@@ -1,31 +1,35 @@
-# Documentation
+# HACKING.md
 
-## README: Update the table of content
+## Documentation
+
+### README: Update the table of contents
 
 1. Install [doctoc](https://github.com/thlorenz/doctoc)
-2. To update the TOC run the following command:
+2. To update the TOC, run the following command:
 
 ```zsh
 doctoc --github README.md
 ```
 
-## Update asciidoc and/or zshelldoc
+### Update asciidoc and/or zshelldoc
 
-1. Make sure you have [docker](https://www.docker.com/) or [podman](https://podman.io/) installed.
-2. From the root of the repo, run:
+> [!IMPORTANT]
+> Make sure you have [docker](https://www.docker.com/) or [podman](https://podman.io/) installed.
+
+1. From the root of the repo, run:
 
 ```zsh
 make doc-container
 ```
 
-If for some reason you want to build the zshelldocs or the PDF manually, you'll need:
+If, for some reason, you want to build the zshelldocs or the PDF manually, you'll need:
 
 1. Patience, zsd is very finicky about locales. You have been warned.
 2. [zshelldoc (zsd)](https://github.com/zdharma-continuum/zshelldoc)
 3. [asciidoc](https://asciidoc.org/)
 4. `make doc`
 
-## Generate the manpage (doc/zinit.1)
+### Generate the manpage (doc/zinit.1)
 
 1. Install [pandoc](https://pandoc.org/)
 2. From the root of the repo run:
@@ -34,7 +38,7 @@ If for some reason you want to build the zshelldocs or the PDF manually, you'll 
 pandoc --standalone --to man README.md -o doc/zinit.1
 ```
 
-## Updating the gh-pages (zdharma-continuum.github.io)
+### Updating the gh-pages (zdharma-continuum.github.io)
 
 1. Check out the [documentation branch](https://github.com/zdharma-continuum/zinit/tree/documentation)
 
@@ -45,14 +49,15 @@ git checkout documentation
 
 2. Do your modifications and push your changes
 3. Keep an eye on [the CI logs](https://github.com/zdharma-continuum/zinit/actions/workflows/gh-pages.yaml)
-4. If all went well you can head to https://zdharma-continuum.github.io/ to see your changes live.
+4. If all went well, head to https://zdharma-continuum.github.io/ to see your changes live.
 
-**NOTE:** If you really **need** to push directly, without CI please refer to \[the README in the
-documentation\]https://github.com/zdharma-continuum/zinit/blob/documentation/README.md
+> [!NOTE]
+> If you really **need** to push directly, without CI, please refer to [the README in the
+documentation](https://github.com/zdharma-continuum/zinit/blob/documentation/README.md)
 
-# Testing
+## Testing
 
-We run out tests with [zunit](https://zunit.xyz).
+We run our tests with [zunit](https://zunit.xyz).
 
 To add a new test case:
 
@@ -88,12 +93,12 @@ zinit for \
 }
 
 @test 'zinit-annex-bin-gem-node installation' {
-  # This spawns the official zinit container, and executesa single zinit command
+  # This spawns the official zinit container and executes a single zinit command
   # inside it
   run ./scripts/docker-run.sh --wrap --debug --zunit \
     zinit light as"null" for zdharma-continuum/null
 
-  # Verify exit code of the command above
+  # Verify the exit code of the command above
   assert $state equals 0
   assert "$output" contains "Downloading"
 
@@ -104,7 +109,7 @@ zinit for \
 }
 ```
 
-You should of course also check out the existing tests ;)
+You should, of course, also check out the existing tests ;)
 
 3. To run your new test:
 
@@ -112,17 +117,17 @@ You should of course also check out the existing tests ;)
 zunit --verbose tests/your_test.zunit
 ```
 
-## Debugging tests
+### Debugging tests
 
-If you ever need to inspect the `ZINIT[HOME_DIR]` dir, where zinit's internal data is stored you can do so by commenting
+If you ever need to inspect the `ZINIT[HOME_DIR]` dir, where zinit's internal data is stored, you can do so by commenting
 out the `@teardown` section in your test. Then you can re-run said test and head over to `${TMPDIR:-/tmp}/zunit-zinit`.
 Good luck!
 
-# Misc
+## Misc
 
-## Get the list of supported ices
+### Get the list of supported ices
 
-To get the list in a quick-and-dirty fashion you issue:
+To get the list in a quick-and-dirty fashion, you issue:
 
 ```zsh
 zinit --help | tail -1

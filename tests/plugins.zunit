@@ -24,7 +24,7 @@
   run "$htop" --version; assert $state equals 0
 }
 @test 'bash' {
-  run zinit build for @bminor/bash; assert $state equals 0
+  run zinit build for @tianon/mirror-bash; assert $state equals 0
   local bash="$ZBIN/bash"; assert $bash is_executable
   run "$bash" --version; assert $state equals 0
 }

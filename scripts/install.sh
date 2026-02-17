@@ -58,7 +58,7 @@ echo_error() {
 }
 
 check_dependencies() {
-  zsh_min_version=5.5
+  zsh_min_version=5.8
   if ! zsh -sfc \
     'autoload is-at-least;
        is-at-least $1 $ZSH_VERSION' "$zsh_min_version"; then
@@ -284,7 +284,7 @@ Now to get started you can check out the following:
     🧊 https://github.com/${ZINIT_REPO}#ice-modifiers
 - There's also an ${COLOR_BOLD_WHITE_ON_BLACK}introduction${COLOR_RESET} to Zinit on the wiki:
     📚 https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
-- The ${COLOR_BOLD_WHITE_ON_BLACK}For-Syntax${COLOR_RESET} article on the wiki, which hilights some best practises:
+- The ${COLOR_BOLD_WHITE_ON_BLACK}For-Syntax${COLOR_RESET} article on the wiki, which highlights some best practices:
     📖 https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
 
 💁 Need help?

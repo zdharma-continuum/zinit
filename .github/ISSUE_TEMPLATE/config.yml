@@ -3,6 +3,6 @@ contact_links:
   - name: Support
     url: https://github.com/zdharma-continuum/zinit/discussions
     about: Ask the community for support
-  - name: Get help on Gitter
-    url: https://gitter.im/zdharma-continuum/community/
+  - name: Get help on Matrix
+    url: https://matrix.to/#/#zdharma-continuum_community:gitter.im
     about: Have a quick question? Join the Gitter community and ask your question.
