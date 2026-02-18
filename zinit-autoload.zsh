@@ -1966,13 +1966,11 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 #
 # $1 - Absolute path to Git repository"
 .zi-check-for-git-changes() {
-    local quiet=0
-    [[ $1 = -q ]] && { quiet=1; shift; }
     +zi-log "{dbg} checking $1"
     if command git -C "$1" rev-parse --is-inside-work-tree &> /dev/null; then
         if command git -C "$1" rev-parse --abbrev-ref @'{u}' &> /dev/null; then
             REPLY=$(command git -C "$1" rev-parse --abbrev-ref HEAD)
-            if (( ! quiet )); then
+            if (( ! OPTS[opt_-q,--quiet] )); then
                 local nl=$'\n'
                 +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$REPLY{info} branch$nl{rst}"
             fi
@@ -1983,7 +1981,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 return 0
             fi
         fi
-        (( ! quiet )) && +zi-log "{m} Already up to date"
+        (( ! OPTS[opt_-q,--quiet] )) && +zi-log "{m} Already up to date"
         return 1
     fi
 } # ]]]
@@ -1993,11 +1991,9 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent warncreateglobal
 
-    if .zi-check-for-git-changes ${1:+"$1"} "$ZINIT[BIN_DIR]"; then
+    if .zi-check-for-git-changes "$ZINIT[BIN_DIR]"; then
         # Store branch name resolved by .zi-check-for-git-changes via $REPLY
         local current_branch=$REPLY
-        
-        [[ $1 = -q ]] && +zi-log "{pre}[self-update]{info} updating zinit repository{msg2}" \
 
         local nl=$'\n' escape=$'\x1b['
         # Warn if user is not on main (requested by maintainer)
@@ -2025,13 +2021,13 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 builtin print
             fi
             # Do not use hardcoded 'origin main' to let git use the configured upstream
-            if [[ $1 != -q ]] {
+            if (( ! OPTS[opt_-q,--quiet] )) {
                 command git pull --no-stat --ff-only
             } else {
                 command git pull --no-stat --quiet --ff-only
             }
         )
-        if [[ $1 != -q ]] {
+        if (( ! OPTS[opt_-q,--quiet] )) {
             +zi-log "{pre}[self-update]{info} compiling zinit via {obj}zcompile{rst}"
         }
         command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
@@ -2039,7 +2035,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload','additional'}.zsh
         zcompile -U $ZINIT[BIN_DIR]/share/git-process-output.zsh
         # Load for the current session
-        [[ $1 != -q ]] && +zi-log "{pre}[self-update]{info} reloading zinit for the current session{rst}"
+        (( ! OPTS[opt_-q,--quiet] )) && +zi-log "{pre}[self-update]{info} reloading zinit for the current session{rst}"
 
         # +zi-log "{pre}[self-update]{info} resetting zinit repository via{rst}: {cmd}${ICE[reset]:-git reset --hard HEAD}{rst}"
         source $ZINIT[BIN_DIR]/zinit.zsh
@@ -3402,7 +3398,9 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     local -F2 SECONDS=0
 
-    .zinit-self-update -q
+    local -A OPTS
+    OPTS[opt_-q,--quiet]=1
+    .zinit-self-update
 
     [[ $2 = restart ]] && \
         +zi-log "{msg2}Restarting the update with the new codebase loaded.{rst}"$'\n'

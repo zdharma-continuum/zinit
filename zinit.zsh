@@ -2623,13 +2623,14 @@ zinit() {
         light         "--help|-b|-h"
         snippet       "--command|--force|--help|-f|-h|-x"
         times         "--help|-h|-m|-s"
+        self-update   "--help|--quiet|-h|-q"
         unload        "--help|--quiet|-h|-q"
         update        "--all|--help|--no-pager|--parallel|--plugins|--quiet|--reset|--snippets|--urge|--verbose|-L|-a|-h|-n|-p|-q|-r|-s|-u|-v"
         version       ""
     )
 
     cmd="$1"
-    if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|cdclear) ]]; then
+    if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|cdclear|self-update) ]]; then
         if (( $@[(I)-*] || OPTS[opt_-h,--help] )); then
             .zinit-parse-opts "$cmd" "$@"
             if (( OPTS[opt_-h,--help] )); then
@@ -2950,7 +2951,8 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     .zinit-show-times "${@[2-correct,-1]}"
                     ;;
                 (self-update)
-                    .zinit-self-update "${@[2-correct,-1]}"
+                    .zinit-parse-opts "self-update" "$@"
+                    .zinit-self-update
                     ;;
                 (unload)
                     (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
