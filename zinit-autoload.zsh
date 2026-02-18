@@ -1983,7 +1983,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 return 0
             fi
         fi
-        (( ! quiet )) && builtin print -P -- "Already up-to-date."
+        (( ! quiet )) && +zi-log "{m} Already up to date"
         return 1
     fi
 } # ]]]
