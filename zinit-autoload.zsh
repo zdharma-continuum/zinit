@@ -3398,6 +3398,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     local -F2 SECONDS=0
 
+    # Always run quietly during bulk updates
     local -A OPTS
     OPTS[opt_-q,--quiet]=1
     .zinit-self-update
