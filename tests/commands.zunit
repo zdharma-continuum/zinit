@@ -64,8 +64,13 @@
 
 @test 'self-update' {
   run zinit self-update
-  assert $output contains 'Already up-to-date.'
-  assert $state equals 0
+  assert $output contains 'Already up to date'; assert $state equals 0
+
+  run zinit self-update --help
+  assert $output contains 'self-update'; assert $state equals 1
+
+  run zinit self-update --quiet
+  assert $output contains ''; assert $state equals 0
 }
 @test 'set-debug' {
   ZINIT+=(DEBUG 'true')
