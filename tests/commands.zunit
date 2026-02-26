@@ -72,6 +72,27 @@
   run zinit self-update --quiet
   assert $output is_empty; assert $state equals 0
 }
+@test 'self-update --help / -h shows help and exits 1' {
+  for flag in '--help' '-h'; do
+    run zinit self-update $flag
+    assert $output contains 'self-update'
+    assert $output contains '--quiet'
+    assert $state equals 1
+  done
+}
+@test 'self-update --quiet / -q suppresses output' {
+  for flag in '--quiet' '-q'; do
+    run zinit self-update $flag
+    assert $output is_empty
+    assert $state equals 0
+  done
+}
+@test 'self-update rejects unknown flags' {
+  run zinit self-update --foo
+  assert $output contains 'Incorrect options given'
+  assert $output contains '--foo'
+  assert $state equals 1
+}
 @test 'set-debug' {
   ZINIT+=(DEBUG 'true')
   run +zi-log -n '{dbg} message'

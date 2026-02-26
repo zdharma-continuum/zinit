@@ -2243,8 +2243,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
         +zi-log "{b}{u-warn}ERROR{b-warn}:{rst}{msg2} Incorrect options given{ehi}:" \
                 "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
                 "{apo}\`{cmd}$cmd{apo}\`{msg2} are{ehi}:{rst}" \
-                "{nl}{mmdsh} {opt}${allowed//\|/$sep2}{msg2}." \
-                "{nl}{…} Aborting.{rst}"
+                "{nl}  {opt}${allowed//\|/$sep2}{msg2}."
     } else {
         local -a cmds
         cmds=( load snippet update delete )
@@ -2636,6 +2635,9 @@ zinit() {
             if (( OPTS[opt_-h,--help] )); then
                 +zinit-prehelp-usage-message $cmd $___opt_map[$cmd] $@
                 return 1;
+            elif (( ${reply[(I)-*]} )); then
+                +zinit-prehelp-usage-message $cmd $___opt_map[$cmd] ${reply[@]}
+                return 1
             fi
         fi
     fi
