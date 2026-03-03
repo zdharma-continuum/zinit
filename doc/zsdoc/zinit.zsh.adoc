@@ -317,7 +317,7 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== +zinit-prehelp-usage-message
 
-Has 38 line(s). Calls functions:
+Has 37 line(s). Calls functions:
 
  +zinit-prehelp-usage-message
  `-- +zi-log
@@ -1602,7 +1602,7 @@ ____
 
 ____
 
-Has 558 line(s). Calls functions:
+Has 562 line(s). Calls functions:
 
  zinit
  |-- +zi-log
