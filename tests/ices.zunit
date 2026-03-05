@@ -61,5 +61,63 @@
   COMPS=( "$ZINIT[COMPLETIONS_DIR]"/_* )
   assert __init__.py is_not_value_in $COMPS
 }
+@test 'ziextract error on missing file' {
+  run ziextract /tmp/zi-nonexistent-file.zip
+  assert $state equals 1
+  assert $output contains 'ERROR'
+  assert $output contains "doesn't exist"
+}
+@test 'ziextract plain (no flattening)' {
+  # extract'' → ziextract with no flags: directory structure is preserved
+  local workdir=$(mktemp -d)
+  mkdir "$workdir/subdir"
+  printf 'hello\n' > "$workdir/subdir/file1.txt"
+  ( cd "$workdir" && zip -qr test.zip subdir/ )
+  ( cd "$workdir" && ziextract test.zip )
+  assert "$workdir/subdir/file1.txt" is_file
+  assert "$workdir/file1.txt" not_exists
+  rm -rf "$workdir"
+}
+@test 'ziextract --move (flatten one level)' {
+  # extract'!' → ziextract --move: outer/file.txt → file.txt at root
+  local workdir=$(mktemp -d)
+  mkdir "$workdir/outer"
+  printf 'hello\n' > "$workdir/outer/file1.txt"
+  printf 'world\n' > "$workdir/outer/file2.txt"
+  ( cd "$workdir" && zip -qr test.zip outer/ )
+  ( cd "$workdir" && ziextract test.zip --move )
+  assert "$workdir/file1.txt" is_file
+  assert "$workdir/file2.txt" is_file
+  assert "$workdir/outer" not_exists
+  rm -rf "$workdir"
+}
+@test 'ziextract --move2 (flatten two levels)' {
+  # extract'!!' → ziextract --move --move2: outer/inner/file.txt → file.txt at root
+  local workdir=$(mktemp -d)
+  mkdir -p "$workdir/outer/inner"
+  printf 'hello\n' > "$workdir/outer/inner/file1.txt"
+  ( cd "$workdir" && zip -qr test.zip outer/ )
+  ( cd "$workdir" && ziextract test.zip --move --move2 )
+  assert "$workdir/file1.txt" is_file
+  assert "$workdir/outer" not_exists
+  rm -rf "$workdir"
+}
+@test 'ziextract deletes archive by default' {
+  local workdir=$(mktemp -d)
+  ( cd "$workdir" && printf 'hello\n' > file1.txt && zip -q test.zip file1.txt && rm file1.txt )
+  ( cd "$workdir" && ziextract test.zip )
+  assert "$workdir/file1.txt" is_file
+  assert "$workdir/test.zip" not_exists
+  rm -rf "$workdir"
+}
+@test 'ziextract --norm keeps archive after extraction' {
+  # extract'-' → ziextract --norm: archive is preserved after extraction
+  local workdir=$(mktemp -d)
+  ( cd "$workdir" && printf 'hello\n' > file1.txt && zip -q test.zip file1.txt && rm file1.txt )
+  ( cd "$workdir" && ziextract test.zip --norm )
+  assert "$workdir/file1.txt" is_file
+  assert "$workdir/test.zip" is_file
+  rm -rf "$workdir"
+}
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=\ {,}:foldmethod=marker
