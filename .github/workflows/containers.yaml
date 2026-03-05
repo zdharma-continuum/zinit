@@ -25,7 +25,7 @@ jobs:
         uses: rlespinasse/github-slug-action@v3.x
 
       - name: set up qemu
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: setup docker buildx
         id: buildx
@@ -67,7 +67,7 @@ jobs:
         uses: rlespinasse/github-slug-action@v3.x
 
       - name: setup docker qemu
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: setup docker buildx
         id: buildx
