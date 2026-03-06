@@ -18,7 +18,7 @@ jobs:
 
       - uses: xt0rted/markdownlint-problem-matcher@v3
 
-      - run: npm install -g markdownlint-cli
+      - run: npm install -g markdownlint-cli@0.44.0
       # disabled checks:
       # MD013/line-length
       # MD024/no-duplicate-heading
