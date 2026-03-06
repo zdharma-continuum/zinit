@@ -267,9 +267,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 }
             }
 
-            # --move is default (or as explicit, when extract'!…' is given)
-            # Also possible is --move2 when extract'!!…' given
-            ziextract "$fname" ${ICE[extract]---move} ${${(M)ICE[extract]:#!([^!]|(#e))*}:+--move} ${${(M)ICE[extract]:#!!*}:+--move2}
+            # When extract ice is set, the ∞zinit-extract-hook will handle
+            # extraction; otherwise extract here with --move as default.
+            if (( !${+ICE[extract]} )); then
+                ziextract "$fname" --move
+            fi
             return 0
         ) && {
             reply=( "$user" "$plugin" )
@@ -397,7 +399,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     [[ -d ._zinit ]] || return 2
                     builtin print -r -- $url >! ._zinit/url || return 3
                     builtin print -r -- ${REPLY} >! ._zinit/is_release${count:#1} || return 4
-                    ziextract ${REPLY:t} ${${${#reply}:#1}:+--nobkp} ${${(M)ICE[extract]:#!([^!]|(#e))*}:+--move} ${${(M)ICE[extract]:#!!*}:+--move2}
+                    # When extract ice is set, the ∞zinit-extract-hook will
+                    # handle extraction; otherwise extract here (no move).
+                    if (( !${+ICE[extract]} )); then
+                        ziextract ${REPLY:t} ${${${#reply}:#1}:+--nobkp}
+                    fi
                 }
                 return $?
             ) || {

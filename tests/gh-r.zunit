@@ -825,6 +825,23 @@
   local zoxide="$ZBIN/zoxide"; assert "$zoxide" is_executable
   run $zoxide --version; assert $state equals 0
 }
+@test 'extract-bang with gh-r' { # extract'!' should extract exactly once via ∞zinit-extract-hook
+  run zinit from'gh-r' extract'!' id-as'bat/extract-bang' for @sharkdp/bat
+  assert $state equals 0
+  assert $output does_not_contain 'ERROR'
+  assert $output does_not_contain "doesn't exist"
+  local bat="$ZBIN/bat"; assert "$bat" is_executable
+  run "$bat" --version; assert $state equals 0
+}
+@test 'extract-bang-bang with gh-r' { # extract'!!' flattens two levels: hub-ver/bin/hub → hub at root
+  # hub archive: hub-darwin-amd64-X.Y.Z/bin/hub (3 levels deep, requires !!)
+  run zinit from'gh-r' extract'!!' id-as'hub/extract-bangbang' for @mislav/hub
+  assert $state equals 0
+  assert $output does_not_contain 'ERROR'
+  assert $output does_not_contain "doesn't exist"
+  local hub="$ZBIN/hub"; assert "$hub" is_executable
+  run "$hub" --version; assert $state equals 0
+}
 
 #=============
 # Flaky Tests
