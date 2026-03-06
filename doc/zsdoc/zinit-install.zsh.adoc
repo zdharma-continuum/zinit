@@ -261,7 +261,7 @@ Called by:
 
 ==== .zinit-get-package
 
-Has 195 line(s). Calls functions:
+Has 197 line(s). Calls functions:
 
  .zinit-get-package
  |-- .zinit-download-file-stdout
@@ -435,7 +435,7 @@ ____
 
 ____
 
-Has 220 line(s). Calls functions:
+Has 222 line(s). Calls functions:
 
  .zinit-setup-plugin-dir
  |-- .zinit-download-file-stdout
