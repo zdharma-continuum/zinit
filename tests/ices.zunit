@@ -2,6 +2,21 @@
 
 @setup {
   ZPLUGINS=$ZINIT[PLUGINS_DIR]
+  function _zunit_assert_not_executable(){
+    local pathname=$1 filepath
+
+    # If filepath is relative, prepend the test directory
+    if [[ "${pathname:0:1}" != "/" ]]; then
+      filepath="$testdir/${pathname}"
+    else
+      filepath="$pathname"
+    fi
+
+    [[ ! -x "$filepath" ]] && return 0
+
+    echo "'$pathname' is executable but should not be"
+    exit 1
+  }
   function _zunit_assert_not_exists(){
     local file_path=$1
     if [[ "${file_path:0:1}" != "/" ]]; then # relative path - prepend the test directory
@@ -118,6 +133,39 @@
   assert "$workdir/file1.txt" is_file
   assert "$workdir/test.zip" is_file
   rm -rf "$workdir"
+}
+@test 'ziextract-permissions' {
+  # Build a zip with known permissions, call ziextract directly, and verify
+  # that only files with +x in the archive come out executable.
+  local srcdir workdir
+  srcdir=$(mktemp -d)
+  workdir=$(mktemp -d)
+
+  # run_me.sh: +x in archive, has shebang  → must be executable
+  printf '#!/bin/sh\necho run\n' > "$srcdir/run_me.sh"
+  chmod +x "$srcdir/run_me.sh"
+
+  # also_run.py: no +x in archive, has shebang  → must NOT be executable (shebang alone is not enough)
+  printf '#!/usr/bin/env python3\nprint("hi")\n' > "$srcdir/also_run.py"
+
+  # library.py: no +x, no shebang  → must NOT be executable
+  printf 'def foo(): pass\n' > "$srcdir/library.py"
+
+  # pre_marked.sh: +x in archive, no shebang  → must be executable (archive bit)
+  printf 'echo pre\n' > "$srcdir/pre_marked.sh"
+  chmod +x "$srcdir/pre_marked.sh"
+
+  # Build zip preserving permissions, then extract via ziextract
+  ( cd "$srcdir" && zip -q "$workdir/test.zip" run_me.sh also_run.py library.py pre_marked.sh )
+  (( ${+functions[ziextract]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+  ( builtin cd "$workdir" && ziextract test.zip )
+
+  assert "$workdir/run_me.sh"     is_executable
+  assert "$workdir/pre_marked.sh" is_executable
+  assert "$workdir/also_run.py"   not_executable
+  assert "$workdir/library.py"    not_executable
+
+  rm -rf "$srcdir" "$workdir"
 }
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=\ {,}:foldmethod=marker
