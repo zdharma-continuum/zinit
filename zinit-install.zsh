@@ -1514,9 +1514,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 } # ]]]
 # FUNCTION: ziextract [[[
 # If the file is an archive, it is extracted by this function.
-# Next stage is scanning of files with the common utility file
-# to detect executables. They are given +x mode. There are also
-# messages to the user on performed actions.
+# Executable permissions are determined solely by the execute bit already
+# stored in the archive — i.e. whatever the package author intended.
+# No heuristics (file(1), shebang scanning, etc.) are applied.
 #
 # $1 - url
 # $2 - file
@@ -1757,13 +1757,21 @@ ziextract() {
     }
     unfunction -- .zinit-extract-wrapper
 
+    # Glob qualifier legend:
+    #   (DN-.)  — D=include dotfiles, N=null glob (no error if empty),
+    #             -=no symlinks, .=regular files  → all regular files
+    #   (DN-*.) — same plus *=has execute bit set → files already marked
+    #             executable by the archive extractor
     local -aU execs
-    execs=( **/*~(._zinit(|/*)|.git(|/*)|.svn(|/*)|.hg(|/*)|._backup(|/*))(DN-.) )
-    if [[ ${#execs} -gt 0 && -n $execs ]] {
-        execs=( ${(@f)"$( file ${execs[@]} )"} )
-        execs=( "${(M)execs[@]:#[^(:]##:*executable*}" )
-        execs=( "${execs[@]/(#b)([^(:]##):*/${match[1]}}" )
-    }
+    # Collect files that already have the execute bit set in the archive.
+    # This is the authoritative signal: if the package author wanted a file
+    # executable, they set +x when creating the archive. Any file that lacks
+    # +x in the archive (library, documentation, data file, …) should stay
+    # non-executable regardless of its content or extension.
+    # If a poorly maintained package fails to set permissions correctly,
+    # the user can fix it with the atclone/atpull ices — there is no need
+    # for zinit to second-guess the archive on every install.
+    execs=( **/*~(._zinit(|/*)|.git(|/*)|.svn(|/*)|.hg(|/*)|._backup(|/*))(DN-*.) )
 
     builtin print -rl -- ${execs[@]} >! ${TMPDIR:-/tmp}/zinit-execs.$$.lst
     if [[ ${#execs} -gt 0 ]] {
