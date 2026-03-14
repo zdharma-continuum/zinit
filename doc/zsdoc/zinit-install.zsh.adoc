@@ -552,16 +552,16 @@ Called by:
 ____
  
  If the file is an archive, it is extracted by this function.
- Next stage is scanning of files with the common utility file
- to detect executables. They are given +x mode. There are also
- messages to the user on performed actions.
+ Executable permissions are determined solely by the execute bit already
+ stored in the archive — i.e. whatever the package author intended.
+ No heuristics (file(1), shebang scanning, etc.) are applied.
  
  $1 - url
  $2 - file
 
 ____
 
-Has 283 line(s). Calls functions:
+Has 277 line(s). Calls functions:
 
  ziextract
  `-- zinit.zsh/+zi-log
