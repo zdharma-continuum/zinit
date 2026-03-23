@@ -31,7 +31,7 @@ jobs:
 
       - name: commit and push updated docs
         if: github.event_name != 'pull_request'
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           add: 'doc'
           author_name: GitHub Actions
