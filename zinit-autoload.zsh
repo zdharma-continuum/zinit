@@ -3398,10 +3398,12 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     local -F2 SECONDS=0
 
-    # Always run quietly during bulk updates
-    local -A OPTS
+    # Silence self-update during bulk updates, then restore the original quiet state
+    # (avoid re-declaring OPTS as local — it would shadow the caller's flags like --parallel)
+    local _saved_quiet=${OPTS[opt_-q,--quiet]:-0}
     OPTS[opt_-q,--quiet]=1
     .zinit-self-update
+    OPTS[opt_-q,--quiet]=$_saved_quiet
 
     [[ $2 = restart ]] && \
         +zi-log "{msg2}Restarting the update with the new codebase loaded.{rst}"$'\n'
