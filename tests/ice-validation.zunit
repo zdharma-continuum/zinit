@@ -86,6 +86,12 @@
 
 }
 
+@test 'wait-valid-bang-no-suffix' {
+    run zinit ice wait'!3'
+    assert $state equals 0
+
+}
+
 @test 'wait-valid-decimal' {
     run zinit ice wait'3.5'
     assert $state equals 0
@@ -174,6 +180,13 @@
     run zinit ice depth'10'
     assert $state equals 0
 
+}
+
+@test 'depth-invalid-zero' {
+    run zinit ice depth'0'
+    assert $state equals 0
+    assert $output contains 'depth'
+    assert $output contains '0'
 }
 
 @test 'depth-empty' {
