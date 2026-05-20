@@ -1,0 +1,263 @@
+#!/usr/bin/env zunit
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
+#
+# Tests for ice value validation in .zinit-validate-ice()
+#
+
+@test 'as-valid-null' {
+    run zinit ice as'null'
+    assert $state equals 0
+}
+
+@test 'as-valid-command' {
+    run zinit ice as'command'
+    assert $state equals 0
+}
+
+@test 'as-valid-program' {
+    run zinit ice as'program'
+    assert $state equals 0
+}
+
+@test 'as-valid-completion' {
+    run zinit ice as'completion'
+    assert $state equals 0
+}
+
+@test 'as-empty' {
+    run zinit ice as''
+    assert $state equals 0
+}
+
+@test 'as-invalid-none' {
+    run zinit ice as'none'
+    assert $state equals 0
+    assert $output contains 'as'
+    assert $output contains 'none'
+    assert $output contains 'null'
+}
+
+@test 'as-invalid-banana' {
+    run zinit ice as'banana'
+    assert $state equals 0
+    assert $output contains 'as'
+    assert $output contains 'banana'
+}
+
+@test 'wait-valid-0' {
+    run zinit ice wait'0'
+    assert $state equals 0
+
+}
+
+@test 'wait-valid-3' {
+    run zinit ice wait'3'
+    assert $state equals 0
+
+}
+
+@test 'wait-valid-0a' {
+    run zinit ice wait'0a'
+    assert $state equals 0
+
+}
+
+@test 'wait-valid-3b' {
+    run zinit ice wait'3b'
+    assert $state equals 0
+
+}
+
+@test 'wait-valid-1c' {
+    run zinit ice wait'1c'
+    assert $state equals 0
+
+}
+
+@test 'wait-valid-bang' {
+    run zinit ice wait'!0'
+    assert $state equals 0
+
+}
+
+@test 'wait-valid-bang-a' {
+    run zinit ice wait'!2a'
+    assert $state equals 0
+
+}
+
+@test 'wait-valid-decimal' {
+    run zinit ice wait'3.5'
+    assert $state equals 0
+
+}
+
+@test 'wait-empty' {
+    run zinit ice wait
+    assert $state equals 0
+
+}
+
+@test 'wait-cond-command-exists' {
+    run zinit ice wait'[[ -n $commands[fzf] ]]'
+    assert $state equals 0
+
+}
+
+@test 'wait-cond-arithmetic' {
+    run zinit ice wait'(( $+commands[kubectl] ))'
+    assert $state equals 0
+
+}
+
+@test 'wait-cond-variable' {
+    run zinit ice wait'[[ -n $MY_VAR ]]'
+    assert $state equals 0
+
+}
+
+@test 'wait-cond-always-false' {
+    run zinit ice wait'[[ 1 = 0 ]]'
+    assert $state equals 0
+
+}
+
+@test 'wait-cond-single-command' {
+    run zinit ice wait'type fzf &>/dev/null'
+    assert $state equals 0
+
+}
+
+@test 'wait-invalid-suffix-x' {
+    run zinit ice wait'0x'
+    assert $state equals 0
+    assert $output contains 'wait'
+    assert $output contains 'x'
+    assert $output contains 'a'
+}
+
+@test 'wait-invalid-suffix-d' {
+    run zinit ice wait'3d'
+    assert $state equals 0
+    assert $output contains 'wait'
+    assert $output contains 'd'
+}
+
+@test 'wait-invalid-suffix-z' {
+    run zinit ice wait'1z'
+    assert $state equals 0
+    assert $output contains 'wait'
+    assert $output contains 'z'
+}
+
+@test 'wait-invalid-bang-suffix' {
+    run zinit ice wait'!2x'
+    assert $state equals 0
+    assert $output contains 'wait'
+    assert $output contains 'x'
+}
+
+@test 'wait-invalid-suffix-A' {
+    run zinit ice wait'0A'
+    assert $state equals 0
+    assert $output contains 'wait'
+    assert $output contains 'A'
+}
+
+@test 'depth-valid-1' {
+    run zinit ice depth'1'
+    assert $state equals 0
+
+}
+
+@test 'depth-valid-10' {
+    run zinit ice depth'10'
+    assert $state equals 0
+
+}
+
+@test 'depth-empty' {
+    run zinit ice depth''
+    assert $state equals 0
+
+}
+
+@test 'depth-invalid-text' {
+    run zinit ice depth'abc'
+    assert $state equals 0
+    assert $output contains 'depth'
+    assert $output contains 'abc'
+}
+
+@test 'depth-invalid-negative' {
+    run zinit ice depth'-1'
+    assert $state equals 0
+    assert $output contains 'depth'
+    assert $output contains '-1'
+}
+
+@test 'depth-invalid-decimal' {
+    run zinit ice depth'1.5'
+    assert $state equals 0
+    assert $output contains 'depth'
+    assert $output contains '1.5'
+}
+
+@test 'combined-all-valid' {
+    run zinit ice as'null' wait'0a' depth'1'
+    assert $state equals 0
+
+}
+
+@test 'combined-some-invalid' {
+    run zinit ice as'none' wait'0a'
+    assert $state equals 0
+    assert $output contains 'as'
+    assert $output contains 'none'
+}
+
+@test 'combined-all-invalid' {
+    run zinit ice as'none' wait'3x' depth'abc'
+    assert $state equals 0
+    assert $output contains 'as'
+    assert $output contains 'wait'
+    assert $output contains 'depth'
+}
+
+@test 'dash-prefix-valid' {
+    run zinit ice --as'null'
+    assert $state equals 0
+
+}
+
+@test 'dash-prefix-invalid' {
+    run zinit ice --as'none'
+    assert $state equals 0
+    assert $output contains 'as'
+    assert $output contains 'none'
+}
+
+@test 'as-invalid-NULL-case' {
+    run zinit ice as'NULL'
+    assert $state equals 0
+    assert $output contains 'as'
+    assert $output contains 'NULL'
+}
+
+@test 'as-colon-valid' {
+    run zinit ice as:null
+    assert $state equals 0
+}
+
+@test 'as-colon-invalid' {
+    run zinit ice as:none
+    assert $state equals 0
+    assert $output contains 'as'
+    assert $output contains 'none'
+}
+
+@test 'for-invalid-as' {
+    run zinit for as'none' @zdharma-continuum/null
+    assert $output contains 'as'
+    assert $output contains 'none'
+}
