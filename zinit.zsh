@@ -2314,9 +2314,10 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     if (( $+ZINIT_ICES[wait] )) && [[ -n ${ZINIT_ICES[wait]} ]]; then
         local w="${ZINIT_ICES[wait]#\!}"
         w="${w%%.[0-9]##}"
-        if [[ ${w%%[^0-9]*} = <-> && -n ${w##[0-9]##} && ${w##[0-9]##} != [abc] ]]; then
+        local suffix="${w##[0-9]##}"
+        if [[ ${w%%[^0-9]*} = <-> && -n $suffix && $suffix != [abc] ]]; then
             +zi-log "{warn}Warning{b-warn}:{rst} {ice}wait{rst} ice received invalid" \
-                "suffix letter {apo}\`{data}${w##[0-9]##}{apo}\`{rst}." \
+                "suffix letter {apo}\`{data}${suffix}{apo}\`{rst}." \
                 "Expected one of: {data2}a{rst}, {data2}b{rst}, {data2}c{rst}, or none."
         fi
     fi

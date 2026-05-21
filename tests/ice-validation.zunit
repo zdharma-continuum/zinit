@@ -139,7 +139,7 @@
     assert $state equals 0
     assert $output contains 'wait'
     assert $output contains 'x'
-    assert $output contains 'a'
+    assert $output contains 'Expected one of: a, b, c'
 }
 
 @test 'wait-invalid-suffix-d' {
@@ -271,6 +271,7 @@
 
 @test 'for-invalid-as' {
     run zinit for as'none' @zdharma-continuum/null
+    assert $state equals 0
     assert $output contains 'as'
     assert $output contains 'none'
 }
