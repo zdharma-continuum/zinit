@@ -2307,7 +2307,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
                 +zi-log "{warn}Warning{b-warn}:{rst} {ice}as{rst} ice received invalid" \
                     "value {apo}\`{data}${ZINIT_ICES[as]}{apo}\`{rst}." \
                     "Expected one of: {data2}null{rst}, {data2}command{rst}," \
-                    "{data2}completion{rst}."
+                    "{data2}program{rst}, {data2}completion{rst}."
                 ;;
         esac
     fi
