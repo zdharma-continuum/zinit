@@ -35,6 +35,7 @@
     assert $output contains 'as'
     assert $output contains 'none'
     assert $output contains 'null'
+    assert $output contains 'program'
 }
 
 @test 'as-invalid-banana' {
