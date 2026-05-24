@@ -50,6 +50,7 @@ Documentation automatically generated with `zshelldoc'
  .zinit-tmp-subst-off
  .zinit-tmp-subst-on
  .zinit-util-shands-path
+ .zinit-validate-ice
  :zinit-reload-and-run
  :zinit-tmp-subst-alias
  :zinit-tmp-subst-autoload
@@ -109,7 +110,9 @@ Has 264 line(s). Calls functions:
  |   |-- .zinit-get-object-path
  |   |   `-- .zinit-any-to-user-plugin
  |   |-- .zinit-ice
- |   |   `-- +zi-log
+ |   |   |-- +zi-log
+ |   |   `-- .zinit-validate-ice
+ |   |       `-- +zi-log
  |   |-- .zinit-load-ices
  |   |   `-- .zinit-get-object-path
  |   |       `-- .zinit-any-to-user-plugin
@@ -229,6 +232,7 @@ Called by:
  .zinit-register-plugin
  .zinit-run
  .zinit-set-m-func
+ .zinit-validate-ice
  :zinit-tmp-subst-autoload
  Script-Body
  zinit
@@ -688,10 +692,12 @@ ____
 
 ____
 
-Has 21 line(s). Calls functions:
+Has 22 line(s). Calls functions:
 
  .zinit-ice
- `-- +zi-log
+ |-- +zi-log
+ `-- .zinit-validate-ice
+     `-- +zi-log
 
 Uses feature(s): _setopt_
 
@@ -1184,6 +1190,26 @@ Called by:
 
  .zinit-any-to-pid
 
+==== .zinit-validate-ice
+
+____
+ 
+ Validates ice values at parse time.
+ Warns (not errors) about invalid values — behavior is unchanged.
+
+____
+
+Has 29 line(s). Calls functions:
+
+ .zinit-validate-ice
+ `-- +zi-log
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ .zinit-ice
+
 ==== :zinit-reload-and-run
 
 ____
@@ -1617,7 +1643,9 @@ Has 562 line(s). Calls functions:
  |-- .zinit-get-object-path
  |   `-- .zinit-any-to-user-plugin
  |-- .zinit-ice
- |   `-- +zi-log
+ |   |-- +zi-log
+ |   `-- .zinit-validate-ice
+ |       `-- +zi-log
  |-- .zinit-load-ices
  |   `-- .zinit-get-object-path
  |       `-- .zinit-any-to-user-plugin
@@ -1774,7 +1802,9 @@ Has 1 line(s). Calls functions:
      |-- .zinit-get-object-path
      |   `-- .zinit-any-to-user-plugin
      |-- .zinit-ice
-     |   `-- +zi-log
+     |   |-- +zi-log
+     |   `-- .zinit-validate-ice
+     |       `-- +zi-log
      |-- .zinit-load-ices
      |   `-- .zinit-get-object-path
      |       `-- .zinit-any-to-user-plugin
