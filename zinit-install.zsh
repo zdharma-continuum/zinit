@@ -455,7 +455,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     }
                     ;;
                 (*)
-                    builtin print -Pr "${ZINIT[col-error]}Unknown protocol:%f%b ${ICE[proto]}."
+                    builtin print -Pr "${ZINIT[col-error]}Unknown protocol:%f%b ${ICE[proto]}. Expected one of: git, http, https, ssh, ftp, ftps, rsync."
                     return 1
             esac
 

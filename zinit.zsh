@@ -2292,7 +2292,42 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     fi
     (( $+ZINIT_ICES[configure] )) && ZINIT_ICES[configure]="${ZINIT_ICES[configure]}"
     (( $+ZINIT_ICES[make] )) && ZINIT_ICES[make]="${ZINIT_ICES[make]:-install}"
+    .zinit-validate-ice
     return retval
+} # ]]]
+# FUNCTION: .zinit-validate-ice [[[
+# Validates ice values at parse time.
+# Warns (not errors) about invalid values — behavior is unchanged.
+.zinit-validate-ice() {
+    builtin setopt localoptions noksharrays extendedglob typesetsilent noshortloops
+    if (( $+ZINIT_ICES[as] )) && [[ -n ${ZINIT_ICES[as]} ]]; then
+        case ${ZINIT_ICES[as]} in
+            (command|program|null|completion) ;;
+            (*)
+                +zi-log "{warn}Warning{b-warn}:{rst} {ice}as{rst} ice received invalid" \
+                    "value {apo}\`{data}${ZINIT_ICES[as]}{apo}\`{rst}." \
+                    "Expected one of: {data2}null{rst}, {data2}command{rst}," \
+                    "{data2}program{rst}, {data2}completion{rst}."
+                ;;
+        esac
+    fi
+    if (( $+ZINIT_ICES[wait] )) && [[ -n ${ZINIT_ICES[wait]} ]]; then
+        local w="${ZINIT_ICES[wait]#\!}"
+        w="${w%%.[0-9]##}"
+        local suffix="${w##[0-9]##}"
+        if [[ ${w%%[^0-9]*} = <-> && -n $suffix && $suffix != [abc] ]]; then
+            +zi-log "{warn}Warning{b-warn}:{rst} {ice}wait{rst} ice received invalid" \
+                "suffix letter {apo}\`{data}${suffix}{apo}\`{rst}." \
+                "Expected one of: {data2}a{rst}, {data2}b{rst}, {data2}c{rst}, or none."
+        fi
+    fi
+    if (( $+ZINIT_ICES[depth] )) && [[ -n ${ZINIT_ICES[depth]} ]]; then
+        if [[ ${ZINIT_ICES[depth]} != <1-> ]]; then
+            +zi-log "{warn}Warning{b-warn}:{rst} {ice}depth{rst} ice received invalid" \
+                "value {apo}\`{data}${ZINIT_ICES[depth]}{apo}\`{rst}." \
+                "Expected a positive integer."
+        fi
+    fi
 } # ]]]
 # FUNCTION: .zinit-pack-ice [[[
 # Remembers all ice-mods, assigns them to concrete plugin. Ice spec
