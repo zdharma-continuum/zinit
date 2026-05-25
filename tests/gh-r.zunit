@@ -842,6 +842,34 @@
   local hub="$ZBIN/hub"; assert "$hub" is_executable
   run "$hub" --version; assert $state equals 0
 }
+@test 'extract-bang update with gh-r' { # extract hook must run after download, not before
+  # Install bat with extract'!'
+  run zinit from'gh-r' extract'!' id-as'bat/extract-update' for @sharkdp/bat
+  assert $state equals 0
+  assert $output does_not_contain 'ERROR'
+  assert $output does_not_contain "doesn't exist"
+  local bat="$ZBIN/bat"; assert "$bat" is_executable
+
+  # Tamper with stored release info so zinit sees a "new" version
+  local plugin_dir="${ZINIT[PLUGINS_DIR]}/bat---extract-update"
+  echo "/fake/old/release" >! "$plugin_dir/._zinit/is_release"
+
+  # Remove extracted contents (keep ._zinit) to verify re-extraction
+  local f
+  for f in "$plugin_dir"/*(N); do
+    [[ "${f:t}" != "._zinit" ]] && command rm -rf "$f"
+  done
+
+  # Update — should re-download and extract the archive
+  run zinit update bat/extract-update
+  assert $state equals 0
+  assert $output does_not_contain 'ERROR'
+  assert $output does_not_contain "doesn't exist"
+
+  # Verify the binary was re-extracted and linked
+  assert "$bat" is_executable
+  run "$bat" --version; assert $state equals 0
+}
 
 #=============
 # Flaky Tests
