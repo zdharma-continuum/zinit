@@ -3334,7 +3334,7 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 
 # e-!atpull-pre.
 @zinit-register-hook "make'!!'" hook:no-e-\!atpull-pre ∞zinit-make-ee-hook
-@zinit-register-hook "extract" hook:e-\!atpull-pre ∞zinit-extract-hook
+@zinit-register-hook "extract" hook:no-e-\!atpull-pre ∞zinit-extract-hook
 @zinit-register-hook "mv''" hook:no-e-\!atpull-pre ∞zinit-mv-hook
 @zinit-register-hook "cp''" hook:no-e-\!atpull-pre ∞zinit-cp-hook
 @zinit-register-hook "compile-plugin" hook:no-e-\!atpull-pre ∞zinit-compile-plugin-hook
