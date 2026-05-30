@@ -3326,13 +3326,21 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
     }
 } # ]]]
 
-# !atpull-pre
+# Hook-group naming convention for atpull:
+#   hook:e-!atpull-*    — fires alongside the user's atpull'!...' ice
+#                          (runs before the pull)
+#   hook:no-e-!atpull-* — fires alongside the user's plain atpull'...' ice
+#                          (runs after the pull)
+# The 'e' stands for "exclamation" (the ! prefix on the user's atpull ice),
+# not "early".
+
+# e-!atpull-pre.
 @zinit-register-hook "-r/--reset" hook:e-\!atpull-pre ∞zinit-reset-hook
-# !atpull-post
+# e-!atpull-post.
 @zinit-register-hook "ICE[reset]" hook:e-\!atpull-post ∞zinit-reset-hook
 @zinit-register-hook "atpull'!'" hook:e-\!atpull-post ∞zinit-atpull-e-hook
 
-# e-!atpull-pre.
+# no-e-!atpull-pre.
 @zinit-register-hook "make'!!'" hook:no-e-\!atpull-pre ∞zinit-make-ee-hook
 @zinit-register-hook "extract" hook:e-\!atpull-pre ∞zinit-extract-hook
 @zinit-register-hook "mv''" hook:no-e-\!atpull-pre ∞zinit-mv-hook
