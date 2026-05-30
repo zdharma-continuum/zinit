@@ -109,10 +109,10 @@
   local checkmake="$ZBIN/checkmake"; assert "$checkmake" is_executable
   run $checkmake --version; assert $state equals 0
 }
-@test 'cog' { # Containers for machine learning
-  run zinit lbin'!* -> cog' for @replicate/cog; assert $state equals 0
-  local cog="$ZBIN/cog"; assert "$cog" is_executable
-  run $cog --version; assert $state equals 0
+@test 'cosign' { # Container signing, verification and storage in an OCI registry
+  run zinit lbin'!* -> cosign' for @sigstore/cosign; assert $state equals 0
+  local cosign="$ZBIN/cosign"; assert "$cosign" is_executable
+  run $cosign version; assert $state equals 0
 }
 @test 'compress' { # Optimized Go Compression Packages
   run zinit bpick'*.tar.gz' lbin'!s2c;s2d;s2sx;' for @klauspost/compress; assert $state equals 0
