@@ -397,7 +397,7 @@ builtin setopt noaliases
                         [[ -f $pth/$func ]] && { sel=$pth; break; }
                     }
                     if [[ -z $sel ]] {
-                        +zi-log '{u-warn}zinit{b-warn}:{error} Couldn''t find autoload function{ehi}:' \
+                        +zi-log '{u-warn}zinit{b-warn}:{error} Could not find autoload function{ehi}:' \
                             "{apo}\`{file}${func}{apo}\`{error} anywhere in {var}\$fpath{error}."
                             retval=1
                     } else {
