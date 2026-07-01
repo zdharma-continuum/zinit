@@ -33,6 +33,7 @@ jobs:
           - annexes
           - commands
           - compile
+          - config-zstyle
           - gh-r
           - ices
           - plugins

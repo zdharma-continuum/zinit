@@ -23,6 +23,34 @@ ZINIT=( "${(kv)ZPLGM[@]}" "${(kv)ZINIT[@]}" )
 unset ZPLGM
 
 #
+# Allow configuring ZINIT[...] settings via zstyle, e.g.:
+#   zstyle ':zinit:config' home-dir ~/.zinit
+#   zstyle ':zinit:config' bin-dir  ~/.zinit/zinit.git
+# An explicitly-set ZINIT[KEY] always wins over the matching zstyle.
+#
+if zmodload -F zsh/zutil +b:zstyle 2>/dev/null || (( ${+builtins[zstyle]} )); then
+    () {
+        local _attr _key
+        local -A _map=(
+            bin-dir         BIN_DIR          home-dir         HOME_DIR
+            plugins-dir     PLUGINS_DIR      completions-dir  COMPLETIONS_DIR
+            snippets-dir    SNIPPETS_DIR     services-dir     SERVICES_DIR
+            module-dir      MODULE_DIR       polaris-dir      POLARIS_DIR
+            zpfx            ZPFX             man-dir          MAN_DIR
+            list-command    LIST_COMMAND     zcompdump-path   ZCOMPDUMP_PATH
+            compinit-opts   COMPINIT_OPTS    mute-warnings    MUTE_WARNINGS
+            no-aliases      NO_ALIASES       packages-branch  PACKAGES_BRANCH
+            packages-repo   PACKAGES_REPO
+            optimize-out-disk-accesses OPTIMIZE_OUT_DISK_ACCESSES
+        )
+        for _attr _key in "${(kv)_map[@]}"; do
+            [[ -n ${ZINIT[$_key]} ]] && continue
+            zstyle -s ':zinit:config' "$_attr" "ZINIT[$_key]"
+        done
+    }
+fi
+
+#
 # Common needed values.
 #
 

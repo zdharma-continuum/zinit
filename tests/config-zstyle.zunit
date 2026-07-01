@@ -1,0 +1,68 @@
+#!/usr/bin/env zunit
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
+#
+# zdharma-continuum/zinit/tests/config-zstyle.zunit
+# Copyright (c) 2016-2021 Sebastian Gniazdowski
+# Copyright (c) 2021-2024 zdharma-continuum
+# Homepage: https://github.com/zdharma-continuum/zinit
+# License: MIT License
+#
+# Tests for configuring ZINIT[...] settings via `zstyle ':zinit:config' ...'.
+#
+# NOTE: the test bootstrap pre-sets every ZINIT[KEY], which would mask the
+# zstyle path. Each test therefore exercises the feature in a CLEAN
+# `zsh -fc` subshell that sets a zstyle, sources the patched zinit.zsh
+# (located at ${ZINIT[BIN_DIR]}/zinit.zsh inside the test env) and prints the
+# resulting hash field.
+#
+# The subshell is captured with `$(...)` rather than zunit's `run`: `run`
+# re-`eval`s its arguments in the *outer* process, where the bootstrap has
+# already populated ZINIT[HOME_DIR] et al., which would clobber the inner
+# `${ZINIT[...]}` reads we want to observe. Single-quoting the inner script
+# defers those reads to the subshell; only ${ZINIT[BIN_DIR]} is expanded
+# (concatenated in) by the outer shell to locate zinit.zsh.
+#
+
+@test 'zstyle fills an unset key' {
+    output=$(zsh -fc 'zmodload zsh/zutil; typeset -gAH ZINIT
+        ZINIT[BIN_DIR]='"${ZINIT[BIN_DIR]}"'
+        zstyle ":zinit:config" home-dir /tmp/zi-fromstyle
+        source '"${ZINIT[BIN_DIR]}"'/zinit.zsh >/dev/null 2>&1
+        print -r -- ${ZINIT[HOME_DIR]}')
+    state=$?
+    assert $state equals 0
+    assert $output same_as '/tmp/zi-fromstyle'
+}
+
+@test 'explicit ZINIT[KEY] beats zstyle' {
+    output=$(zsh -fc 'zmodload zsh/zutil; typeset -gAH ZINIT
+        ZINIT[BIN_DIR]='"${ZINIT[BIN_DIR]}"'
+        ZINIT[HOME_DIR]=/tmp/zi-explicit
+        zstyle ":zinit:config" home-dir /tmp/zi-fromstyle
+        source '"${ZINIT[BIN_DIR]}"'/zinit.zsh >/dev/null 2>&1
+        print -r -- ${ZINIT[HOME_DIR]}')
+    state=$?
+    assert $state equals 0
+    assert $output same_as '/tmp/zi-explicit'
+}
+
+@test 'derived dir follows zstyle-provided home-dir' {
+    output=$(zsh -fc 'zmodload zsh/zutil; typeset -gAH ZINIT
+        ZINIT[BIN_DIR]='"${ZINIT[BIN_DIR]}"'
+        zstyle ":zinit:config" home-dir /tmp/zi-fromstyle
+        source '"${ZINIT[BIN_DIR]}"'/zinit.zsh >/dev/null 2>&1
+        print -r -- ${ZINIT[PLUGINS_DIR]}')
+    state=$?
+    assert $state equals 0
+    assert $output same_as '/tmp/zi-fromstyle/plugins'
+}
+
+@test 'no zstyle, no array still resolves a default home-dir' {
+    output=$(zsh -fc 'zmodload zsh/zutil; typeset -gAH ZINIT
+        ZINIT[BIN_DIR]='"${ZINIT[BIN_DIR]}"'
+        source '"${ZINIT[BIN_DIR]}"'/zinit.zsh >/dev/null 2>&1
+        [[ -n ${ZINIT[HOME_DIR]} ]] && print OK')
+    state=$?
+    assert $state equals 0
+    assert $output same_as 'OK'
+}
