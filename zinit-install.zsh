@@ -1754,6 +1754,17 @@ ziextract() {
         unfunction -- →zinit-extract →zinit-check
     } else {
         integer warning=1
+        # Not an archive and no explicit type claimed — treat as a plain single
+        # file (e.g. a bare gh-r release binary). HTTP downloads carry no exec
+        # bit, so mark the file executable and let the execs collection below
+        # pick it up and report success.
+        if [[ -z $ext ]] {
+            warning=0
+            (( !OPTS[opt_-q,--quiet] )) && \
+                +zi-log "{info}[{pre}ziextract{info}]{rst}" \
+                    "\`{file}${file}{rst}' is not an archive — keeping it as a plain file."
+            command chmod a+x "$file"
+        }
     }
     unfunction -- .zinit-extract-wrapper
 
