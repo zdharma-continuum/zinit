@@ -24,7 +24,7 @@ on:
 
 jobs:
   zunit-tests:
-    name: ${{ matrix.zunit_test }}
+    name: ${{ matrix.zunit_test }} | ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -80,8 +80,9 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           git clone --depth 1 https://github.com/zdharma-continuum/zunit
           cd ./zunit
+          git checkout feat/run-tests-in-parallel-support
           ./configure --prefix=$HOME/.local
           make all install
 
       - name: "run tests"
-        run: zunit run tests/${{ matrix.zunit_test }}.zunit
+        run: zunit run --parallel tests/${{ matrix.zunit_test }}.zunit
