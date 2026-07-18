@@ -793,8 +793,18 @@ You may safely assume a given ice works with both plugins and snippets unless ex
 
 ### Order of Execution<a name="order-of-execution"></a>
 
-Order of execution of related Ice-mods: `atinit` -> `atpull!` -> `make'!!'` -> `mv` -> `cp` -> `make!` ->
-`atclone`/`atpull` -> `make` -> `(plugin script loading)` -> `src` -> `multisrc` -> `atload`.
+Order of execution of related Ice-mods: `atinit` -> `atpull!` -> `make'!!'` -> `mv` -> `cp` ->
+`[compile, unless nocompile is set]` -> `make!` -> `atclone`/`atpull` -> `make` -> `cmake` ->
+`[compile when nocompile'!']` -> `(plugin script loading)` -> `src` -> `multisrc` -> `atload`.
+
+Compilation runs in one of two phases. **By default** the `pick`-pointed files are compiled early –
+right after `cp`, and **before** the `atclone`/`atpull` hooks run – so files already present in the
+repository (or moved into place by `mv`/`cp`) are compiled automatically. A file that is **created by an
+`atclone` or `atpull` hook does not yet exist** at that point, so the default compile skips it. Passing
+the bang form `nocompile'!'` disables the early compile and **defers** compilation to a second phase that
+runs **after** `make''` and `atclone''`/`atpull''`, once the generated file exists (see the `nocompile`
+ice). Bare `nocompile` disables compilation entirely. `make'!!'` is the extra-early make phase before
+`mv`/`cp`/`extract` and the default compile phase.
 
 ## Zinit Commands<a name="zinit-commands"></a>
 
