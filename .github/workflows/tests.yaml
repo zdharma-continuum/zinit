@@ -78,9 +78,8 @@ jobs:
         run: |
           mkdir -p "$HOME/.local/bin"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          git clone --depth 1 https://github.com/zdharma-continuum/zunit
+          git clone --branch='feat/run-tests-in-parallel-support' https://github.com/zdharma-continuum/zunit
           cd ./zunit
-          git checkout feat/run-tests-in-parallel-support
           ./configure --prefix=$HOME/.local
           make all install
 
