@@ -39,15 +39,9 @@
   run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit uncompile --quiet compile-command)
   assert $state equals 0; assert $output contains '==> Uncompiling compile-command [OK]'
 }
-@test 'compiled cmd' {
+
+@test 'uncompile all' {
   zinit uncompile --all --quiet
   run zinit compiled; assert $state equals 0
   assert $output contains 'No compiled plugins'
-}
-@test 'uncompile cmd' {
-  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile -q compile-command)
-  assert $state equals 0
-  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit uncompile -q compile-command)
-  assert $state equals 0
-  assert $output contains '==> Uncompiling compile-command [OK]'
 }

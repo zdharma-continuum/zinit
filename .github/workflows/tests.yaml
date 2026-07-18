@@ -85,4 +85,5 @@ jobs:
           make all install
 
       - name: "run tests"
-        run: zunit run --parallel tests/${{ matrix.zunit_test }}.zunit
+        shell: zsh {0}
+        run: zunit run -p tests/${{ matrix.zunit_test }}.zunit
