@@ -1408,7 +1408,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       fi
       ;;
     (Linux)
-      _sys='(musl|gnu)*~^*(unknown|)linux*'
+      [[ $OSTYPE == *musl* || "$(command ldd --version 2>&1)" == *musl* ]] && _clib="musl"
+      if [[ $_clib == musl ]]; then
+        _sys='musl*~^*linux*'
+      else
+        _sys='linux*~*musl'
+      fi
       ;;
     (MINGW* | MSYS* | CYGWIN* | Windows_NT)
       _sys='pc-windows-gnu'
