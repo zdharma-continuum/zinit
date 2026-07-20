@@ -76,6 +76,27 @@
   COMPS=( "$ZINIT[COMPLETIONS_DIR]"/_* )
   assert __init__.py is_not_value_in $COMPS
 }
+@test 'bindmap' {
+  # bindmap'' remaps the key that the plugin binds, so unload has to remove the
+  # remapped key ("^_") -- not the raw, still-quoted ice value ('"^_"').
+  # The load/unload has to happen in this shell (the binding is the assertion),
+  # so `run' is not usable here and ERR_EXIT has to be turned off by hand.
+  unsetopt ERR_EXIT
+
+  function zunit-bindmap-widget() { }
+  zle -N zunit-bindmap-widget
+
+  zinit as"null" id-as"test/bindmap" bindmap'^1 -> "^_"' \
+      atload'!bindkey "^1" zunit-bindmap-widget' for zdharma-continuum/null
+
+  local -a bound=( ${(M)${(f)"$(bindkey -L)"}:#*zunit-bindmap-widget*} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^_"'
+
+  zinit unload -q test/bindmap
+  bound=( ${(M)${(f)"$(bindkey -L)"}:#*zunit-bindmap-widget*} )
+  assert $#bound equals 0
+}
 @test 'ziextract error on missing file' {
   run ziextract /tmp/zi-nonexistent-file.zip
   assert $state equals 1

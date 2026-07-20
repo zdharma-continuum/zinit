@@ -511,17 +511,21 @@ builtin setopt noaliases
         fi
 
         local bmap_val="${ZINIT_CUR_BIND_MAP[${1}]}"
+        integer val=0
         if (( !ZINIT_CUR_BIND_MAP[empty] )) {
             [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)1}]}"
             [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)${(Q)1}}]}"
-            [[ -z $bmap_val ]] && { bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)1}]}"; integer val=1; }
-            [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)${(Q)1}}]}"
+            [[ -z $bmap_val ]] && { bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)1}]}"; [[ -n $bmap_val ]] && val=1; }
+            [[ -z $bmap_val ]] && { bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)${(Q)1}}]}"; [[ -n $bmap_val ]] && val=1; }
         }
         if [[ -n $bmap_val ]]; then
-            string="${(q)bmap_val}"
+            # Record what's actually being bound, not the raw (possibly quoted)
+            # ice value - otherwise `unload' cannot match the binding back.
             if (( val )) {
-                [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
+                widget="${(q)${(Q)bmap_val}}"
+                [[ ${pos[1]} = "-M" ]] && pos[4]="${(Q)bmap_val}" || pos[2]="${(Q)bmap_val}"
             } else {
+                string="${(q)${(Q)bmap_val}}"
                 [[ ${pos[1]} = "-M" ]] && pos[3]="${(Q)bmap_val}" || pos[1]="${(Q)bmap_val}"
             }
             .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> changed to <$bmap_val>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
@@ -531,17 +535,19 @@ builtin setopt noaliases
                 ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[RIGHTAR]}} && -n ${${ZINIT[RIGHTAR]}[(r);:${(q)1};:]} ) || \
                 ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[LEFTAR]}} && -n ${${ZINIT[LEFTAR]}[(r);:${(q)1};:]} )
         ]]; then
-            string="${(q)bmap_val}"
             if (( val )) {
-                [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
+                widget="${(q)${(Q)bmap_val}}"
+                [[ ${pos[1]} = "-M" ]] && pos[4]="${(Q)bmap_val}" || pos[2]="${(Q)bmap_val}"
             } else {
+                string="${(q)${(Q)bmap_val}}"
                 [[ ${pos[1]} = "-M" ]] && pos[3]="${(Q)bmap_val}" || pos[1]="${(Q)bmap_val}"
             }
             .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as cursor-key and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
         fi
         [[ $bmap_val = hold ]] && return 0
 
-        local prev="${(q)${(s: :)$(builtin bindkey ${(Q)string})}[-1]#undefined-key}"
+        # Quoted - the key sequence may contain spaces, e.g. bindmap'^X -> "^ "'.
+        local prev="${(q)${(s: :)$(builtin bindkey "${(Q)string}")}[-1]#undefined-key}"
 
         # "-M map" given?
         if (( ${+opts[-M]} )); then
