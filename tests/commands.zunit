@@ -49,6 +49,30 @@
     run return ${+commands[wd]}; assert $state equals 0
     run zinit delete --yes mfaerevaag/wd
 }
+@test 'delete unloads a loaded plugin' {
+    # Deleting a plugin that is still loaded has to revert its effects on the
+    # running shell first, or its bindkeys and widgets outlive the files and
+    # start erroring with "No such widget".
+    # The load/delete must happen in this shell, so `run' is not usable here
+    # and ERR_EXIT has to be turned off by hand.
+    unsetopt ERR_EXIT
+
+    function zunit-del-widget() { }
+    zle -N zunit-del-widget
+
+    zinit as"null" id-as"test/delete-unloads" \
+        atload'!bindkey "^3" zunit-del-widget' bindmap'^3 -> "^[[A"' \
+        for zdharma-continuum/null
+
+    local -a bound=( ${(M)${(f)"$(bindkey -L)"}:#*zunit-del-widget*} )
+    assert $#bound equals 1
+    assert "${bound[1]}" contains '"^[[A"'
+
+    # No `zinit unload' first -- delete has to do it itself.
+    zinit delete --quiet --yes test/delete-unloads
+    bound=( ${(M)${(f)"$(bindkey -L)"}:#*zunit-del-widget*} )
+    assert $#bound equals 0
+}
 
 @test 'plugins' {
   run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit plugins)

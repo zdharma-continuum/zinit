@@ -1461,6 +1461,20 @@ EOF
             files=(${(@)files[1,4]} ${files[4]+more…})
             ICE=("${(kv)ICE2[@]}")
             if [[ -e $local_dir ]]; then
+                # Revert the plugin's effects on the running shell before its
+                # files go away, otherwise its bindkeys, widgets, functions and
+                # aliases are stranded and start erroring out on use.
+                (( is_snippet )) || {
+                    .zinit-any-to-uspl2 "${ICE2[id-as]:-$the_id}"
+                    local ___uspl2="$REPLY"
+                    if [[ -n ${ZINIT_REGISTERED_PLUGINS[(r)$___uspl2]} ]]; then
+                        if [[ ${ZINIT[STATES__$___uspl2]} = 2 ]]; then
+                            .zinit-unload "$___uspl2" "" ${o_quiet:+-q}
+                        elif (( !$#o_quiet )); then
+                            +zi-log "{w} {b}$___uspl2{rst} was light-loaded, its changes to the shell cannot be reverted"
+                        fi
+                    fi
+                }
                 (( is_snippet )) && {
                     .zinit-run-delete-hooks snippet "${ICE2[teleid]}" "" "$the_id" "$local_dir"
                 } || {
