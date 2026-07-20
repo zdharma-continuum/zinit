@@ -37,13 +37,25 @@ typeset -gxH ZPFX=
 ZPFX="${zi_test_dir}/polaris"
 
 command git diff > ${ZINIT[HOME_DIR]}/unstaged.diff
+
+# `git clone --reference' refuses a linked worktree ("fatal: reference
+# repository '…' as a linked checkout is not supported yet"), so reference the
+# shared object store of the main checkout instead of the top-level directory.
+# In an ordinary clone --git-common-dir is that repository's own .git, so this
+# stays equivalent to referencing ${GIT_REPO}; in a worktree it resolves to the
+# main checkout's .git, which is a valid reference repository.
+GIT_COMMON_DIR=${$(command git rev-parse --git-common-dir 2>/dev/null):A}
+
+CLONE_OPTS=( --quiet --depth=1 --no-hardlinks )
+if [[ -d ${GIT_COMMON_DIR}/objects ]]; then
+    CLONE_OPTS+=( --dissociate --reference "${GIT_COMMON_DIR}" )
+else
+    warn "no object store to borrow from, cloning ${GIT_REPO} without --reference"
+fi
+
 # info 'creating test env'
 git clone \
-    --quiet \
-    --depth=1 \
-    --dissociate \
-    --no-hardlinks \
-    --reference "${GIT_REPO}" \
+    "${CLONE_OPTS[@]}" \
     file://${GIT_REPO:A} \
     "${ZINIT[BIN_DIR]}" >/dev/null
 if (( $? != 0 )); then
