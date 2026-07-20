@@ -94,6 +94,30 @@ __zinit_installed_plugins(){
   list=( "${list[@]:#custom}" )
   _wanted list expl 'plugins' compadd -a - list
 } # ]]]
+# FUNCTION: __zinit_loaded_plugins [[[
+# Plugins registered in the running shell, i.e. the ones `unload' can act on.
+__zinit_loaded_plugins(){
+  typeset -a list
+  local expl
+  list=( "${ZINIT_REGISTERED_PLUGINS[@]}" )
+  list=( "${list[@]:#_local/zinit}" )
+  # Zinit registers itself under a `%'-prefixed absolute path too
+  list=( "${list[@]:#\%*}" )
+  _wanted list expl 'loaded plugins' compadd -a - list
+} # ]]]
+# FUNCTION: __zinit_unloaded_plugins [[[
+# Installed plugins that are not currently loaded, i.e. what `load' can act on.
+__zinit_unloaded_plugins(){
+  typeset -a list loaded
+  local expl
+  list=( "${ZINIT[PLUGINS_DIR]}"/*(N:t) )
+  list=( "${list[@]//---//}" )
+  list=( "${list[@]:#_local/zinit}" )
+  list=( "${list[@]:#custom}" )
+  loaded=( "${ZINIT_REGISTERED_PLUGINS[@]}" )
+  (( $#loaded )) && list=( "${list[@]:#(${(~j:|:)loaded})}" )
+  _wanted list expl 'unloaded plugins' compadd -a - list
+} # ]]]
 # FUNCTION: __zinit_installed_snippets [[[
 __zinit_installed_snippets(){
   # [[ -prefix '-' ]] && return 0
@@ -319,7 +343,7 @@ _zinit_unload(){
   _arguments -A \
     '(-h --help)'{-h,--help}'[Show this help message]' \
     '(-q --quiet)'{-q,--quiet}'[Turn off messages from the operation]' \
-    - installed '*:installed:__zinit_installed'
+    - loaded '*:loaded:__zinit_loaded_plugins'
 } # ]]]
 # FUNCTION: _zinit_update [[[
 _zinit_update(){
@@ -337,9 +361,11 @@ _zinit_update(){
   - set2 \
       '1:installed:__zinit_installed'
 } # ]]]
-# FUNCTION: _zunit_load [[[
+# FUNCTION: _zinit_load [[[
 _zinit_load() {
-  _message 'Hit enter to list the defined key bindings replay' && ret=0
+  _arguments -A \
+    '(-h --help)'{-h,--help}'[Show this help message]' \
+    - unloaded '*:unloaded:__zinit_unloaded_plugins'
 } # ]]]
 
 # FUNCTION: _zinit [[[
