@@ -73,8 +73,9 @@
   assert "$ZPLUGINS/test---ignored_completions/_valid" is_file
   assert "$ZPLUGINS/test---ignored_completions/__init__.py" is_file
   assert "$ZINIT[COMPLETIONS_DIR]/_valid" is_file
-  COMPS=( "$ZINIT[COMPLETIONS_DIR]"/_* )
-  assert __init__.py is_not_value_in $COMPS
+  local -a COMPS=( "${ZINIT[COMPLETIONS_DIR]}"/_*(:t) )
+  assert __init__.py not_in $COMPS
+  assert _valid in $COMPS
 }
 @test 'bindmap' {
   # bindmap'' remaps the key that the plugin binds, so unload has to remove the
