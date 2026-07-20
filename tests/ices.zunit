@@ -98,6 +98,31 @@
   bound=( ${(M)${(f)"$(bindkey -L)"}:#*zunit-bindmap-widget*} )
   assert $#bound equals 0
 }
+@test 'bindmap survives a bare re-load' {
+  # `zinit load <id>' after an unload carries no ices of its own, so it has to
+  # replay the ices recorded by the previous load -- otherwise bindmap'' and
+  # atload'' are silently dropped and the key is never re-bound.
+  unsetopt ERR_EXIT
+
+  function zunit-reload-widget() { }
+  zle -N zunit-reload-widget
+
+  zinit as"null" id-as"test/reload" bindmap'^1 -> "^_"' \
+      atload'!bindkey "^1" zunit-reload-widget' for zdharma-continuum/null
+
+  local -a bound=( ${(M)${(f)"$(bindkey -L)"}:#*zunit-reload-widget*} )
+  assert $#bound equals 1
+
+  zinit unload -q test/reload
+  bound=( ${(M)${(f)"$(bindkey -L)"}:#*zunit-reload-widget*} )
+  assert $#bound equals 0
+
+  # No ices given here -- the recorded ones must be reused.
+  zinit load test/reload
+  bound=( ${(M)${(f)"$(bindkey -L)"}:#*zunit-reload-widget*} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^_"'
+}
 @test 'ziextract error on missing file' {
   run ziextract /tmp/zi-nonexistent-file.zip
   assert $state equals 1

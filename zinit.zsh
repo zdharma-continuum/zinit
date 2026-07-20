@@ -1673,6 +1673,25 @@ builtin setopt noaliases
         ICE[teleid]="$___user${${___user:#%}:+/}$___plugin"
     }
 
+    # A bare re-load – e.g. `zinit load <id>' after `zinit unload <id>' – carries
+    # no ices, which would silently drop bindmap'', atload'' etc. and then also
+    # overwrite the recorded set below. Replay the ices of the previous load
+    # instead. Only `wait'' (created empty in the main function) and `teleid''
+    # (set just above) are Zinit's own, so anything beyond them means the user
+    # did pass ices and those always win.
+    if (( ${#ICE} - ${+ICE[wait]} - ${+ICE[teleid]} == 0 )) {
+        local -a ___sice_tmp
+        ___sice_tmp=( "${(z@)ZINIT_SICE[$___id_as]}" )
+        if (( ${#___sice_tmp} > 1 && ${#___sice_tmp} % 2 == 0 )) {
+            local ___teleid_bkp="${ICE[teleid]}"
+            ICE=( "${(Q)___sice_tmp[@]}" )
+            # An explicit `load' is imperative – don't re-defer or re-condition it.
+            unset 'ICE[wait]' 'ICE[load]' 'ICE[unload]' 'ICE[service]' 'ICE[subscribe]'
+            ICE[teleid]="${ICE[teleid]:-$___teleid_bkp}"
+            .zinit-add-report "$___id_as" "Note: reusing the ices of the previous load"
+        }
+    }
+
     .zinit-set-m-func set
 
     local -a ___arr
