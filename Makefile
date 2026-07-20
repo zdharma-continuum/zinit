@@ -7,7 +7,10 @@ DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
 .PHONY: all clean container doc doc/container tags tags/emacs tags/vim test zwc
 
 clean:
-	rm -rf *.zwc doc/zsdoc/zinit{'','-additional','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
+	@zsh -fc "print -C4 *.zwc(N) */zsdoc/{$(foreach wrd,$(SRC),$(wrd).zsh.adoc)(N),data(/N)} tests/_support/tmp*(/N)"
+	zsh -fc "rm -rf *.zwc(N) */zsdoc/{$(foreach wrd,$(SRC),$(wrd).zsh.adoc)(N),data(/N)} tests/_support/tmp*(/N)"
+	@# $(or $(ZSH),:) -fc 'for f in *.zsh; do zcompile -R -- $$f.zwc $$f || exit; done'
+
 
 container:
 	docker build --tag=ghcr.io/zdharma-continuum/zinit:latest --file=docker/Dockerfile .
