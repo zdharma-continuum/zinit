@@ -546,8 +546,8 @@ builtin setopt noaliases
         fi
         [[ $bmap_val = hold ]] && return 0
 
-        # Quoted - the key sequence may contain spaces, e.g. bindmap'^X -> "^ "'.
-        # Probe the same keymap the bind targets, so unload restores the right prior widget.
+        # Quoted - the key sequence may contain spaces, e.g. bindmap'^X -> "^
+        # "'. Probe the same keymap the bind targets, so unload restores the right prior widget.
         local -a Mprobe
         (( ${+opts[-M]} )) && Mprobe=( -M "${opts[-M]}" )
         local prev="${(q)${(s: :)$(builtin bindkey "${Mprobe[@]}" "${(Q)string}")}[-1]#undefined-key}"
