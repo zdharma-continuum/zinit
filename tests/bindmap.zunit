@@ -1,0 +1,278 @@
+#!/usr/bin/env zunit
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=\ {,}:foldmethod=marker
+#
+# zdharma-continuum/zinit/tests/bindmap.zunit
+# Copyright (c) 2021-2024 zdharma-continuum
+# Homepage: https://github.com/zdharma-continuum/zinit
+# License: MIT License
+#
+# Coverage for the bindmap'' ice, which rewrites the key sequences a plugin
+# binds and has to be reverted exactly on unload.
+#
+# Conventions used throughout:
+#   * `unsetopt ERR_EXIT' first -- zunit test bodies run with ERR_EXIT set and a
+#     bare `zinit ... for' aborts them with a blank failure.
+#   * `run' is unusable: it evaluates in a command-substitution subshell, and the
+#     bindings in *this* shell are the assertion.
+#   * The plugin directory is pre-created by @setup, so .zinit-load skips the
+#     clone and the file needs no network.
+#   * One id-as and one widget name per test, so cases cannot interfere.
+
+@setup {
+  ZPLUGINS=$ZINIT[PLUGINS_DIR]
+  # .zinit-load only clones when the directory is missing
+  function bindmap_fixture() {
+    command mkdir -p "$ZPLUGINS/test---$1"
+  }
+  # Lines of `bindkey -L' (optionally of one keymap) that mention a widget
+  function bindings_for() {
+    local widget=$1 keymap=$2
+    print -rl -- ${(M)${(f)"$(bindkey -L ${keymap:+-M} $keymap)"}:#*${widget}*}
+  }
+}
+
+@test 'bindmap remaps to an unquoted target' {
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-plain
+  function zunit-bm-plain() { }
+  zle -N zunit-bm-plain
+
+  zinit as"null" id-as"test/bm-plain" bindmap'^A -> ^T' \
+      atload'!bindkey "^A" zunit-bm-plain' for test/bm-plain
+
+  local -a bound=( ${(f)"$(bindings_for zunit-bm-plain)"} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^T"'
+}
+
+@test 'bindmap strips quotes from the target' {
+  # Regression: the remapped key used to be recorded with its quotes still
+  # attached, so unload looked up a key that was never bound.
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-quoted
+  function zunit-bm-quoted() { }
+  zle -N zunit-bm-quoted
+
+  zinit as"null" id-as"test/bm-quoted" bindmap'^A -> "^_"' \
+      atload'!bindkey "^A" zunit-bm-quoted' for test/bm-quoted
+
+  local -a bound=( ${(f)"$(bindings_for zunit-bm-quoted)"} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^_"'
+
+  zinit unload -q test/bm-quoted
+  bound=( ${(f)"$(bindings_for zunit-bm-quoted)"} )
+  assert $#bound equals 0
+}
+
+@test 'bindmap handles a target containing a space' {
+  # "^ " is Ctrl-Space, displayed as ^@. Quoting the target is the documented
+  # way to express it, and the previous-binding probe has to survive the space.
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-space
+  function zunit-bm-space() { }
+  zle -N zunit-bm-space
+
+  zinit as"null" id-as"test/bm-space" bindmap'^A -> "^ "' \
+      atload'!bindkey "^A" zunit-bm-space' for test/bm-space
+
+  local -a bound=( ${(f)"$(bindings_for zunit-bm-space)"} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^@"'
+
+  zinit unload -q test/bm-space
+  bound=( ${(f)"$(bindings_for zunit-bm-space)"} )
+  assert $#bound equals 0
+}
+
+@test 'bindmap applies every ;-separated pair' {
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-multi
+  function zunit-bm-multi-up() { }
+  function zunit-bm-multi-down() { }
+  zle -N zunit-bm-multi-up
+  zle -N zunit-bm-multi-down
+
+  zinit as"null" id-as"test/bm-multi" bindmap'^A -> "^[[A";^B -> "^[[B"' \
+      atload'!bindkey "^A" zunit-bm-multi-up; bindkey "^B" zunit-bm-multi-down' \
+      for test/bm-multi
+
+  local -a up=( ${(f)"$(bindings_for zunit-bm-multi-up)"} )
+  local -a down=( ${(f)"$(bindings_for zunit-bm-multi-down)"} )
+  assert $#up equals 1
+  assert $#down equals 1
+  assert "${up[1]}" contains '"^[[A"'
+  assert "${down[1]}" contains '"^[[B"'
+
+  zinit unload -q test/bm-multi
+  up=( ${(f)"$(bindings_for zunit-bm-multi-up)"} )
+  down=( ${(f)"$(bindings_for zunit-bm-multi-down)"} )
+  assert $#up equals 0
+  assert $#down equals 0
+}
+
+@test 'bindmap hold suppresses the binding' {
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-hold
+  function zunit-bm-hold() { }
+  zle -N zunit-bm-hold
+
+  zinit as"null" id-as"test/bm-hold" bindmap'^A -> hold' \
+      atload'!bindkey "^A" zunit-bm-hold' for test/bm-hold
+
+  # `hold' means "unmapped" -- the key is not bound anywhere
+  local -a bound=( ${(f)"$(bindings_for zunit-bm-hold)"} )
+  assert $#bound equals 0
+}
+
+@test 'bindmap confines a -M remap to that keymap' {
+  # `main' is linked to `viins' in the test shell, so `emacs' is used to tell
+  # the keymaps apart.
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-keymap
+  function zunit-bm-keymap() { }
+  zle -N zunit-bm-keymap
+
+  zinit as"null" id-as"test/bm-keymap" bindmap'^A -> "^Y"' \
+      atload'!bindkey -M emacs "^A" zunit-bm-keymap' for test/bm-keymap
+
+  local -a in_emacs=( ${(f)"$(bindings_for zunit-bm-keymap emacs)"} )
+  local -a in_main=( ${(f)"$(bindings_for zunit-bm-keymap)"} )
+  assert $#in_emacs equals 1
+  assert "${in_emacs[1]}" contains '"^Y"'
+  assert $#in_main equals 0
+
+  zinit unload -q test/bm-keymap
+  in_emacs=( ${(f)"$(bindings_for zunit-bm-keymap emacs)"} )
+  assert $#in_emacs equals 0
+}
+
+@test 'bindmap ! form remaps the widget, not the key' {
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-bang
+  function zunit-bm-bang-from() { }
+  function zunit-bm-bang-to() { }
+  zle -N zunit-bm-bang-from
+  zle -N zunit-bm-bang-to
+
+  zinit as"null" id-as"test/bm-bang" bindmap'!"^A" -> zunit-bm-bang-to' \
+      atload'!bindkey "^A" zunit-bm-bang-from' for test/bm-bang
+
+  # The key keeps its own sequence; only the widget behind it is swapped
+  local -a to=( ${(f)"$(bindings_for zunit-bm-bang-to)"} )
+  local -a from=( ${(f)"$(bindings_for zunit-bm-bang-from)"} )
+  assert $#to equals 1
+  assert "${to[1]}" contains '"^A"'
+  assert $#from equals 0
+
+  zinit unload -q test/bm-bang
+  to=( ${(f)"$(bindings_for zunit-bm-bang-to)"} )
+  assert $#to equals 0
+}
+
+@test 'bindmap recognises the UPAR cursor-key alias' {
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-upar
+  function zunit-bm-upar() { }
+  zle -N zunit-bm-upar
+
+  zinit as"null" id-as"test/bm-upar" bindmap'UPAR -> "^P"' \
+      atload'!bindkey "^[[A" zunit-bm-upar' for test/bm-upar
+
+  local -a bound=( ${(f)"$(bindings_for zunit-bm-upar)"} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^P"'
+}
+
+@test 'unload restores the widget the remapped key had before' {
+  # The remapped key was already bound, so unload has to put the old widget
+  # back rather than simply deleting the binding.
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-restore
+  function zunit-bm-restore() { }
+  zle -N zunit-bm-restore
+  bindkey '^Y' clear-screen
+
+  zinit as"null" id-as"test/bm-restore" bindmap'^A -> "^Y"' \
+      atload'!bindkey "^A" zunit-bm-restore' for test/bm-restore
+  assert "$(bindkey '^Y')" contains 'zunit-bm-restore'
+
+  zinit unload -q test/bm-restore
+  assert "$(bindkey '^Y')" contains 'clear-screen'
+}
+
+@test 'bindmap is ignored in light mode without trackbinds' {
+  # Light mode skips the bindkey shadowing, so the plugin's own key survives
+  # untouched -- this is documented behaviour, not a defect.
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-light
+  function zunit-bm-light() { }
+  zle -N zunit-bm-light
+
+  zinit light-mode as"null" id-as"test/bm-light" bindmap'^A -> "^V"' \
+      atload'!bindkey "^A" zunit-bm-light' for test/bm-light
+
+  local -a bound=( ${(f)"$(bindings_for zunit-bm-light)"} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^A"'
+}
+
+@test 'bindmap applies in light mode with trackbinds' {
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-track
+  function zunit-bm-track() { }
+  zle -N zunit-bm-track
+
+  zinit light-mode trackbinds as"null" id-as"test/bm-track" bindmap'^B -> "^W"' \
+      atload'!bindkey "^B" zunit-bm-track' for test/bm-track
+
+  local -a bound=( ${(f)"$(bindings_for zunit-bm-track)"} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^W"'
+}
+
+@test 'unload removes the remapped key' {
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-unload
+  function zunit-bm-unload() { }
+  zle -N zunit-bm-unload
+
+  zinit as"null" id-as"test/bm-unload" bindmap'^A -> "^_"' \
+      atload'!bindkey "^A" zunit-bm-unload' for test/bm-unload
+
+  local -a bound=( ${(f)"$(bindings_for zunit-bm-unload)"} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^_"'
+
+  zinit unload -q test/bm-unload
+  bound=( ${(f)"$(bindings_for zunit-bm-unload)"} )
+  assert $#bound equals 0
+}
+
+@test 'bindmap survives a bare re-load' {
+  # `zinit load <id>' after an unload carries no ices of its own, so it has to
+  # replay the ices recorded by the previous load -- otherwise bindmap'' and
+  # atload'' are silently dropped and the key is never re-bound.
+  unsetopt ERR_EXIT
+  bindmap_fixture bm-reload
+  function zunit-bm-reload() { }
+  zle -N zunit-bm-reload
+
+  zinit as"null" id-as"test/bm-reload" bindmap'^A -> "^_"' \
+      atload'!bindkey "^A" zunit-bm-reload' for test/bm-reload
+
+  local -a bound=( ${(f)"$(bindings_for zunit-bm-reload)"} )
+  assert $#bound equals 1
+
+  zinit unload -q test/bm-reload
+  bound=( ${(f)"$(bindings_for zunit-bm-reload)"} )
+  assert $#bound equals 0
+
+  # No ices given here -- the recorded ones must be reused.
+  zinit load test/bm-reload
+  bound=( ${(f)"$(bindings_for zunit-bm-reload)"} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^_"'
+}
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=\ {,}:foldmethod=marker

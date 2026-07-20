@@ -31,6 +31,7 @@ jobs:
       matrix:
         zunit_test:
           - annexes
+          - bindmap
           - commands
           - compile
           - config-zstyle
