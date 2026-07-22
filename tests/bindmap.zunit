@@ -126,25 +126,50 @@
 }
 
 @test 'bindmap confines a -M remap to that keymap' {
-  # `main' is linked to `viins' in the test shell, so `emacs' is used to tell
-  # the keymaps apart.
+  # `main' defaults to `emacs' unless EDITOR/VISUAL is vi-flavored; pin it to `viins' so a remap
+  # that leaked out of `emacs' (a dropped -M) is actually observable in `main'.
   unsetopt ERR_EXIT
+  bindkey -A viins main
   bindmap_fixture bm-keymap
-  function zunit-bm-keymap() { }
+  function zunit-bm-keymap() { ; }
   zle -N zunit-bm-keymap
 
-  zinit as"null" id-as"test/bm-keymap" bindmap'^A -> "^Y"' \
-      atload'!bindkey -M emacs "^A" zunit-bm-keymap' for test/bm-keymap
+  zinit for \
+    as"null" \
+    atload'!bindkey -M emacs "^A" zunit-bm-keymap' \
+    bindmap'^A -> "^Y"' \
+    id-as"test/bm-keymap" \
+  @test/bm-keymap
 
   local -a in_emacs=( ${(f)"$(bindings_for zunit-bm-keymap emacs)"} )
   local -a in_main=( ${(f)"$(bindings_for zunit-bm-keymap)"} )
-  assert $#in_emacs equals 1
+  assert ${#in_emacs} equals 1
   assert "${in_emacs[1]}" contains '"^Y"'
-  assert $#in_main equals 0
+  assert ${#in_main} equals 0
 
   zinit unload -q test/bm-keymap
   in_emacs=( ${(f)"$(bindings_for zunit-bm-keymap emacs)"} )
   assert $#in_emacs equals 0
+}
+
+@test 'bindmap -M restores the keymap-specific previous binding' {
+  # Regression: the previous-binding probe read `main' even for a `-M <map>' bind, so unload
+  # restored the wrong keymap's widget. The remapped key is pre-bound differently in `emacs' and
+  # `main' so restoring the wrong one is detectable.
+  unsetopt ERR_EXIT
+  bindkey -A viins main
+  bindmap_fixture bm-keymap-prev
+  function zunit-bm-keymap-prev() { }
+  zle -N zunit-bm-keymap-prev
+  bindkey -M emacs '^Y' clear-screen    # emacs prior -- must be restored on unload
+  bindkey '^Y' self-insert              # different main prior -- must NOT be what's restored
+
+  zinit as"null" id-as"test/bm-keymap-prev" bindmap'^A -> "^Y"' \
+      atload'!bindkey -M emacs "^A" zunit-bm-keymap-prev' for test/bm-keymap-prev
+  assert "$(bindkey -M emacs '^Y')" contains 'zunit-bm-keymap-prev'
+
+  zinit unload -q test/bm-keymap-prev
+  assert "$(bindkey -M emacs '^Y')" contains 'clear-screen'
 }
 
 @test 'bindmap ! form remaps the widget, not the key' {
