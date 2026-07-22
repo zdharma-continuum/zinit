@@ -82,6 +82,27 @@
   assert $output contains 'ERROR'
   assert $output contains "doesn't exist"
 }
+@test 'ziextract plain single file (not an archive)' {
+  # A bare gh-r-style release binary: no "unrecognized archive" error,
+  # the file is kept as-is and marked executable.
+  local workdir=$(mktemp -d)
+  printf '#!/bin/sh\necho jq\n' > "$workdir/jq-macos-arm64"
+  _zi_extract_plain() { cd "$workdir" && ziextract jq-macos-arm64 }
+  run _zi_extract_plain
+  assert $state equals 0
+  assert $output does_not_contain "didn't recognize archive type"
+  assert $output contains 'not an archive'
+  assert "$workdir/jq-macos-arm64" is_executable
+  rm -rf "$workdir"
+}
+@test 'ziextract still errors on unrecognized explicit type' {
+  local workdir=$(mktemp -d)
+  printf 'plain text\n' > "$workdir/somefile"
+  _zi_extract_bogus() { cd "$workdir" && ziextract somefile bogus-type }
+  run _zi_extract_bogus
+  assert $output contains "didn't recognize archive type"
+  rm -rf "$workdir"
+}
 @test 'ziextract plain (no flattening)' {
   # extract'' → ziextract with no flags: directory structure is preserved
   local workdir=$(mktemp -d)
