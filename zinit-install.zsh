@@ -1408,7 +1408,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       fi
       ;;
     (Linux)
-      _sys='(musl|gnu)*~^*(unknown|)linux*'
+      _sys='linux'
+      [[ $OSTYPE == *musl* || "$(command ldd --version 2>&1)" == *musl* ]] && _clib="musl"
       ;;
     (MINGW* | MSYS* | CYGWIN* | Windows_NT)
       _sys='pc-windows-gnu'
@@ -1434,7 +1435,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       +zi-log "{e} {b}gh-r{rst}Unsupported CPU: {obj}$_cpu{rst}"
       ;;
   esac
-  echo "${_sys};${_cpu};${_os}"
+  echo "${_sys};${_cpu};${_os};${_clib}"
 } # ]]]
 # FUNCTION: .zinit-get-latest-gh-r-url-part [[[
 # Gets version string of latest release of given Github
@@ -1501,6 +1502,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         break
       fi
     done
+
+    # A musl asset is correct only when the host libc is musl — but runs after
+    # the CPU filter so a musl-only arch (e.g. only x86_64 build is musl) still resolves.
+    if (( $#list > 1 )); then
+      if [[ $parts[4] == musl ]]; then
+        filtered=( ${(M)list[@]:#(#i)*musl*} )
+      else
+        filtered=( ${list[@]:#(#i)*musl*} )
+      fi
+      (( $#filtered > 0 )) && list=( ${filtered[@]} )
+    fi
 
     if (( $#list > 1 )) { filtered=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} ); }
 
