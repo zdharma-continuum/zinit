@@ -3635,7 +3635,6 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 #
 # User-action entry point.
 zi::version() {
-    +zi-log "{w} DIFF{rst}"
 	+zi-log "zinit{cmd} $(command git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
 	return $?
 } # ]]]
