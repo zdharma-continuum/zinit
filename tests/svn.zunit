@@ -1,0 +1,314 @@
+#!/usr/bin/env zunit
+#
+# Coverage for the `svn'' ice – directory (sub-directory) snippets.
+#
+# GitHub retired its Subversion bridge in January 2024.  The ice keeps its
+# name, but is implemented on top of native git: a blobless, depth-1 partial
+# clone whose sub-tree is checked out at the working-tree root.  These tests
+# pin down the on-disk contract and the load semantics, not the transport.
+#
+# ERR_EXIT
+#   zunit runs every @test body with `setopt ERR_EXIT'.  Several zinit entry
+#   points return non-zero on success – `zinit light' returns 1 on the first
+#   load of a shell, `zinit update <id>' returns 1 even when it worked – and a
+#   bare `zinit ice svn' aborts the test with no output at all.  So every
+#   zinit invocation below is either wrapped in `run' or placed in an `||'
+#   list.
+#
+# Isolation
+#   Each @test body runs in its own subshell, and `run' adds another.  Shell
+#   state (functions, options, $fpath, $prompt_theme) therefore never leaks
+#   between tests, but $ZINIT[HOME_DIR] is shared.  That is why `run zinit ice
+#   svn' followed by `run zinit snippet ...' cannot work – the ICE array dies
+#   with the subshell – and why each recipe is a helper function.
+#
+# Ordering
+#   Disk state is shared, so the tests are ordered download-first/delete-last.
+#   Two have a hard ordering requirement, marked inline.  Every test can still
+#   (re)download what it needs, so a reorder costs runtime, never correctness.
+#   Do not run this file with `zunit -p': parallel mode slices one file's
+#   tests across subshells that share a single $zi_test_dir.
+
+@setup {
+  typeset -gx HOME="$zi_test_dir"
+  typeset -g  SNIPPETS="$ZINIT[SNIPPETS_DIR]"
+
+  # nocolor() and the not_exists assertion come from tests/_support/bootstrap.
+
+  # -- the four recipes ------------------------------------------------------
+  # R1
+  omz_lib() {
+    zinit ice svn pick"completion.zsh" src"git.zsh"
+    zinit snippet OMZ::lib
+  }
+  # R2.  `wait' never fires without a precmd, so the recipe is followed by the
+  # supported forcing mechanism, `@zinit-scheduler burst'.  Oh-My-Zsh renamed
+  # plugins/osx to plugins/macos, so the atclone symlink is named to match;
+  # the shape of the recipe is otherwise verbatim.
+  omz_macos_turbo() {
+    zinit ice svn wait"0" lucid atinit"local ZSH=\$PWD" \
+      atclone"mkdir -p plugins; cd plugins; ln -sfn ../. macos"
+    zinit snippet OMZ::plugins/macos
+    @zinit-scheduler burst
+  }
+  # R3
+  omz_macos() {
+    zinit ice svn
+    zinit snippet OMZ::plugins/macos
+  }
+  # R4.  mafredri/zsh-async supplies the `async' autoload that Prezto's sorin
+  # theme needs – Prezto ships it as a submodule, which is never fetched.
+  pzt_prompt() {
+    zinit light mafredri/zsh-async
+    zinit ice svn silent atload'prompt sorin'
+    zinit snippet PZT::modules/prompt
+  }
+
+  # -- red path: OMZ::plugins/osx no longer exists upstream -------------------
+  omz_osx() {
+    zinit ice svn
+    zinit snippet OMZ::plugins/osx
+  }
+  omz_osx_turbo() {
+    zinit ice svn wait"0" lucid
+    zinit snippet OMZ::plugins/osx
+    @zinit-scheduler burst
+  }
+  # The contract both red-path tests hold the implementation to: name the path,
+  # say ERROR, and leave nothing on disk.
+  assert_osx_failed() {  # $1 = de-coloured log
+    assert "$1" contains 'ERROR'
+    assert "$1" contains 'plugins/osx'
+    assert "$SNIPPETS/OMZ::plugins/osx" not_exists
+  }
+
+  # `rm -rf -- $ZINIT[SNIPPETS_DIR]' followed by a fresh shell.
+  # .zinit-prepare-home runs once per shell (latched by ZINIT[HOME_READY], and
+  # called at zinit.zsh source time), so the latch has to be dropped for the
+  # skeleton to be rebuilt.  The unset dies with this subshell, but the
+  # directories it recreates persist on disk for the following tests.
+  reset_snippets_dir() {
+    command rm -rf -- "$ZINIT[SNIPPETS_DIR]"
+    builtin unset 'ZINIT[HOME_READY]'
+    .zinit-prepare-home || true
+    return 0
+  }
+}
+
+@test 'svn: OMZ::lib is downloaded as a directory snippet' {
+  local dir="$SNIPPETS/OMZ::lib"
+
+  run omz_lib
+  local log="$(nocolor "$output")"
+
+  assert $state equals 0
+  assert "$log" contains 'Setting up snippet'
+  assert "$log" contains 'OMZ::lib'
+
+  # The sub-directory's contents land flat -- there must be no nested lib/
+  assert "$dir/completion.zsh" is_file
+  assert "$dir/git.zsh"        is_file
+  assert "$dir/spectrum.zsh"   is_file
+  assert "$dir/lib"            not_exists
+
+  assert "$(<$dir/._zinit/mode)" same_as '1'
+  assert "$dir/._zinit/svn"  is_file
+  assert "$(<$dir/._zinit/url)" same_as 'OMZ::lib'
+}
+
+@test 'svn: downloading writes only the snippet own git config' {
+  # `git config' treats GIT_CONFIG as an implicit `--file': with it set, a
+  # `git -C <snippet> config <key> <value>' write lands in the file it names –
+  # for most people their own ~/.config/git/config – rather than in the
+  # snippet.  The probe stands in for that file.
+  local probe="$zi_test_dir/gitconfig-probe" dir="$SNIPPETS/OMZ::lib"
+  print -r -- $'[user]\n\tname = probe' >| $probe
+  # A checksum, not the contents: zunit's `assert' splits the expected value on
+  # newlines (IFS), so a multi-line comparison silently degrades to its first
+  # line.
+  local before="$(command cksum < $probe)"
+
+  command rm -rf -- "$dir"
+  GIT_CONFIG=$probe GIT_CONFIG_GLOBAL=$probe omz_lib || true
+
+  assert "$(command cksum < $probe)" same_as "$before"
+  assert "$(<$probe)" does_not_contain 'ohmyzsh'
+  # …and the URL has to be *somewhere*, or the assertion above would also pass
+  # for a download that never configured a remote.  Read the file rather than
+  # asking `git config', which GIT_CONFIG would send to the probe.
+  assert "$(<$dir/.git/config)" contains 'ohmyzsh'
+}
+
+@test 'svn: OMZ::lib sources only pick and src' {
+  omz_lib || true
+
+  assert "$ZINIT_SNIPPETS[OMZ::lib]" contains '<svn>'
+
+  # pick"completion.zsh" -- lib/completion.zsh ends on bashcompinit
+  assert "${+functions[bashcompinit]}" equals 1
+  # src"git.zsh"
+  assert "${+functions[git_current_branch]}" equals 1
+  # negative control: lib/functions.zsh is on disk but must not be sourced,
+  # which is what makes the two assertions above mean "pick/src", not "all of it"
+  assert "${+functions[omz_urlencode]}" equals 0
+}
+
+@test 'svn: OMZ::plugins/macos loads in turbo mode' {
+  # Must be the first test to touch this snippet -- atclone'' only fires on an
+  # actual download.
+  local dir="$SNIPPETS/OMZ::plugins/macos"
+
+  run omz_macos_turbo
+  local log="$(nocolor "$output")"
+
+  assert $state equals 0
+  assert "$log" contains 'Setting up snippet'
+  # lucid'' suppresses the turbo "Loaded ..." message
+  assert "$log" does_not_contain 'Loaded OMZ::plugins/macos'
+
+  assert "$dir/macos.plugin.zsh" is_file
+  assert "$dir/_security"        is_file
+  assert "$dir/music"            is_file
+  assert "$dir/spotify"          is_file
+  assert "$(<$dir/._zinit/mode)" same_as '1'
+
+  # atinit"local ZSH=$PWD" + atclone"... ln -sfn ../. macos" means
+  # $ZSH/plugins/macos has to resolve back into the snippet directory.
+  assert "$dir/plugins/macos" is_link
+  assert "$dir/plugins/macos/macos.plugin.zsh" is_file
+}
+
+@test 'svn: OMZ::plugins/macos sources its sibling files' {
+  omz_macos || true
+
+  assert "$ZINIT_SNIPPETS[OMZ::plugins/macos]" contains '<svn>'
+  # from macos.plugin.zsh itself
+  assert "${+functions[ofd]}" equals 1
+  # macos.plugin.zsh ends with `source "${0:h:A}/music"' and `.../spotify'.
+  # These only resolve if the whole directory came down rather than a single
+  # *.plugin.zsh file -- this is the core of the svn'' contract.
+  assert "${+functions[music]}"   equals 1
+  assert "${+functions[spotify]}" equals 1
+}
+
+@test 'svn: a single-file snippet still records mode 0' {
+  local dir="$SNIPPETS/OMZL::spectrum.zsh"
+
+  run zinit snippet OMZL::spectrum.zsh
+  assert $state equals 0
+
+  assert "$dir/OMZL::spectrum.zsh" is_file
+  assert "$(<$dir/._zinit/mode)" same_as '0'
+  assert "$dir/._zinit/svn" not_exists
+}
+
+@test 'svn: a pruned snippets directory is rebuilt and redownloaded' {
+  # R3 -- "with ~/.zinit/snippets directory pruned".  This wipes OMZ::lib,
+  # OMZL::spectrum.zsh and PZT::modules/*, so it runs after the tests that use
+  # them, and redownloads OMZ::plugins/macos for the tests that follow.
+  reset_snippets_dir || true
+
+  assert "$SNIPPETS"              is_dir
+  assert "$SNIPPETS/OMZ::plugins" is_dir
+  assert "$SNIPPETS/plugins"      is_link
+  assert "$SNIPPETS/OMZ::plugins/macos" not_exists
+
+  run omz_macos
+  local log="$(nocolor "$output")"
+
+  assert $state equals 0
+  assert "$log" contains 'Setting up snippet'
+  assert "$SNIPPETS/OMZ::plugins/macos/macos.plugin.zsh" is_file
+  assert "$SNIPPETS/OMZ::plugins/macos/spotify"          is_file
+  assert "$(<$SNIPPETS/OMZ::plugins/macos/._zinit/mode)" same_as '1'
+}
+
+@test 'svn: zinit update round-trips a directory snippet' {
+  local dir="$SNIPPETS/OMZ::plugins/macos"
+
+  # $state is deliberately not asserted: `zinit update <id>' returns 1 even on
+  # a fully successful update, for directory and single-file snippets alike.
+  run zinit update OMZ::plugins/macos
+  local log="$(nocolor "$output")"
+
+  assert "$log" contains 'Updating snippet'
+  assert "$log" contains 'OMZ::plugins/macos'
+
+  # the working copy has to survive the round-trip intact
+  assert "$dir/macos.plugin.zsh" is_file
+  assert "$dir/music"            is_file
+  assert "$dir/spotify"          is_file
+  assert "$(<$dir/._zinit/mode)" same_as '1'
+  assert "$dir/._zinit/svn" is_file
+}
+
+@test 'svn: zinit status reports a directory snippet' {
+  # Only the transport-independent header is asserted -- the body is a git log
+  # line plus `git status --short' and will change with the implementation.
+  run zinit status OMZ::plugins/macos
+  local log="$(nocolor "$output")"
+
+  assert "$log" contains 'Status for'
+  assert "$log" contains 'macos'
+}
+
+@test 'svn: PZT::modules/prompt loads the sorin theme' {
+  local dir="$SNIPPETS/PZT::modules/prompt"
+
+  run pzt_prompt
+  local log="$(nocolor "$output")"
+
+  assert $state equals 0
+  assert "$log" contains 'Setting up snippet'
+
+  assert "$dir/init.zsh"  is_file
+  assert "$dir/functions/prompt_sorin_setup" is_file
+  assert "$(<$dir/._zinit/mode)" same_as '1'
+
+  # modules/prompt/external/* are git submodules: the directories may exist,
+  # but must stay empty -- exactly as they did under Subversion.
+  local extfiles=( "$dir"/external/**/*(DN.) )
+  assert "${#extfiles}" equals 0
+
+  # second pass, in-shell, for the effects `run' discards
+  pzt_prompt || true
+
+  # zinit puts the module's functions/ on $fpath, which is how promptinit
+  # resolves prompt_sorin_setup
+  assert "${fpath[(r)$dir/functions]}" same_as "$dir/functions"
+  assert "${+functions[prompt_sorin_setup]}" equals 1
+  assert "${+functions[promptinit]}"         equals 1
+  assert "${prompt_theme[1]}" same_as 'sorin'
+}
+
+@test 'svn: a missing subdirectory fails cleanly' {
+  # OMZ::plugins/osx no longer exists upstream -- Oh-My-Zsh renamed it to
+  # plugins/macos.  `git sparse-checkout set' would accept the missing path
+  # and silently produce an empty tree; the implementation must instead fail
+  # loudly, name the path, and leave nothing on disk (in particular no
+  # ._zinit/mode, which would orphan the entry in `zinit update --all').
+  run omz_osx
+  assert $state is_greater_than 0
+  assert_osx_failed "$(nocolor "$output")"
+
+  # the failure must not disturb a sibling snippet in the same local_dir
+  assert "$SNIPPETS/OMZ::plugins/macos/macos.plugin.zsh" is_file
+}
+
+@test 'svn: a missing subdirectory fails cleanly in turbo mode' {
+  # $state is not asserted -- @zinit-scheduler swallows task return codes.
+  run omz_osx_turbo
+  assert_osx_failed "$(nocolor "$output")"
+}
+
+@test 'svn: zinit delete removes a directory snippet' {
+  # Runs last: `zinit delete' also sweeps $SNIPPETS/plugins, an emptied
+  # $SNIPPETS/OMZ::plugins, and every dangling symlink under $ZINIT[HOME_DIR].
+  local dir="$SNIPPETS/OMZ::plugins/macos"
+
+  run zinit delete --yes OMZ::plugins/macos
+  assert $state equals 0
+  assert $dir not_exists
+}
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=@test,}:foldmethod=marker

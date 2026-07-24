@@ -38,6 +38,7 @@ jobs:
           - ices
           - plugins
           - snippets
+          - svn
         os: [macos-latest, ubuntu-latest]
 
     steps:
