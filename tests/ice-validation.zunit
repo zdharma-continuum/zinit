@@ -168,6 +168,8 @@
 @test 'wait-cond-variable' {
     run zinit ice wait'[[ -n $MY_VAR ]]'
     assert $state equals 0
+    assert $output contains 'wait'
+    assert $output contains 'wait'
 }
 
 @test 'wait-empty' {
