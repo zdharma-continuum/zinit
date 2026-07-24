@@ -1615,12 +1615,12 @@ EOF
 —— self-update                   – updates and compiles Zinit
 —— snippet [-f] ${ZINIT[col-pname]}{url}${ZINIT[col-rst]}            – source local or remote file (by direct URL), -f: force – don't use cache
 —— srv {service-id} [cmd]        – control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
-—— status ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
+—— status ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL           – Git status for plugin or snippet (or for all those if ——all passed)
 —— stress ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – test plugin for compatibility with set of options
 —— times [-s] [-m] [-a] – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds, -m – show plugin loading moments, -a – show both load times and loading moments
 —— uncompile ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}            – remove compiled version of plugin (or of all plugins if ——all passed)
 —— unload ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – unload plugin loaded with \`zinit load ...', -q – quiet
-—— update [-q] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard / svn revert before pulling changes
+—— update [-q] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard before pulling changes
 —— version                       – display zinit version
 —— zstatus                       – overall Zinit status
 —— add-fpath|fpath ${ZINIT[col-info]}[-f|--front]${ZINIT[col-rst]} \\
@@ -1750,12 +1750,12 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         list=( "${(f@)"$(${=ZINIT[LIST_COMMAND]})"}" )
         # Oh-My-Zsh single file
         list=( "${list[@]//(#b)(https--github.com--(ohmyzsh|robbyrussel)l--oh-my-zsh--raw--master(--)(#c0,1)(*))/$ZINIT[col-info]Oh-My-Zsh$ZINIT[col-error]${match[2]/--//}$ZINIT[col-pname]${match[3]//--/$ZINIT[col-error]/$ZINIT[col-pname]} $ZINIT[col-info](single-file)$ZINIT[col-rst] ${match[1]}}" )
-        # Oh-My-Zsh SVN
-        list=( "${list[@]//(#b)(https--github.com--(ohmyzsh|robbyrussel)l--oh-my-zsh--trunk(--)(#c0,1)(*))/$ZINIT[col-info]Oh-My-Zsh$ZINIT[col-error]${match[2]/--//}$ZINIT[col-pname]${match[3]//--/$ZINIT[col-error]/$ZINIT[col-pname]} $ZINIT[col-info](SVN)$ZINIT[col-rst] ${match[1]}}" )
+        # Oh-My-Zsh subdirectory
+        list=( "${list[@]//(#b)(https--github.com--(ohmyzsh|robbyrussel)l--oh-my-zsh--trunk(--)(#c0,1)(*))/$ZINIT[col-info]Oh-My-Zsh$ZINIT[col-error]${match[2]/--//}$ZINIT[col-pname]${match[3]//--/$ZINIT[col-error]/$ZINIT[col-pname]} $ZINIT[col-info](subdir)$ZINIT[col-rst] ${match[1]}}" )
         # Prezto single file
         list=( "${list[@]//(#b)(https--github.com--sorin-ionescu--prezto--raw--master(--)(#c0,1)(*))/$ZINIT[col-info]Prezto$ZINIT[col-error]${match[2]/--//}$ZINIT[col-pname]${match[3]//--/$ZINIT[col-error]/$ZINIT[col-pname]} $ZINIT[col-info](single-file)$ZINIT[col-rst] ${match[1]}}" )
-        # Prezto SVN
-        list=( "${list[@]//(#b)(https--github.com--sorin-ionescu--prezto--trunk(--)(#c0,1)(*))/$ZINIT[col-info]Prezto$ZINIT[col-error]${match[2]/--//}$ZINIT[col-pname]${match[3]//--/$ZINIT[col-error]/$ZINIT[col-pname]} $ZINIT[col-info](SVN)$ZINIT[col-rst] ${match[1]}}" )
+        # Prezto subdirectory
+        list=( "${list[@]//(#b)(https--github.com--sorin-ionescu--prezto--trunk(--)(#c0,1)(*))/$ZINIT[col-info]Prezto$ZINIT[col-error]${match[2]/--//}$ZINIT[col-pname]${match[3]//--/$ZINIT[col-error]/$ZINIT[col-pname]} $ZINIT[col-info](subdir)$ZINIT[col-rst] ${match[1]}}" )
 
         # First-level names
         list=( "${list[@]//(#b)(#s)(│   └──|    └──|    ├──|│   ├──) (*)/${match[1]} $ZINIT[col-p]${match[2]}$ZINIT[col-rst]}" )
@@ -3558,8 +3558,34 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     if [[ "$st" = "status" ]]; then
         if (( ${+ICE2[svn]} )); then
             builtin print -r -- "${ZINIT[col-info]}Status for ${${${local_dir:h}:t}##*--}/${local_dir:t}${ZINIT[col-rst]}"
-            ( builtin cd -q "$local_dir"; command svn status -vu )
-            retval=$?
+            # The .git guard is also what keeps git from walking up into an
+            # enclosing repository when the snippet has none of its own.
+            if [[ -d $local_dir/.git ]]; then
+                command git -C "$local_dir" --no-pager log -1 --format='%h  %ad  %s' --date=short
+                # Local modifications only – zinit's own ._zinit/ and *.zwc are
+                # in .git/info/exclude, so anything listed here is the user's.
+                command git -C "$local_dir" status --short
+                # `svn status -vu' contacted the server and flagged whatever was
+                # behind it; keep answering "is this snippet stale?" rather than
+                # reporting a purely local, always-clean view.
+                (( ${+functions[.zinit-mirror-using-svn]} )) || \
+                    builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
+                # The probe needs a clonable URL, so apply the same OMZ::/PZT::
+                # expansion .zinit-download-snippet does. An anonymous function,
+                # not a subshell: it scopes the option without forking.
+                local __surl=${ICE2[teleid]:-$URL}
+                () { setopt localoptions extendedglob
+                    __surl=${__surl/(#s)(#m)(${(~kj.|.)ZINIT_1MAP})/$ZINIT_1MAP[$MATCH]} }
+                if .zinit-mirror-using-svn "$__surl" "-t" "$local_dir"; then
+                    builtin print -r -- "An update is available."
+                else
+                    builtin print -r -- "Up to date."
+                fi
+                retval=0
+            else
+                builtin print -r -- "Not migrated from Subversion yet – run \`zinit update ${URL}'."
+                retval=1
+            fi
             builtin print
         else
             builtin print -r -- "${ZINIT[col-info]}Status for ${${local_dir:h}##*--}/$filename${ZINIT[col-rst]}"
@@ -3609,6 +3635,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 #
 # User-action entry point.
 zi::version() {
+    +zi-log "{w} DIFF{rst}"
 	+zi-log "zinit{cmd} $(command git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
 	return $?
 } # ]]]
