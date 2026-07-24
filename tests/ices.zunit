@@ -17,14 +17,7 @@
     echo "'$pathname' is executable but should not be"
     exit 1
   }
-  function _zunit_assert_not_exists(){
-    local file_path=$1
-    if [[ "${file_path:0:1}" != "/" ]]; then # relative path - prepend the test directory
-      filepath="${testdir}/${file_path}"
-    fi
-    [[ ! -e "$file_path" ]] && return 0
-    exit "found '${file_path}'"
-  }
+  # not_exists comes from tests/_support/bootstrap
 }
 
 @test 'mv' {

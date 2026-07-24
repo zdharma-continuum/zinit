@@ -36,14 +36,35 @@ ZINIT+=(
 typeset -gxH ZPFX=
 ZPFX="${zi_test_dir}/polaris"
 
+# The suite drives real clones and downloads through the code under test, so
+# without this it writes to the git configuration of whoever runs it – GIT_CONFIG
+# in particular is honoured by `git config' as an implicit `--file', which sends
+# every write there no matter which repository the command is aimed at. [[[
 command git diff > ${ZINIT[HOME_DIR]}/unstaged.diff
+builtin unset GIT_CONFIG GIT_CONFIG_COUNT GIT_DIR GIT_WORK_TREE
+typeset -gx GIT_CONFIG_GLOBAL="${zi_test_dir}/gitconfig"
+typeset -gx GIT_CONFIG_SYSTEM='/dev/null'
+typeset -gx GIT_CONFIG_NOSYSTEM=1
+: >| "${GIT_CONFIG_GLOBAL}"
+# ]]]
+# `git clone --reference' refuses a linked worktree ("fatal: reference
+# repository '…' as a linked checkout is not supported yet"), so reference the
+# shared object store of the main checkout instead of the top-level directory.
+# In an ordinary clone --git-common-dir is that repository's own .git, so this
+# stays equivalent to referencing ${GIT_REPO}; in a worktree it resolves to the
+# main checkout's .git, which is a valid reference repository.
+GIT_COMMON_DIR=${$(command git rev-parse --git-common-dir 2>/dev/null):A}
+
+CLONE_OPTS=( --quiet --depth=1 --no-hardlinks )
+if [[ -d ${GIT_COMMON_DIR}/objects ]]; then
+    CLONE_OPTS+=( --dissociate --reference "${GIT_COMMON_DIR}" )
+else
+    warn "no object store to borrow from, cloning ${GIT_REPO} without --reference"
+fi
+
 # info 'creating test env'
 git clone \
-    --quiet \
-    --depth=1 \
-    --dissociate \
-    --no-hardlinks \
-    --reference "${GIT_REPO}" \
+    "${CLONE_OPTS[@]}" \
     file://${GIT_REPO:A} \
     "${ZINIT[BIN_DIR]}" >/dev/null
 if (( $? != 0 )); then
@@ -71,6 +92,23 @@ builtin hash -d zinit="${zi_test_dir}"
 builtin hash -d zpfx="${zi_test_dir}/polaris"
 builtin hash -d plugins="${zi_test_dir}/plugins"
 
+# Shared test helpers. Functions defined here are inherited by the per-test
+# subshells, and zunit's `assert' dispatches on _zunit_assert_<name>, so
+# assertions defined here are available to every test file. [[[
+
+# zunit has no negated existence assertion.
+function _zunit_assert_not_exists() {
+  local file_path="$1"
+  [[ ! -e $file_path ]] && return 0
+  echo "'$file_path' exists but should not"
+  exit 1
+}
+
+# zinit's +zi-log emits SGR sequences that split identifiers apart, e.g.
+# "OMZ\e[38;5;227m::\e[1mlib". Strip them before matching on output.
+function nocolor() { print -r -- "$1" | command perl -pe 's/\x1b\[[0-9;]*[a-zA-Z]//g'; }
+# ]]]
+
 {
   zinit for \
     @zdharma-continuum/zinit-annex-bin-gem-node \
@@ -79,4 +117,5 @@ builtin hash -d plugins="${zi_test_dir}/plugins"
     @zdharma-continuum/zinit-annex-linkman
 }>/dev/null
 
-zinit zstatus 
+zinit zstatus
+zinit version
