@@ -82,7 +82,7 @@
 
   # snippet
   .zinit-two-paths "$___URL"
-  local ___s_path="${reply[-4]}" ___s_svn="${reply[-3]}" ___path="${reply[-2]}" ___filename="${reply[-1]}" ___local_dir
+  local ___s_path="${reply[-4]}" ___s_is_dir="${reply[-3]}" ___path="${reply[-2]}" ___filename="${reply[-1]}" ___local_dir
 
   if [[ -d "$___s_path" || -d "$___path" ]]; then
     ___is_snippet=1
@@ -103,7 +103,7 @@
   ___tmp=( "${(z@)ZINIT_SICE[${___user-$___URL}${${___user:#(%|/)*}:+/}$___plugin]}" )
   (( ${#___tmp[@]} > 1 && ${#___tmp[@]} % 2 == 0 )) && ___sice=( "${(Q)___tmp[@]}" )
 
-  if [[ "${+___sice[svn]}" = "1" || -n "$___s_svn" ]]; then
+  if [[ "${+___sice[svn]}" = "1" || -n "$___s_is_dir" ]]; then
     if (( !___is_snippet && ${+___sice[svn]} == 1 )); then
       builtin print -r -- "The \`svn' ice is given, but the argument ($___URL) is a plugin"
       builtin print -r -- "(\`svn' can be used only with snippets)"
@@ -112,7 +112,7 @@
       builtin print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma-continuum/zinit/issues"
       return 1
     fi
-    if [[ -e "$___s_path" && -n "$___s_svn" ]]; then
+    if [[ -e "$___s_path" && -n "$___s_is_dir" ]]; then
       ___sice[svn]=""
       ___local_dir="$___s_path"
     else
@@ -354,16 +354,16 @@
   done
 } # ]]]
 # FUNCTION: .zinit-two-paths [[[
-# Obtains a snippet URL without specification if it is an SVN URL (points to
-# directory) or regular URL (points to file), returns 2 possible paths for
-# further examination
+# Obtains a snippet URL without specification if it is a directory snippet
+# (the `svn' ice) or a regular URL (points to file), returns 2 possible paths
+# for further examination
 #
 # $REPLY - two filepaths
 .zinit-two-paths() {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   setopt extendedglob typesetsilent warncreateglobal noshortloops
 
-  local dirnameA dirnameB local_dirA local_dirB svn_dirA url1 url2 url=$1
+  local dirnameA dirnameB local_dirA local_dirB is_dir_snippet url1 url2 url=$1
   local -a fileB_there
 
   # remove leading whitespace and trailing /
@@ -373,8 +373,20 @@
 
   .zinit-get-object-path snippet "$url1"
   local_dirA=$reply[-3] dirnameA=$reply[-2]
-  [[ -d "$local_dirA/$dirnameA/.svn" ]] && {
-    svn_dirA=".svn"
+  # A directory snippet is marked by mode=1 in its metadata directory, written
+  # by .zinit-store-ices – ._zplugin being the legacy spelling of ._zinit (cf.
+  # .zinit-get-object-path, and the (._zinit|._zplugin)/mode globs in
+  # .zinit-update-or-status-all). .svn covers working copies from before the
+  # git backend, which predate nothing but are still on disk until updated.
+  #
+  # Deliberately NOT probing for .git: unlike .svn it isn't zinit-exclusive, so
+  # a single-file snippet whose atclone'' runs `git init' in its own directory
+  # would be misclassified as a directory snippet and then force-updated
+  # against the upstream sub-tree.
+  [[ "$(<$local_dirA/$dirnameA/._zinit/mode)" == 1 || \
+     "$(<$local_dirA/$dirnameA/._zplugin/mode)" == 1 || \
+     -d "$local_dirA/$dirnameA/.svn" ]] 2>/dev/null && {
+    is_dir_snippet=1
     if { .zinit-first % "$local_dirA/$dirnameA"; } {
       fileB_there=( ${reply[-1]} )
     }
@@ -383,9 +395,9 @@
   .zinit-get-object-path snippet "$url2"
   local_dirB=$reply[-3] dirnameB=$reply[-2]
 
-  [[ -z $svn_dirA ]] && fileB_there=( "$local_dirB/$dirnameB"/*~*.(zwc|md|js|html)(.-DOnN[1]) )
+  (( is_dir_snippet )) || fileB_there=( "$local_dirB/$dirnameB"/*~*.(zwc|md|js|html)(.-DOnN[1]) )
 
-  reply=( "$local_dirA/$dirnameA" "$svn_dirA" "$local_dirB/$dirnameB" "${fileB_there[1]##$local_dirB/$dirnameB/#}" )
+  reply=( "$local_dirA/$dirnameA" "$is_dir_snippet" "$local_dirB/$dirnameB" "${fileB_there[1]##$local_dirB/$dirnameB/#}" )
 } # ]]]
 
 # Local Variables:
