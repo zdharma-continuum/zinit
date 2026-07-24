@@ -27,20 +27,6 @@
   }
 }
 
-@test 'mv' {
-  run zinit as"null" id-as"test/mv" mv"readme.md -> mv.md" for zdharma-continuum/null
-  assert $state equals 0
-  assert "$ZPLUGINS/test---mv/mv.md" is_file
-  assert "$ZPLUGINS/test---mv/mv.md" is_readable
-  assert "$ZPLUGINS/test---mv/readme.md" not_exists
-}
-@test 'cp' {
-  run zinit as"null" id-as"test/cp" cp"readme.md -> cp.md" for zdharma-continuum/null
-  assert $state equals 0
-  assert "$ZPLUGINS/test---cp/cp.md" is_file
-  assert "$ZPLUGINS/test---cp/cp.md" is_readable
-  assert "$ZPLUGINS/test---cp/readme.md" is_file
-}
 @test 'atclone' {
   run zinit as"null" id-as"test/atclone" atclone"mv readme.md atclone.md" for zdharma-continuum/null
   assert $state equals 0
@@ -48,23 +34,32 @@
   assert "$ZPLUGINS/test---atclone/atclone.md" is_readable
   assert "$ZPLUGINS/test---atclone/readme.md" not_exists
 }
-@test 'make' {
-  run zinit as"null" id-as"test/make" atclone"printf 'all:\n\ttouch whatever\n' > Makefile" make"all" for zdharma-continuum/null
-  assert $state equals 0
-  assert "$ZPLUGINS/test---make/whatever" is_file
+@test 'bindmap' {
+  # bindmap'' remaps the key that the plugin binds, so unload has to remove the
+  # remapped key ("^_") -- not the raw, still-quoted ice value ('"^_"'). The
+  # load/unload has to happen in this shell (the binding is the assertion), so
+  # `run' is not usable here and ERR_EXIT has to be turned off by hand.
+  unsetopt ERR_EXIT
+
+  function zunit-bindmap-widget() { }
+  zle -N zunit-bindmap-widget
+
+  zinit as"null" id-as"test/bindmap" bindmap'^1 -> "^_"' \
+      atload'!bindkey "^1" zunit-bindmap-widget' for zdharma-continuum/null
+
+  local -a bound=( ${(M)${(f)"$(bindkey -L)"}:#*zunit-bindmap-widget*} )
+  assert $#bound equals 1
+  assert "${bound[1]}" contains '"^_"'
+
+  zinit unload -q test/bindmap
+  bound=( ${(M)${(f)"$(bindkey -L)"}:#*zunit-bindmap-widget*} )
+  assert $#bound equals 0
 }
 @test 'completions' {
   run zinit as"null" id-as"test/completions" atclone"touch _whatever" completions for zdharma-continuum/null
   assert $state equals 0
   assert "$ZPLUGINS/test---completions/_whatever" is_file
   assert "$ZINIT[COMPLETIONS_DIR]/_whatever" is_file
-}
-@test 'completions-overwrite' {
-  # if both are given, the completions wins
-  run zinit as"null" id-as"test/completions-overwrite" atclone"touch _whatever2" nocompletions completions for zdharma-continuum/null
-  assert $state equals 0
-  assert "$ZPLUGINS/test---completions-overwrite/_whatever2" is_file
-  assert "$ZINIT[COMPLETIONS_DIR]/_whatever2" is_file
 }
 @test 'completions-ignored' {
   # only the _valid file should be installed as a completion
@@ -73,27 +68,35 @@
   assert "$ZPLUGINS/test---ignored_completions/_valid" is_file
   assert "$ZPLUGINS/test---ignored_completions/__init__.py" is_file
   assert "$ZINIT[COMPLETIONS_DIR]/_valid" is_file
-  local -a COMPS=( "${ZINIT[COMPLETIONS_DIR]}"/_*(:t) )
+  local -a COMPS=( "$ZINIT[COMPLETIONS_DIR]"/_*(:t) )
   assert __init__.py not_in $COMPS
   assert _valid in $COMPS
 }
-# The bindmap'' ice is covered by tests/bindmap.zunit
-@test 'ziextract error on missing file' {
-  run ziextract /tmp/zi-nonexistent-file.zip
-  assert $state equals 1
-  assert $output contains 'ERROR'
-  assert $output contains "doesn't exist"
+@test 'completions-overwrite' {
+  # if both are given, the completions wins
+  run zinit as"null" id-as"test/completions-overwrite" atclone"touch _whatever2" nocompletions completions for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---completions-overwrite/_whatever2" is_file
+  assert "$ZINIT[COMPLETIONS_DIR]/_whatever2" is_file
 }
-@test 'ziextract plain (no flattening)' {
-  # extract'' → ziextract with no flags: directory structure is preserved
-  local workdir=$(mktemp -d)
-  mkdir "$workdir/subdir"
-  printf 'hello\n' > "$workdir/subdir/file1.txt"
-  ( cd "$workdir" && zip -qr test.zip subdir/ )
-  ( cd "$workdir" && ziextract test.zip )
-  assert "$workdir/subdir/file1.txt" is_file
-  assert "$workdir/file1.txt" not_exists
-  rm -rf "$workdir"
+@test 'cp' {
+  run zinit as"null" id-as"test/cp" cp"readme.md -> cp.md" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---cp/cp.md" is_file
+  assert "$ZPLUGINS/test---cp/cp.md" is_readable
+  assert "$ZPLUGINS/test---cp/readme.md" is_file
+}
+@test 'make' {
+  run zinit as"null" id-as"test/make" atclone"printf 'all:\n\ttouch whatever\n' > Makefile" make"all" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---make/whatever" is_file
+}
+@test 'mv' {
+  run zinit as"null" id-as"test/mv" mv"readme.md -> mv.md" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---mv/mv.md" is_file
+  assert "$ZPLUGINS/test---mv/mv.md" is_readable
+  assert "$ZPLUGINS/test---mv/readme.md" not_exists
 }
 @test 'ziextract --move (flatten one level)' {
   # extract'!' → ziextract --move: outer/file.txt → file.txt at root
@@ -119,6 +122,15 @@
   assert "$workdir/outer" not_exists
   rm -rf "$workdir"
 }
+@test 'ziextract --norm keeps archive after extraction' {
+  # extract'-' → ziextract --norm: archive is preserved after extraction
+  local workdir=$(mktemp -d)
+  ( cd "$workdir" && printf 'hello\n' > file1.txt && zip -q test.zip file1.txt && rm file1.txt )
+  ( cd "$workdir" && ziextract test.zip --norm )
+  assert "$workdir/file1.txt" is_file
+  assert "$workdir/test.zip" is_file
+  rm -rf "$workdir"
+}
 @test 'ziextract deletes archive by default' {
   local workdir=$(mktemp -d)
   ( cd "$workdir" && printf 'hello\n' > file1.txt && zip -q test.zip file1.txt && rm file1.txt )
@@ -127,13 +139,21 @@
   assert "$workdir/test.zip" not_exists
   rm -rf "$workdir"
 }
-@test 'ziextract --norm keeps archive after extraction' {
-  # extract'-' → ziextract --norm: archive is preserved after extraction
+@test 'ziextract error on missing file' {
+  run ziextract /tmp/zi-nonexistent-file.zip
+  assert $state equals 1
+  assert $output contains 'ERROR'
+  assert $output contains "doesn't exist"
+}
+@test 'ziextract plain (no flattening)' {
+  # extract'' → ziextract with no flags: directory structure is preserved
   local workdir=$(mktemp -d)
-  ( cd "$workdir" && printf 'hello\n' > file1.txt && zip -q test.zip file1.txt && rm file1.txt )
-  ( cd "$workdir" && ziextract test.zip --norm )
-  assert "$workdir/file1.txt" is_file
-  assert "$workdir/test.zip" is_file
+  mkdir "$workdir/subdir"
+  printf 'hello\n' > "$workdir/subdir/file1.txt"
+  ( cd "$workdir" && zip -qr test.zip subdir/ )
+  ( cd "$workdir" && ziextract test.zip )
+  assert "$workdir/subdir/file1.txt" is_file
+  assert "$workdir/file1.txt" not_exists
   rm -rf "$workdir"
 }
 @test 'ziextract-permissions' {
@@ -159,7 +179,7 @@
 
   # Build zip preserving permissions, then extract via ziextract
   ( cd "$srcdir" && zip -q "$workdir/test.zip" run_me.sh also_run.py library.py pre_marked.sh )
-  (( ${+functions[ziextract]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+  (( $+functions[ziextract] )) || builtin source "$ZINIT[BIN_DIR]/zinit-install.zsh"
   ( builtin cd "$workdir" && ziextract test.zip )
 
   assert "$workdir/run_me.sh"     is_executable
