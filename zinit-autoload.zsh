@@ -3631,12 +3631,35 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 } # ]]]
 
 # FUNCTION: zi::version [[[
-# Shows usage information.
+# Shows the version of the Zinit installation in $ZINIT[BIN_DIR].
 #
 # User-action entry point.
 zi::version() {
-	+zi-log "zinit{cmd} $(command git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
-	return $?
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    setopt extendedglob warncreateglobal typesetsilent
+
+    local ver sha
+
+    # A linked worktree and a submodule have a .git *file*, not a directory, so
+    # this tests for existence. It is also what keeps `git -C' inside the
+    # installation: without a repository of its own it walks up and describes
+    # whatever repository happens to enclose BIN_DIR.
+    if [[ -e ${ZINIT[BIN_DIR]}/.git ]] {
+        ver=$(command git -C ${ZINIT[BIN_DIR]} describe --tags 2> /dev/null)
+        # A clone made with --depth or --no-tags has no tag to describe from,
+        # and `describe' then fails outright – the test suite clones that way.
+        # Fall back to the VERSION file, which semantic-release stamps, plus the
+        # short sha, keeping the shape `describe' would have produced.
+        if [[ -z $ver ]] {
+            sha=$(command git -C ${ZINIT[BIN_DIR]} rev-parse --short HEAD 2> /dev/null)
+        }
+    }
+    if [[ -z $ver ]] {
+        [[ -r ${ZINIT[BIN_DIR]}/VERSION ]] && ver=v$(<${ZINIT[BIN_DIR]}/VERSION)
+        ver=${ver:-unknown}${sha:+-g$sha}
+    }
+
+    +zi-log "zinit{cmd} $ver {rst}(${OSTYPE}_${CPUTYPE})"
 } # ]]]
 
 # vim: set fenc=utf8 ffs=unix foldmarker=[[[,]]] foldmethod=marker ft=zsh list et sts=4 sw=4 ts=4 tw=100:
