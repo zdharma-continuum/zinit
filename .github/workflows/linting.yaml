@@ -10,6 +10,10 @@ on:
   workflow_dispatch:
 
 jobs:
+  commit:
+    name: "commit convention"
+    uses: zdharma-continuum/.github/.github/workflows/commit-job.yml@main
+    
   mdlint:
     name: markdown
     runs-on: ubuntu-latest
