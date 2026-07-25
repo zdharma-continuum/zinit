@@ -23,6 +23,34 @@ ZINIT=( "${(kv)ZPLGM[@]}" "${(kv)ZINIT[@]}" )
 unset ZPLGM
 
 #
+# Allow configuring ZINIT[...] settings via zstyle, e.g.:
+#   zstyle ':zinit:config' home-dir ~/.zinit
+#   zstyle ':zinit:config' bin-dir  ~/.zinit/zinit.git
+# An explicitly-set ZINIT[KEY] always wins over the matching zstyle.
+#
+if zmodload -F zsh/zutil +b:zstyle 2>/dev/null || (( ${+builtins[zstyle]} )); then
+    () {
+        local _attr _key
+        local -A _map=(
+            bin-dir         BIN_DIR          home-dir         HOME_DIR
+            plugins-dir     PLUGINS_DIR      completions-dir  COMPLETIONS_DIR
+            snippets-dir    SNIPPETS_DIR     services-dir     SERVICES_DIR
+            module-dir      MODULE_DIR       polaris-dir      POLARIS_DIR
+            zpfx            ZPFX             man-dir          MAN_DIR
+            list-command    LIST_COMMAND     zcompdump-path   ZCOMPDUMP_PATH
+            compinit-opts   COMPINIT_OPTS    mute-warnings    MUTE_WARNINGS
+            no-aliases      NO_ALIASES       packages-branch  PACKAGES_BRANCH
+            packages-repo   PACKAGES_REPO
+            optimize-out-disk-accesses OPTIMIZE_OUT_DISK_ACCESSES
+        )
+        for _attr _key in "${(kv)_map[@]}"; do
+            [[ -n ${ZINIT[$_key]} ]] && continue
+            zstyle -s ':zinit:config' "$_attr" "ZINIT[$_key]"
+        done
+    }
+fi
+
+#
 # Common needed values.
 #
 
@@ -397,7 +425,7 @@ builtin setopt noaliases
                         [[ -f $pth/$func ]] && { sel=$pth; break; }
                     }
                     if [[ -z $sel ]] {
-                        +zi-log '{u-warn}zinit{b-warn}:{error} Couldn''t find autoload function{ehi}:' \
+                        +zi-log '{u-warn}zinit{b-warn}:{error} Could not find autoload function{ehi}:' \
                             "{apo}\`{file}${func}{apo}\`{error} anywhere in {var}\$fpath{error}."
                             retval=1
                     } else {
@@ -1443,8 +1471,10 @@ builtin setopt noaliases
     )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" load || \
-            return $(( 10 - $? ))
+        if [[ -n "${arr[5]:-}" ]]; then
+            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" load || \
+                return $(( 10 - $? ))
+        fi
     done
 
     # Download or copy the file.
@@ -1647,8 +1677,10 @@ builtin setopt noaliases
     )
     for ___key in "${reply[@]}"; do
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
-        "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" "${${___key##(zinit|z-annex) hook:}%% <->}" load || \
-            return $(( 10 - $? ))
+        if [[ -n "${___arr[5]:-}" ]]; then
+            "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" "${${___key##(zinit|z-annex) hook:}%% <->}" load || \
+                return $(( 10 - $? ))
+        fi
     done
 
     if [[ $___user != % && ! -d ${ZINIT[PLUGINS_DIR]}/${___id_as//\//---} ]] {
@@ -2239,8 +2271,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
         +zi-log "{b}{u-warn}ERROR{b-warn}:{rst}{msg2} Incorrect options given{ehi}:" \
                 "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
                 "{apo}\`{cmd}$cmd{apo}\`{msg2} are{ehi}:{rst}" \
-                "{nl}{mmdsh} {opt}${allowed//\|/$sep2}{msg2}." \
-                "{nl}{…} Aborting.{rst}"
+                "{nl}  {opt}${allowed//\|/$sep2}{msg2}."
     } else {
         local -a cmds
         cmds=( load snippet update delete )
@@ -2289,7 +2320,42 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     fi
     (( $+ZINIT_ICES[configure] )) && ZINIT_ICES[configure]="${ZINIT_ICES[configure]}"
     (( $+ZINIT_ICES[make] )) && ZINIT_ICES[make]="${ZINIT_ICES[make]:-install}"
+    .zinit-validate-ice
     return retval
+} # ]]]
+# FUNCTION: .zinit-validate-ice [[[
+# Validates ice values at parse time.
+# Warns (not errors) about invalid values — behavior is unchanged.
+.zinit-validate-ice() {
+    builtin setopt localoptions noksharrays extendedglob typesetsilent noshortloops
+    if (( $+ZINIT_ICES[as] )) && [[ -n ${ZINIT_ICES[as]} ]]; then
+        case ${ZINIT_ICES[as]} in
+            (command|program|null|completion) ;;
+            (*)
+                +zi-log "{warn}Warning{b-warn}:{rst} {ice}as{rst} ice received invalid" \
+                    "value {apo}\`{data}${ZINIT_ICES[as]}{apo}\`{rst}." \
+                    "Expected one of: {data2}null{rst}, {data2}command{rst}," \
+                    "{data2}program{rst}, {data2}completion{rst}."
+                ;;
+        esac
+    fi
+    if (( $+ZINIT_ICES[wait] )) && [[ -n ${ZINIT_ICES[wait]} ]]; then
+        local w="${ZINIT_ICES[wait]#\!}"
+        w="${w%%.[0-9]##}"
+        local suffix="${w##[0-9]##}"
+        if [[ ${w%%[^0-9]*} = <-> && -n $suffix && $suffix != [abc] ]]; then
+            +zi-log "{warn}Warning{b-warn}:{rst} {ice}wait{rst} ice received invalid" \
+                "suffix letter {apo}\`{data}${suffix}{apo}\`{rst}." \
+                "Expected one of: {data2}a{rst}, {data2}b{rst}, {data2}c{rst}, or none."
+        fi
+    fi
+    if (( $+ZINIT_ICES[depth] )) && [[ -n ${ZINIT_ICES[depth]} ]]; then
+        if [[ ${ZINIT_ICES[depth]} != <1-> ]]; then
+            +zi-log "{warn}Warning{b-warn}:{rst} {ice}depth{rst} ice received invalid" \
+                "value {apo}\`{data}${ZINIT_ICES[depth]}{apo}\`{rst}." \
+                "Expected a positive integer."
+        fi
+    fi
 } # ]]]
 # FUNCTION: .zinit-pack-ice [[[
 # Remembers all ice-mods, assigns them to concrete plugin. Ice spec
@@ -2619,18 +2685,22 @@ zinit() {
         light         "--help|-b|-h"
         snippet       "--command|--force|--help|-f|-h|-x"
         times         "--help|-h|-m|-s"
+        self-update   "--help|--quiet|-h|-q"
         unload        "--help|--quiet|-h|-q"
         update        "--all|--help|--no-pager|--parallel|--plugins|--quiet|--reset|--snippets|--urge|--verbose|-L|-a|-h|-n|-p|-q|-r|-s|-u|-v"
         version       ""
     )
 
     cmd="$1"
-    if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|cdclear) ]]; then
+    if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|cdclear|self-update) ]]; then
         if (( $@[(I)-*] || OPTS[opt_-h,--help] )); then
             .zinit-parse-opts "$cmd" "$@"
             if (( OPTS[opt_-h,--help] )); then
                 +zinit-prehelp-usage-message $cmd $___opt_map[$cmd] $@
                 return 1;
+            elif (( ${reply[(I)-*]} )); then
+                +zinit-prehelp-usage-message $cmd $___opt_map[$cmd] ${reply[@]}
+                return 1
             fi
         fi
     fi
@@ -3284,15 +3354,23 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
     }
 } # ]]]
 
-# !atpull-pre
+# Hook-group naming convention for atpull:
+#   hook:e-!atpull-*    — fires alongside the user's atpull'!...' ice
+#                          (runs before the pull)
+#   hook:no-e-!atpull-* — fires alongside the user's plain atpull'...' ice
+#                          (runs after the pull)
+# The 'e' stands for "exclamation" (the ! prefix on the user's atpull ice),
+# not "early".
+
+# e-!atpull-pre.
 @zinit-register-hook "-r/--reset" hook:e-\!atpull-pre ∞zinit-reset-hook
-# !atpull-post
+# e-!atpull-post.
 @zinit-register-hook "ICE[reset]" hook:e-\!atpull-post ∞zinit-reset-hook
 @zinit-register-hook "atpull'!'" hook:e-\!atpull-post ∞zinit-atpull-e-hook
 
-# e-!atpull-pre.
+# no-e-!atpull-pre.
 @zinit-register-hook "make'!!'" hook:no-e-\!atpull-pre ∞zinit-make-ee-hook
-@zinit-register-hook "extract" hook:e-\!atpull-pre ∞zinit-extract-hook
+@zinit-register-hook "extract" hook:no-e-\!atpull-pre ∞zinit-extract-hook
 @zinit-register-hook "mv''" hook:no-e-\!atpull-pre ∞zinit-mv-hook
 @zinit-register-hook "cp''" hook:no-e-\!atpull-pre ∞zinit-cp-hook
 @zinit-register-hook "compile-plugin" hook:no-e-\!atpull-pre ∞zinit-compile-plugin-hook

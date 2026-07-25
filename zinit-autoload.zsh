@@ -691,20 +691,40 @@ ZINIT[EXTENDED_GLOB]=""
 # BusyBox less lacks the -X and -i options, so it can use more
 .zinit-pager() {
     setopt LOCAL_OPTIONS EQUALS
-    # Quiet mode ? → no pager.
-    if (( OPTS[opt_-n,--no-pager] )) {
-        cat
+
+    # Check if a non-interactive mode has been requested, either via a flag or a global setting.
+    if (( OPTS[opt_-n,--no-pager] )) || [[ ${ZINIT[NO_PAGER]} = (1|true|on|yes) ]]; then
+        # NON-INTERACTIVE MODE
+        local max_lines=${ZINIT[NO_PAGER_MAX_LINES]}
+
+        # Check if a line limit is explicitly set and is a valid non-negative integer.
+        if [[ $max_lines =~ ^[0-9]+$ ]]; then
+            if (( max_lines > 0 )); then
+                # A positive number means limit the output to that many lines.
+                head -n "$max_lines"
+            else
+                # A value of 0 means suppress all output from the pager completely.
+                # `cat > /dev/null` is the most robust way to achieve this.
+                cat > /dev/null
+            fi
+        else
+            # No valid line limit is set, so show the full output without interaction.
+            cat
+        fi
         return 0
-    }
-    if [[ ${${:-=less}:A:t} = busybox* ]] {
-        more 2>/dev/null
-        (( ${+commands[more]} ))
-    } else {
-        less -FRXi 2>/dev/null
-        (( ${+commands[less]} ))
-    }
-    (( $? )) && cat
-    return 0
+    else
+        # INTERACTIVE MODE (Original Behavior)
+        # Fall back to the default interactive pager if no non-interactive mode is set.
+        if [[ ${${:-=less}:A:t} = busybox* ]] {
+            more 2>/dev/null
+            (( ${+commands[more]} ))
+        } else {
+            less -FRXi 2>/dev/null
+            (( ${+commands[less]} ))
+        }
+        (( $? )) && cat
+        return 0
+    fi
 } # ]]]
 
 # FUNCTION: .zinit-build-module [[[
@@ -1947,15 +1967,21 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 # $1 - Absolute path to Git repository"
 .zi-check-for-git-changes() {
     +zi-log "{dbg} checking $1"
-    if command git --work-tree "$1" rev-parse --is-inside-work-tree &> /dev/null; then
-        if command git --work-tree "$1" rev-parse --abbrev-ref @'{u}' &> /dev/null; then
-            local count="$(command git --work-tree "$1" rev-list --left-right --count HEAD...@'{u}' 2> /dev/null)"
+    if command git -C "$1" rev-parse --is-inside-work-tree &> /dev/null; then
+        if command git -C "$1" rev-parse --abbrev-ref @'{u}' &> /dev/null; then
+            REPLY=$(command git -C "$1" rev-parse --abbrev-ref HEAD)
+            if (( ! OPTS[opt_-q,--quiet] )); then
+                local nl=$'\n'
+                +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$REPLY{info} branch$nl{rst}"
+            fi
+            command git -C "$1" fetch --quiet 2> /dev/null
+            local count="$(command git -C "$1" rev-list --left-right --count HEAD...@'{u}' 2> /dev/null)"
             local down="$count[(w)2]"
             if [[ $down -gt 0 ]]; then
                 return 0
             fi
         fi
-        builtin print -P -- "Already up-to-date."
+        (( ! OPTS[opt_-q,--quiet] )) && +zi-log "{m} Already up to date."
         return 1
     fi
 } # ]]]
@@ -1966,17 +1992,19 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     setopt extendedglob typesetsilent warncreateglobal
 
     if .zi-check-for-git-changes "$ZINIT[BIN_DIR]"; then
-        [[ $1 = -q ]] && +zi-log "{pre}[self-update]{info} updating zinit repository{msg2}" \
+        # Store branch name resolved by .zi-check-for-git-changes via $REPLY
+        local current_branch=$REPLY
 
         local nl=$'\n' escape=$'\x1b['
-        local current_branch=$(command git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
-        # local current_branch='main'
+        # Warn if user is not on main (requested by maintainer)
+        if [[ -n $current_branch && $current_branch != main ]]; then
+            +zi-log "{pre}[self-update]{warn} non-{obj}main{warn} branch detected: {obj}${current_branch}{warn}. Self-update will pull from the branch's configured upstream.{rst}"
+        fi
         local -a lines
         (
             builtin cd -q "$ZINIT[BIN_DIR]" \
-            && +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$current_branch{info} branch$nl{rst}" \
-            && command git fetch --quiet \
-            && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..origin/HEAD)"} )
+            && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..@\{u\})"} )
+            # Use '..@{u}' which refers to the configured upstream branch, instead of '..origin/HEAD'
             if (( ${#lines} > 0 )); then
                 # Remove the (origin/main ...) segments, to expect only tags to appear
                 lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
@@ -1992,13 +2020,14 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 builtin print -rl -- "${lines[@]}" | .zinit-pager
                 builtin print
             fi
-            if [[ $1 != -q ]] {
-                command git pull --no-stat --ff-only origin main
+            # Do not use hardcoded 'origin main' to let git use the configured upstream
+            if (( ! OPTS[opt_-q,--quiet] )) {
+                command git pull --no-stat --ff-only
             } else {
-                command git pull --no-stat --quiet --ff-only origin main
+                command git pull --no-stat --quiet --ff-only
             }
         )
-        if [[ $1 != -q ]] {
+        if (( ! OPTS[opt_-q,--quiet] )) {
             +zi-log "{pre}[self-update]{info} compiling zinit via {obj}zcompile{rst}"
         }
         command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
@@ -2006,7 +2035,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload','additional'}.zsh
         zcompile -U $ZINIT[BIN_DIR]/share/git-process-output.zsh
         # Load for the current session
-        [[ $1 != -q ]] && +zi-log "{pre}[self-update]{info} reloading zinit for the current session{rst}"
+        (( ! OPTS[opt_-q,--quiet] )) && +zi-log "{pre}[self-update]{info} reloading zinit for the current session{rst}"
 
         # +zi-log "{pre}[self-update]{info} resetting zinit repository via{rst}: {cmd}${ICE[reset]:-git reset --hard HEAD}{rst}"
         source $ZINIT[BIN_DIR]/zinit.zsh
@@ -3264,10 +3293,11 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         fi
         if [[ -n ${(v)ice[(I)(mv|cp|atpull|ps-on-update|cargo)]} || $+ice[sbin]$+ice[make]$+ice[extract]$+ice[configure] -ne 0 ]] {
             if (( !OPTS[opt_-q,--quiet] && ZINIT[annex-multi-flag:pull-active] == 1 )) {
-                +zi-log -n "{pre}[update]{msg3} Continuing with the update because "
-                (( ${+ice[run-atpull]} )) && \
-                    +zi-log "{ice}run-atpull{apo}''{msg3} ice given.{rst}" || \
-                    +zi-log "{opt}-u{msg3}/{opt}--urge{msg3} given.{rst}"
+                if (( ${+ice[run-atpull]} )); then
+                    +zi-log "{info}[{pre}update{info}]{rst} No new commits found, but running post-update hooks as requested by the {ice}run-atpull{apo}{rst} ice."
+                else
+                    +zi-log "{info}[{pre}update{info}]{rst} No new commits found, but running post-update hooks as requested by the {opt}-u{rst}/{opt}--urge{rst} option."
+                fi
             }
         }
 
@@ -3368,7 +3398,12 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     local -F2 SECONDS=0
 
-    .zinit-self-update -q
+    # Silence self-update during bulk updates, then restore the original quiet state
+    # (avoid re-declaring OPTS as local — it would shadow the caller's flags like --parallel)
+    local _saved_quiet=${OPTS[opt_-q,--quiet]:-0}
+    OPTS[opt_-q,--quiet]=1
+    .zinit-self-update
+    OPTS[opt_-q,--quiet]=$_saved_quiet
 
     [[ $2 = restart ]] && \
         +zi-log "{msg2}Restarting the update with the new codebase loaded.{rst}"$'\n'

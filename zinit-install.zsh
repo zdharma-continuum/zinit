@@ -267,9 +267,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 }
             }
 
-            # --move is default (or as explicit, when extract'!…' is given)
-            # Also possible is --move2 when extract'!!…' given
-            ziextract "$fname" ${ICE[extract]---move} ${${(M)ICE[extract]:#!([^!]|(#e))*}:+--move} ${${(M)ICE[extract]:#!!*}:+--move2}
+            # When extract ice is set, the ∞zinit-extract-hook will handle
+            # extraction; otherwise extract here with --move as default.
+            if (( !${+ICE[extract]} )); then
+                ziextract "$fname" --move
+            fi
             return 0
         ) && {
             reply=( "$user" "$plugin" )
@@ -356,7 +358,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         if [[ $site = */releases ]] {
             local tag_version=${ICE[ver]}
             if [[ -z $tag_version ]]; then
-                tag_version="$({.zinit-download-file-stdout $site/latest || .zinit-download-file-stdout $site/latest 1;} 2>/dev/null | command grep -i -m 1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+')"
+                local url="https://$site/latest"
+                tag_version="$({.zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1;} 2>/dev/null | command grep -i -m 1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+')"
                 tag_version=${tag_version##*/}
             fi
             local url=$site/expanded_assets/$tag_version
@@ -396,7 +399,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     [[ -d ._zinit ]] || return 2
                     builtin print -r -- $url >! ._zinit/url || return 3
                     builtin print -r -- ${REPLY} >! ._zinit/is_release${count:#1} || return 4
-                    ziextract ${REPLY:t} ${${${#reply}:#1}:+--nobkp} ${${(M)ICE[extract]:#!([^!]|(#e))*}:+--move} ${${(M)ICE[extract]:#!!*}:+--move2}
+                    # When extract ice is set, the ∞zinit-extract-hook will
+                    # handle extraction; otherwise extract here (no move).
+                    if (( !${+ICE[extract]} )); then
+                        ziextract ${REPLY:t} ${${${#reply}:#1}:+--nobkp}
+                    fi
                 }
                 return $?
             ) || {
@@ -448,7 +455,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     }
                     ;;
                 (*)
-                    builtin print -Pr "${ZINIT[col-error]}Unknown protocol:%f%b ${ICE[proto]}."
+                    builtin print -Pr "${ZINIT[col-error]}Unknown protocol:%f%b ${ICE[proto]}. Expected one of: git, http, https, ssh, ftp, ftps, rsync."
                     return 1
             esac
 
@@ -1442,13 +1449,28 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   if [[ -z $urlpart ]]; then
     local tag_version=${ICE[ver]}
     if [[ -z $tag_version ]]; then
-      local releases_url=https://github.com/$user/$plugin/releases/latest
-      tag_version="$( { .zinit-download-file-stdout $releases_url || .zinit-download-file-stdout $releases_url 1; } 2>/dev/null | command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+' )"
+      # Try GitHub API first, fallback to HTML parsing
+      local api_url=https://api.github.com/repos/$user/$plugin/releases/latest
+      tag_version="$( { .zinit-download-file-stdout $api_url || .zinit-download-file-stdout $api_url 1; } 2>/dev/null | command grep -o '"tag_name"[[:space:]]*:[[:space:]]*"[^"]\+"' | command grep -o '"[^"]*"$' | tr -d '"' )"
+      # Fallback to original method if API fails
+      if [[ -z $tag_version ]]; then
+        local releases_url=https://github.com/$user/$plugin/releases/latest
+        tag_version="$( { .zinit-download-file-stdout $releases_url || .zinit-download-file-stdout $releases_url 1; } 2>/dev/null | command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+' )"
+      fi
       tag_version=${tag_version##*/}
     fi
     local url=https://github.com/$user/$plugin/releases/expanded_assets/$tag_version
   else
     local url=https://$urlpart
+  fi
+  if [[ "${ICE[bpick]}" == "src" ]]; then
+    +zi-log "{dbg} {b}gh-r{rst}: bpick\"src\" detected, targeting source code tarball for tag: {version}$tag_version{rst}"
+    # Construct the URL path for the auto-generated source code archive
+    reply=( "/$user/$plugin/archive/refs/tags/$tag_version.tar.gz" )
+    # Ensure the reply isn't empty if tag_version was somehow missed
+    [[ -n "$tag_version" ]] && return 0
+    +zi-log "{e} {b}gh-r{rst}: Could not determine tag version, cannot use bpick\"src\"."
+    return 1
   fi
   init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | command grep -i -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
   init_list=(${(L)init_list[@]#href=?})
@@ -1492,9 +1514,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 } # ]]]
 # FUNCTION: ziextract [[[
 # If the file is an archive, it is extracted by this function.
-# Next stage is scanning of files with the common utility file
-# to detect executables. They are given +x mode. There are also
-# messages to the user on performed actions.
+# Executable permissions are determined solely by the execute bit already
+# stored in the archive — i.e. whatever the package author intended.
+# No heuristics (file(1), shebang scanning, etc.) are applied.
 #
 # $1 - url
 # $2 - file
@@ -1735,13 +1757,21 @@ ziextract() {
     }
     unfunction -- .zinit-extract-wrapper
 
+    # Glob qualifier legend:
+    #   (DN-.)  — D=include dotfiles, N=null glob (no error if empty),
+    #             -=no symlinks, .=regular files  → all regular files
+    #   (DN-*.) — same plus *=has execute bit set → files already marked
+    #             executable by the archive extractor
     local -aU execs
-    execs=( **/*~(._zinit(|/*)|.git(|/*)|.svn(|/*)|.hg(|/*)|._backup(|/*))(DN-.) )
-    if [[ ${#execs} -gt 0 && -n $execs ]] {
-        execs=( ${(@f)"$( file ${execs[@]} )"} )
-        execs=( "${(M)execs[@]:#[^(:]##:*executable*}" )
-        execs=( "${execs[@]/(#b)([^(:]##):*/${match[1]}}" )
-    }
+    # Collect files that already have the execute bit set in the archive.
+    # This is the authoritative signal: if the package author wanted a file
+    # executable, they set +x when creating the archive. Any file that lacks
+    # +x in the archive (library, documentation, data file, …) should stay
+    # non-executable regardless of its content or extension.
+    # If a poorly maintained package fails to set permissions correctly,
+    # the user can fix it with the atclone/atpull ices — there is no need
+    # for zinit to second-guess the archive on every install.
+    execs=( **/*~(._zinit(|/*)|.git(|/*)|.svn(|/*)|.hg(|/*)|._backup(|/*))(DN-*.) )
 
     builtin print -rl -- ${execs[@]} >! ${TMPDIR:-/tmp}/zinit-execs.$$.lst
     if [[ ${#execs} -gt 0 ]] {

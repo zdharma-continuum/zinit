@@ -1,3 +1,31 @@
+# [3.15.0](https://github.com/zdharma-continuum/zinit/compare/v3.14.0...v3.15.0) (2026-07-01)
+
+
+### Bug Fixes
+
+* .zi-check-for-git-changes runs git fetch before checking for changes ([1107460](https://github.com/zdharma-continuum/zinit/commit/1107460bcd533c1a9003d1cf3db2918425f11c4a))
+* add markdownlint exceptions to linting ([507b4e5](https://github.com/zdharma-continuum/zinit/commit/507b4e5722ecfde21c42cc4e6502b0049e3ef192))
+* avoid apostrophe that breaks typeset -f round-trip of :zinit-tmp-subst-autoload ([#783](https://github.com/zdharma-continuum/zinit/issues/783)) ([d2d4237](https://github.com/zdharma-continuum/zinit/commit/d2d4237715081ea138eb1a9d4a7d1634eec7a36e))
+* correct SSH URL format for private repos ([#721](https://github.com/zdharma-continuum/zinit/issues/721)) ([991e4a8](https://github.com/zdharma-continuum/zinit/commit/991e4a816efc426bb1c2c0b13a01acff298b8005))
+* corrected print-out message in self-update routine ([bb37f3b](https://github.com/zdharma-continuum/zinit/commit/bb37f3bbd829485b006ef95ca24edbb462347731))
+* impl gh-r version detection using GitHub API ([#731](https://github.com/zdharma-continuum/zinit/issues/731)) ([f1e503d](https://github.com/zdharma-continuum/zinit/commit/f1e503dc3b6ac689331180e577b4e7da79e17b02)), closes [#r](https://github.com/zdharma-continuum/zinit/issues/r)
+* prevent "permission denied" errors from empty hook handlers ([#729](https://github.com/zdharma-continuum/zinit/issues/729)) ([2167408](https://github.com/zdharma-continuum/zinit/commit/2167408db27720031983d1067c156837cf522ff3))
+* prevent double extraction when exclamation mark modifier is used in extract'!' ([4fd38b3](https://github.com/zdharma-continuum/zinit/commit/4fd38b34e76fb97fb20d2345256e80526a4921c8)), closes [#r](https://github.com/zdharma-continuum/zinit/issues/r) [#r](https://github.com/zdharma-continuum/zinit/issues/r)
+* remove `local -A OPTS` that shadows caller's parallel flag ([#774](https://github.com/zdharma-continuum/zinit/issues/774)) ([e88ed77](https://github.com/zdharma-continuum/zinit/commit/e88ed77319c9a2e0187b964f9ad99f17a33d5999))
+* resolve a bug where the `-q` option for quiet mode was never dispatched ([6cf2f29](https://github.com/zdharma-continuum/zinit/commit/6cf2f2990d45d72f58d88433c9831b2ea64e8d76))
+* resolve a second issue where `git -C <path>` had to be used instead of `git --work-tree <path>` ([2e83176](https://github.com/zdharma-continuum/zinit/commit/2e83176b23d7be5db48c8bfcdea67197692d2569))
+* resolves a bug with github action trying to push updated docs back to external forks ([#763](https://github.com/zdharma-continuum/zinit/issues/763)) ([34a1811](https://github.com/zdharma-continuum/zinit/commit/34a18112e8866a7a7570b0ee1da44298677cc8d2))
+* silenced `zinit self-update` when in quiet mode (`-q`) ([8d154b0](https://github.com/zdharma-continuum/zinit/commit/8d154b0609e1dbb0387fb15cd93507c794ee9ec2))
+* trust archive permissions instead of `file(1)` heuristics in `ziextract` ([#771](https://github.com/zdharma-continuum/zinit/issues/771)) ([1334994](https://github.com/zdharma-continuum/zinit/commit/1334994f20d58e7279d308401dea2b680c0cade1))
+* update `git-chglog` to `git-cliff` in gh-r tests ([18fc2cc](https://github.com/zdharma-continuum/zinit/commit/18fc2cc5b903450d17f340898e4abbbb48ad975c)), closes [#r](https://github.com/zdharma-continuum/zinit/issues/r)
+* Update various tools in gh-r tests ([#759](https://github.com/zdharma-continuum/zinit/issues/759)) ([01eb65f](https://github.com/zdharma-continuum/zinit/commit/01eb65f8cea521779dd0eb23ac1d92239e36d8d6)), closes [#r](https://github.com/zdharma-continuum/zinit/issues/r)
+
+
+### Features
+
+* validate ice arguments ([#778](https://github.com/zdharma-continuum/zinit/issues/778)) ([424b241](https://github.com/zdharma-continuum/zinit/commit/424b241bc7112bde7bfb906f8726b43bed0ecd1f))
+* **zsh:** allow configuring settings like HOME_DIR/BIN_DIR via zstyle ([8f89f88](https://github.com/zdharma-continuum/zinit/commit/8f89f88cfdda42afbf5e1f7a3f2d510caff7354d))
+
 ## [3.13.1](https://github.com/zdharma-continuum/zinit/compare/v3.13.0...v3.13.1) (2024-01-22)
 
 

@@ -273,6 +273,10 @@ _zinit_run(){
 } # ]]]
 # FUNCTION: _zinit_self_update [[[
 _zinit_self_update(){
+  _arguments -A \
+    '(-h --help)'{-h,--help}'[Show this help message]' \
+    '(-q --quiet)'{-q,--quiet}'[Turn off messages from the operation]' \
+    && ret=0
 } # ]]]
 # FUNCTION: _zinit_snippet [[[
 _zinit_snippet(){

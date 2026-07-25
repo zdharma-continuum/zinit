@@ -50,6 +50,7 @@ Documentation automatically generated with `zshelldoc'
  .zinit-tmp-subst-off
  .zinit-tmp-subst-on
  .zinit-util-shands-path
+ .zinit-validate-ice
  :zinit-reload-and-run
  :zinit-tmp-subst-alias
  :zinit-tmp-subst-autoload
@@ -109,7 +110,9 @@ Has 264 line(s). Calls functions:
  |   |-- .zinit-get-object-path
  |   |   `-- .zinit-any-to-user-plugin
  |   |-- .zinit-ice
- |   |   `-- +zi-log
+ |   |   |-- +zi-log
+ |   |   `-- .zinit-validate-ice
+ |   |       `-- +zi-log
  |   |-- .zinit-load-ices
  |   |   `-- .zinit-get-object-path
  |   |       `-- .zinit-any-to-user-plugin
@@ -229,6 +232,7 @@ Called by:
  .zinit-register-plugin
  .zinit-run
  .zinit-set-m-func
+ .zinit-validate-ice
  :zinit-tmp-subst-autoload
  Script-Body
  zinit
@@ -317,7 +321,7 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== +zinit-prehelp-usage-message
 
-Has 38 line(s). Calls functions:
+Has 37 line(s). Calls functions:
 
  +zinit-prehelp-usage-message
  `-- +zi-log
@@ -688,10 +692,12 @@ ____
 
 ____
 
-Has 21 line(s). Calls functions:
+Has 22 line(s). Calls functions:
 
  .zinit-ice
- `-- +zi-log
+ |-- +zi-log
+ `-- .zinit-validate-ice
+     `-- +zi-log
 
 Uses feature(s): _setopt_
 
@@ -710,7 +716,7 @@ ____
 
 ____
 
-Has 95 line(s). Calls functions:
+Has 97 line(s). Calls functions:
 
  .zinit-load
  |-- +zinit-deploy-message
@@ -880,7 +886,7 @@ ____
 
 ____
 
-Has 203 line(s). Calls functions:
+Has 205 line(s). Calls functions:
 
  .zinit-load-snippet
  |-- +zi-log
@@ -1183,6 +1189,26 @@ Uses feature(s): _setopt_
 Called by:
 
  .zinit-any-to-pid
+
+==== .zinit-validate-ice
+
+____
+ 
+ Validates ice values at parse time.
+ Warns (not errors) about invalid values — behavior is unchanged.
+
+____
+
+Has 29 line(s). Calls functions:
+
+ .zinit-validate-ice
+ `-- +zi-log
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ .zinit-ice
 
 ==== :zinit-reload-and-run
 
@@ -1602,7 +1628,7 @@ ____
 
 ____
 
-Has 558 line(s). Calls functions:
+Has 562 line(s). Calls functions:
 
  zinit
  |-- +zi-log
@@ -1617,7 +1643,9 @@ Has 558 line(s). Calls functions:
  |-- .zinit-get-object-path
  |   `-- .zinit-any-to-user-plugin
  |-- .zinit-ice
- |   `-- +zi-log
+ |   |-- +zi-log
+ |   `-- .zinit-validate-ice
+ |       `-- +zi-log
  |-- .zinit-load-ices
  |   `-- .zinit-get-object-path
  |       `-- .zinit-any-to-user-plugin
@@ -1774,7 +1802,9 @@ Has 1 line(s). Calls functions:
      |-- .zinit-get-object-path
      |   `-- .zinit-any-to-user-plugin
      |-- .zinit-ice
-     |   `-- +zi-log
+     |   |-- +zi-log
+     |   `-- .zinit-validate-ice
+     |       `-- +zi-log
      |-- .zinit-load-ices
      |   `-- .zinit-get-object-path
      |       `-- .zinit-any-to-user-plugin

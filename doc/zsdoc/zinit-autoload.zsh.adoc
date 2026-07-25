@@ -92,7 +92,7 @@ ____
 
 ____
 
-Has 12 line(s). Calls functions:
+Has 18 line(s). Calls functions:
 
  .zi-check-for-git-changes
  `-- zinit.zsh/+zi-log
@@ -931,7 +931,7 @@ ____
 
 ____
 
-Has 14 line(s). Doesn't call other functions.
+Has 24 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
@@ -1497,7 +1497,7 @@ ____
 
 ____
 
-Has 325 line(s). Calls functions:
+Has 326 line(s). Calls functions:
 
  .zinit-update-or-status
  |-- .zinit-pager
@@ -1536,7 +1536,7 @@ ____
 
 ____
 
-Has 133 line(s). Calls functions:
+Has 135 line(s). Calls functions:
 
  .zinit-update-or-status-all
  |-- .zinit-self-update

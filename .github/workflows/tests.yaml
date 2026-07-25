@@ -1,4 +1,4 @@
-name: Unit Tests
+name: tests
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -24,23 +24,25 @@ on:
 
 jobs:
   zunit-tests:
+    name: ${{ matrix.zunit_test }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest]
         zunit_test:
           - annexes
           - commands
           - compile
+          - config-zstyle
           - gh-r
           - ices
           - plugins
           - snippets
+        os: [macos-latest, ubuntu-latest]
 
     steps:
       - name: checkout ${{ github.repository }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -67,7 +69,7 @@ jobs:
       - name: "install dependencies"
         id: install-deps
         run: |
-          brew install --force --overwrite autoconf automake binutils byacc cmake coreutils curl gettext gnu-sed libevent libtool libuv lua lua@5.4 make ncurses ninja parallel pkg-config texinfo unzip xz zsh
+          brew install --force --overwrite autoconf automake binutils byacc coreutils curl gettext gnu-sed libevent libtool libuv lua lua@5.4 make ncurses ninja parallel pkg-config texinfo unzip xz zsh
           brew link --force --overwrite ncurses
 
       - name: "install zunit"

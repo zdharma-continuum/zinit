@@ -1,4 +1,4 @@
-name: Lint
+name: lint
 
 on:
   pull_request:
@@ -11,21 +11,23 @@ on:
 
 jobs:
   mdlint:
-    name: Markdown Lint
+    name: markdown
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: xt0rted/markdownlint-problem-matcher@v3
 
-      - run: npm install -g markdownlint-cli
-
+      - run: npm install -g markdownlint-cli@0.44.0
       # disabled checks:
-      # - MD013/line-length
-      # - MD033/no-inline-html
-      # - MD034/no-bare-urls
-      # - MD036/no-emphasis-as-heading
-      # - MD041/first-line-heading/first-line-h1
+      # MD013/line-length
+      # MD024/no-duplicate-heading
+      # MD033/no-inline-html
+      # MD034/no-bare-urls
+      # MD036/no-emphasis-as-heading
+      # MD041/first-line-heading/first-line-h1
+      # MD059/descriptive-link-text
+      # MD060/table-column-style
       - run: |
           markdownlint --version
 
@@ -33,25 +35,25 @@ jobs:
           ls *.md **/*.md
 
           markdownlint \
+            --disable MD013 MD024 MD029 MD033 MD034 MD036 MD041 MD059 MD060 \
             --ignore '**/CHANGELOG.md' \
-            --disable MD013 MD033 MD034 MD036 MD041 -- \
-            *.md **/*.md
+            -- *.md **/*.md
 
   zshlint:
-    name: ZSH Lint
+    name: zsh
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        task: [zsh-noexec, zsh-zcompile]
+        task: [noexec, zcompile]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
 
       - name: install dependencies
         run: |
@@ -61,11 +63,11 @@ jobs:
       - name: "run lint (${{ matrix.task }})"
         run: |
           case "${{ matrix.task }}" in
-            zsh-noexec)
+            noexec)
               find . -name '*.zsh' -type f -print0 \
                 | xargs -0 -n1 -P4 zsh -n
               ;;
-            zsh-zcompile)
+            zcompile)
               find . -name '*.zsh' -type f \
                 -exec zsh -fc "zcompile {}" \;
               ;;
