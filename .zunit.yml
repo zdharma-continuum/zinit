@@ -4,4 +4,11 @@ directories:
   support: tests/_support
   tests: tests
 fail_fast: false
-verbose: true
+# Both parallel keys stay false, and the flags stay on the command line.
+# zunit's config booleans are one-way -- there is no --no-parallel or
+# --no-verbose -- so a `true' here could never be turned off again, not even
+# for `zunit run tests/commands.zunit@"help"'. parallel_slice additionally
+# implies parallel, and only does anything for a run that queues one file.
+parallel: false
+parallel_slice: false
+verbose: false
