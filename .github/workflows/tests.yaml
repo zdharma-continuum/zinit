@@ -5,8 +5,10 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
+  HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 0
+  HOMEBREW_NO_REQUIRE_TAP_TRUST: 1
   TERM: xterm-256color
+  # TERM: dumb
 
 on:
   pull_request:
@@ -24,8 +26,8 @@ on:
 
 jobs:
   zunit-tests:
-    name: ${{ matrix.zunit_test }}
-    runs-on: ${{ matrix.os }}
+    name: "${{ matrix.zunit_test }} | ${{ matrix.os }}"
+    runs-on: "${{ matrix.os }}-latest"
     strategy:
       fail-fast: false
       matrix:
@@ -38,19 +40,26 @@ jobs:
           - ices
           - plugins
           - snippets
-        os: [macos-latest, ubuntu-latest]
+        os: [macos, ubuntu]
+        include:
+          - zunit_test: gh-r
+            zunit_flag: --slice
+          - zunit_test: plugins
+            zunit_flag: --slice
 
     steps:
-      - name: checkout ${{ github.repository }}
+      - name: "checkout ${{ github.repository }}"
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - name: install homebrew
+      - name: "install homebrew"
         id: setup-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c
+        with:
+          setup-sandbox: true
 
-      - name: "install musl"
+      - name: "install ${{ runner.os }} dependencies"
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update --yes
@@ -66,22 +75,28 @@ jobs:
             xz-utils \
             zsh
 
-      - name: "install dependencies"
+      - name: "install dependencies via brew"
         id: install-deps
         run: |
-          brew install --force --overwrite autoconf automake binutils byacc coreutils curl gettext gnu-sed libevent libtool libuv lua lua@5.4 make ncurses ninja parallel pkg-config texinfo unzip xz zsh
-          brew link --force --overwrite ncurses
+          brew install --quiet --force --overwrite autoconf automake binutils byacc coreutils curl gettext gnu-sed jemalloc libevent libtool libuv lua lua@5.4 make ninja parallel pkg-config texinfo unzip xz zsh
+          brew unlink ncurses && brew link --force ncurses
+
+      - name: "checkout zdharma-continuum/zunit"
+        uses: actions/checkout@v7
+        with:
+          repository: "zdharma-continuum/zunit"
+          path: zunit
+          ref: "feat/run-tests-in-parallel-support"
 
       - name: "install zunit"
         id: install-zunit
         shell: zsh {0}
+        working-directory: zunit
         run: |
-          mkdir -p "$HOME/.local/bin"
+          mkdir -p "${HOME}/.local/bin"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          git clone --depth 1 https://github.com/zdharma-continuum/zunit
-          cd ./zunit
-          ./configure --prefix=$HOME/.local
+          ./configure --prefix=${HOME}/.local
           make all install
 
-      - name: "run tests"
-        run: zunit run tests/${{ matrix.zunit_test }}.zunit
+      - name: "run ${{ matrix.zunit_test }} tests"
+        run: zunit run ${{ matrix.zunit_flag }} tests/${{ matrix.zunit_test }}.zunit
