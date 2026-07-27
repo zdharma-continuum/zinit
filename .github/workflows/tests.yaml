@@ -55,7 +55,7 @@ jobs:
 
       - name: "install homebrew"
         id: setup-homebrew
-        uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c
+        uses: Homebrew/actions/setup-homebrew@df4b09108a1de9d6f995fe68f302b3f68bd6d2ef
         with:
           setup-sandbox: true
 
