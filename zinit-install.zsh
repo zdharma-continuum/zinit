@@ -2262,14 +2262,13 @@ __zinit-cmake-base-hook () {
     local rc=0
     [[ -n $atclone ]] && .zinit-countdown atclone && {
         local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
-        integer ___moved=0
 
-        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir" && ___moved=1
+        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir"
 
         eval "$atclone"
         rc="$?"
 
-        (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
+        .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
 
     return "$rc"
@@ -2389,11 +2388,10 @@ __zinit-cmake-base-hook () {
 
     .zinit-countdown atpull && {
         local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
-        integer ___moved=0
-        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir" && ___moved=1
+        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir"
         .zinit-at-eval "$atpull" "$ICE[atclone]"
         rc="$?"
-        (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
+        .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
 
     return "$rc"
@@ -2414,11 +2412,10 @@ __zinit-cmake-base-hook () {
 
     .zinit-countdown atpull && {
         local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
-        integer ___moved=0
-        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir" && ___moved=1
+        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir"
         .zinit-at-eval "$atpull" $ICE[atclone]
         rc="$?"
-        (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
+        .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
 
     return "$rc"

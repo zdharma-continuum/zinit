@@ -1033,10 +1033,15 @@ builtin setopt noaliases
 # original $OLDPWD for real on the way back. Do not simplify this to a single
 # cd plus an $OLDPWD assignment.
 #
+# Callers call it unconditionally: an ice body that cds on its own must be
+# undone even when zinit itself never cd'd, so the fast path below keeps the
+# case where nothing actually moved free.
+#
 # $1 - the $PWD to return to
 # $2 - the $OLDPWD to restore; may be empty or since-deleted, in which case we
 #      bounce through $1 so that `cd -' degrades to a harmless no-op
 .zinit-restore-dir() {
+    [[ $PWD == "$1" && $OLDPWD == "$2" ]] && return 0
     [[ -n $2 && -d $2 ]] && .zinit-cd-quiet "$2" || .zinit-cd-quiet "$1"
     .zinit-cd-quiet "$1"
 } # ]]]
@@ -1520,7 +1525,7 @@ builtin setopt noaliases
             return $(( 10 - $? ))
     done
 
-    (( ${+ICE[atinit]} )) && { local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; integer ___moved=0; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$local_dir/$dirname" && { ___moved=1; eval "${ICE[atinit]}" }; ((1)); } || eval "${ICE[atinit]}"; (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
+    (( ${+ICE[atinit]} )) && { local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$local_dir/$dirname" && eval "${ICE[atinit]}"; ((1)); } || eval "${ICE[atinit]}"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
 
     reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atinit-<-> <->]} )
     for key in "${reply[@]}"; do
@@ -1587,7 +1592,7 @@ builtin setopt noaliases
             .zinit-wrap-functions "$save_url" "" "$id_as"
         }
 
-        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; integer ___moved=0; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$local_dir/$dirname" && { ___moved=1; builtin eval "${ICE[atload]#\!}" }; ((1)); } || eval "${ICE[atload]#\!}"; (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
+        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$local_dir/$dirname" && builtin eval "${ICE[atload]#\!}"; ((1)); } || eval "${ICE[atload]#\!}"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
 
         (( -- ZINIT[TMP_SUBST] == 0 )) && { ZINIT[TMP_SUBST]=inactive; builtin setopt noaliases; (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef; (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases; }
     elif [[ -n ${opts[(r)--command]} || ${ICE[as]} = command ]]; then
@@ -1641,7 +1646,7 @@ builtin setopt noaliases
             .zinit-wrap-functions "$save_url" "" "$id_as"
         }
 
-        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; integer ___moved=0; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$local_dir/$dirname" && { ___moved=1; builtin eval "${ICE[atload]#\!}" }; ((1)); } || eval "${ICE[atload]#\!}"; (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
+        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$local_dir/$dirname" && builtin eval "${ICE[atload]#\!}"; ((1)); } || eval "${ICE[atload]#\!}"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
 
         [[ -n ${ICE[src]} || -n ${ICE[multisrc]} || ${ICE[atload][1]} = "!" ]] && {
             (( -- ZINIT[TMP_SUBST] == 0 )) && { ZINIT[TMP_SUBST]=inactive; builtin setopt noaliases; (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef; (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases; }
@@ -1650,7 +1655,7 @@ builtin setopt noaliases
         ((1))
     fi
 
-    (( ${+ICE[atload]} )) && [[ ${ICE[atload][1]} != "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; integer ___moved=0; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$local_dir/$dirname" && { ___moved=1; builtin eval "${ICE[atload]}" }; ((1)); } || eval "${ICE[atload]}"; (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
+    (( ${+ICE[atload]} )) && [[ ${ICE[atload][1]} != "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$local_dir/$dirname" && builtin eval "${ICE[atload]}"; ((1)); } || eval "${ICE[atload]}"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
 
     reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atload-<-> <->]} )
     for key in "${reply[@]}"; do
@@ -1755,7 +1760,7 @@ builtin setopt noaliases
             return $(( 10 - $? ))
     done
 
-    [[ ${+ICE[atinit]} = 1 && $ICE[atinit] != '!'*   ]] && { local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; integer ___moved=0; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" && { ___moved=1; eval "${ICE[atinit]}" }; ((1)); } || eval "${ICE[atinit]}"; (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
+    [[ ${+ICE[atinit]} = 1 && $ICE[atinit] != '!'*   ]] && { local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" && eval "${ICE[atinit]}"; ((1)); } || eval "${ICE[atinit]}"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
 
     reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atinit-<-> <->]} )
     for ___key in "${reply[@]}"; do
@@ -1846,7 +1851,7 @@ builtin setopt noaliases
         }
 
         local ZERO
-        [[ $ICE[atinit] = '!'* ]] && { local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; integer ___moved=0; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" && { ___moved=1; eval "${ICE[atinit#!]}" }; ((1)); } || eval "${ICE[atinit]#!}"; (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
+        [[ $ICE[atinit] = '!'* ]] && { local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" && eval "${ICE[atinit#!]}"; ((1)); } || eval "${ICE[atinit]#!}"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
         [[ -n ${ICE[src]} ]] && { ZERO="${${(M)ICE[src]##/*}:-$___pdir_orig/${ICE[src]}}"; (( ${+ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; }
         [[ -n ${ICE[multisrc]} ]] && { local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; .zinit-cd-quiet "$___pdir_orig"; eval "reply=(${ICE[multisrc]})"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; local ___fname; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; done; }
 
@@ -1863,7 +1868,7 @@ builtin setopt noaliases
             .zinit-wrap-functions "$___user" "$___plugin" "$___id_as"
         }
 
-        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; integer ___moved=0; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$___pdir_orig" && { ___moved=1; builtin eval "${ICE[atload]#\!}" }; } || eval "${ICE[atload]#\!}"; (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
+        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$___pdir_orig" && builtin eval "${ICE[atload]#\!}"; ((1)); } || eval "${ICE[atload]#\!}"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
 
         [[ -n ${ICE[src]} || -n ${ICE[multisrc]} || ${ICE[atload][1]} = "!" ]] && {
             (( -- ZINIT[TMP_SUBST] == 0 )) && { ZINIT[TMP_SUBST]=inactive; builtin setopt noaliases; (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef; (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases; }
@@ -1896,7 +1901,7 @@ builtin setopt noaliases
         (( ${+ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
         local ZERO="$___pdir_path/$___fname"
         (( ${+ICE[aliases]} )) || builtin setopt noaliases
-        [[ $ICE[atinit] = '!'* ]] && { local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; integer ___moved=0; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" && { ___moved=1; eval "${ICE[atinit]#!}" }; ((1)); } || eval "${ICE[atinit]#1}"; (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
+        [[ $ICE[atinit] = '!'* ]] && { local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" && eval "${ICE[atinit]#!}"; ((1)); } || eval "${ICE[atinit]#1}"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
         (( ${+ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }
         [[ -n ${ICE[src]} ]] && { ZERO="${${(M)ICE[src]##/*}:-$___pdir_orig/${ICE[src]}}"; (( ${+ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; }
         [[ -n ${ICE[multisrc]} ]] && { local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; .zinit-cd-quiet "$___pdir_orig"; eval "reply=(${ICE[multisrc]})"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); } done; }
@@ -1914,7 +1919,7 @@ builtin setopt noaliases
             .zinit-wrap-functions "$___user" "$___plugin" "$___id_as"
         }
 
-        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; integer ___moved=0; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$___pdir_orig" && { ___moved=1; builtin eval "${ICE[atload]#\!}" }; ((1)); } || eval "${ICE[atload]#\!}"; (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
+        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$___pdir_orig" && builtin eval "${ICE[atload]#\!}"; ((1)); } || eval "${ICE[atload]#\!}"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
         (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
         (( ${+ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
@@ -1923,7 +1928,7 @@ builtin setopt noaliases
         [[ $___mode != light(|-b) ]] && .zinit-diff "${ZINIT[CUR_USPL2]}" end
     fi
 
-    [[ ${+ICE[atload]} = 1 && ${ICE[atload][1]} != "!" ]] && { ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; integer ___moved=0; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$___pdir_orig" && { ___moved=1; builtin eval "${ICE[atload]}" }; ((1)); } || eval "${ICE[atload]}"; (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
+    [[ ${+ICE[atload]} = 1 && ${ICE[atload][1]} != "!" ]] && { ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"; (( ${+ICE[nocd]} == 0 )) && { .zinit-cd-quiet "$___pdir_orig" && builtin eval "${ICE[atload]}"; ((1)); } || eval "${ICE[atload]}"; .zinit-restore-dir "$___oldcd" "$___oldoldpwd"; ((1)); }
 
     reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atload-<-> <->]} )
     for ___key in "${reply[@]}"; do
