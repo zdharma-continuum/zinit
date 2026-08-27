@@ -1022,28 +1022,28 @@ builtin setopt noaliases
 #
 # $1 - directory to change into
 .zinit-cd-quiet() {
-    () { setopt localoptions noautopushd; builtin cd -q "$1"; } "$1"
+    setopt localoptions noautopushd
+    builtin cd -q -- "$1"
 } # ]]]
 # FUNCTION: .zinit-restore-dir [[[
 # Returns to $1 without leaving the visited directory as the `cd -' target.
 #
-# The directory `cd -' goes to is tracked internally by zsh and is only updated
-# by a real cd/pushd/popd, never by assigning to $OLDPWD. The only way to make
-# `cd -' forget the directory we temporarily visited is to cd through the
-# original $OLDPWD for real on the way back. Do not simplify this to a single
-# cd plus an $OLDPWD assignment.
-#
-# Callers call it unconditionally: an ice body that cds on its own must be
-# undone even when zinit itself never cd'd, so the fast path below keeps the
-# case where nothing actually moved free.
+# zsh tracks the `cd -' target internally and only a real cd/pushd/popd moves
+# it, never an assignment to $OLDPWD, so the only way to forget the directory
+# we visited is to hop through the original $OLDPWD for real on the way back.
+# Do not simplify this to a single cd plus an $OLDPWD assignment. Callers call
+# it unconditionally: an ice body that cds on its own must be undone even when
+# zinit itself never cd'd.
 #
 # $1 - the $PWD to return to
-# $2 - the $OLDPWD to restore; may be empty or since-deleted, in which case we
-#      bounce through $1 so that `cd -' degrades to a harmless no-op
+# $2 - the $OLDPWD to restore; when empty, since-deleted or unreadable we hop
+#      through $1 instead, so `cd -' degrades to a harmless no-op
 .zinit-restore-dir() {
     [[ $PWD == "$1" && $OLDPWD == "$2" ]] && return 0
-    [[ -n $2 && -d $2 ]] && .zinit-cd-quiet "$2" || .zinit-cd-quiet "$1"
-    .zinit-cd-quiet "$1"
+    setopt localoptions noautopushd
+    # A failed hop is not worth a diagnostic during shell startup.
+    builtin cd -q -- "${2:-$1}" 2>/dev/null || builtin cd -q -- "$1"
+    builtin cd -q -- "$1"
 } # ]]]
 # FUNCTION: .zinit-any-to-user-plugin [[[
 # Allows elastic plugin-spec across the code.

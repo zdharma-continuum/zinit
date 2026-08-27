@@ -370,7 +370,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             [[ -d "$local_path" ]] || return 1
 
             (
-                () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
+                .zinit-cd-quiet "$local_path" || return 1
                 integer count
 
                 for REPLY ( $reply ) {
@@ -414,7 +414,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             [[ -d "$local_path" ]] || return 1
 
             (
-                () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
+                .zinit-cd-quiet "$local_path" || return 1
                 .zinit-get-cygwin-package "$remote_url_path" || return 1
                 builtin print -r -- $REPLY >! ._zinit/is_release
                 ziextract "$REPLY"
@@ -777,7 +777,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     if [[ "$update" = "-t" ]]; then
         (
-            () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
+            .zinit-cd-quiet "$directory"
             local -a out1 out2
             out1=( "${(f@)"$(LANG=C svn info -r HEAD)"}" )
             out2=( "${(f@)"$(LANG=C svn info)"}" )
@@ -790,7 +790,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         return $?
     fi
     if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]]; then
-        ( () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
+        ( .zinit-cd-quiet "$directory"
           command svn update
           return $? )
     else
@@ -901,7 +901,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     (
         if [[ $url = (ftp(|s)|http(|s)|scp)://* ]] {
             (
-                () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
+                .zinit-cd-quiet "$local_dir" || return 4
 
                 (( !OPTS[opt_-q,--quiet] )) && +zi-log "{i} Downloading {file}$sname{rst} ${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{rst}"
 
@@ -2322,7 +2322,7 @@ __zinit-cmake-base-hook () {
         local -a afr
 
         (
-            () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
+            .zinit-cd-quiet "$dir" || return 1
             afr=( ${~from}(DN) ) # Expand glob patterns
 
             if (( ! ${#afr} )); then
