@@ -36,6 +36,15 @@
     builtin cd -q "$oldpwd_away"
     builtin cd -q "$zi_test_dir"
   }
+
+  # $1 - the $PWD to expect; $2 - where `cd -' must land, which also proves
+  # $OLDPWD. `equals' is arithmetic in zunit, so paths need `same_as'.
+  function _assert_dirs_restored() {
+    assert "$PWD" same_as "$1"
+    assert "$OLDPWD" same_as "$2"
+    builtin cd - >/dev/null 2>&1 || true
+    assert "$PWD" same_as "$2"
+  }
 }
 
 @test 'mv' {
@@ -183,57 +192,32 @@
 # zinit.zsh: zinit cds into the plugin directory to run atinit/atload/multisrc,
 # and the cd back used to restore $PWD but leave $OLDPWD -- and zsh's internal
 # `cd -' target -- pointing at the plugin directory.
-#
-# Two constraints shape every test below:
-#
-#   - Never use zunit's `run' helper. It wraps its command in a nested $(...)
-#     subshell, which discards the very cd side effects under test.
-#   - Assert on where `cd -' actually lands, not just on $OLDPWD. `cd -' reads
-#     zsh's internal previous-directory state, not the parameter, so a fix that
-#     only assigns $OLDPWD passes a parameter-only assertion while leaving the
-#     bug in place.
-#
-# `|| true' is needed throughout: @test bodies run under ERR_EXIT, which would
-# silently abort the test on any non-zero status unrelated to what we assert.
 
 @test 'atload does not leak $OLDPWD' {
   _oldpwd_fixture test/oldpwd-atload
-  local away="$oldpwd_away" home="$zi_test_dir"
 
   zinit as"null" id-as"test/oldpwd-atload" atload"true" for zdharma-continuum/null || true
 
-  # `equals' is arithmetic (-eq) in zunit; `same_as' is string comparison.
-  assert "$PWD" same_as "$home"
-  assert "$OLDPWD" same_as "$away"
-  builtin cd - >/dev/null 2>&1 || true
-  assert "$PWD" same_as "$away"
+  _assert_dirs_restored "$zi_test_dir" "$oldpwd_away"
 }
 
 @test 'atinit does not leak $OLDPWD' {
   _oldpwd_fixture test/oldpwd-atinit
-  local away="$oldpwd_away" home="$zi_test_dir"
 
   zinit as"null" id-as"test/oldpwd-atinit" atinit"true" for zdharma-continuum/null || true
 
-  assert "$PWD" same_as "$home"
-  assert "$OLDPWD" same_as "$away"
-  builtin cd - >/dev/null 2>&1 || true
-  assert "$PWD" same_as "$away"
+  _assert_dirs_restored "$zi_test_dir" "$oldpwd_away"
 }
 
 @test 'multisrc does not leak $OLDPWD' {
   _oldpwd_fixture test/oldpwd-multisrc
-  local away="$oldpwd_away" home="$zi_test_dir"
   # multisrc evaluates its value with the plugin directory as cwd, so give it
   # a real file to find there.
   builtin print -r -- 'true' >! "$ZPLUGINS/test---oldpwd-multisrc/extra.zsh"
 
   zinit as"null" id-as"test/oldpwd-multisrc" multisrc"extra.zsh" for zdharma-continuum/null || true
 
-  assert "$PWD" same_as "$home"
-  assert "$OLDPWD" same_as "$away"
-  builtin cd - >/dev/null 2>&1 || true
-  assert "$PWD" same_as "$away"
+  _assert_dirs_restored "$zi_test_dir" "$oldpwd_away"
 }
 
 @test 'nocd ice leaves $OLDPWD untouched' {
@@ -241,14 +225,24 @@
   # run either. It used to run unconditionally, and its no-op cd back to $PWD
   # still set OLDPWD=$PWD -- turning the user's `cd -' into a dead no-op.
   _oldpwd_fixture test/oldpwd-nocd
-  local away="$oldpwd_away" home="$zi_test_dir"
 
   zinit as"null" id-as"test/oldpwd-nocd" atload"true" nocd for zdharma-continuum/null || true
 
-  assert "$PWD" same_as "$home"
-  assert "$OLDPWD" same_as "$away"
-  builtin cd - >/dev/null 2>&1 || true
-  assert "$PWD" same_as "$away"
+  _assert_dirs_restored "$zi_test_dir" "$oldpwd_away"
+}
+
+@test 'nocd ice still restores a cwd the ice body moved' {
+  # nocd only suppresses zinit's own cd into the plugin directory. An ice body
+  # that cds on its own must still be undone, or the ice strands the user's
+  # shell wherever the plugin decided to go.
+  _oldpwd_fixture test/oldpwd-nocd-moved
+  local elsewhere="$zi_test_dir/elsewhere-nocd"
+  command mkdir -p "$elsewhere"
+
+  zinit as"null" id-as"test/oldpwd-nocd-moved" nocd \
+    atload"builtin cd -q $elsewhere" for zdharma-continuum/null || true
+
+  _assert_dirs_restored "$zi_test_dir" "$oldpwd_away"
 }
 
 @test 'atload survives a since-deleted $OLDPWD' {
@@ -265,12 +259,10 @@
   zinit as"null" id-as"test/oldpwd-stale" atload"true" for zdharma-continuum/null \
     2>"$errfile" || true
 
-  assert "$PWD" same_as "$home"
   assert "$(<$errfile)" does_not_contain "no such file or directory"
   # $OLDPWD cannot be honoured, so `cd -' must degrade to a harmless no-op
   # rather than navigating into the plugin directory.
-  builtin cd - >/dev/null 2>&1 || true
-  assert "$PWD" same_as "$home"
+  _assert_dirs_restored "$home" "$home"
 }
 
 @test 'atload leaves a usable $OLDPWD when it started unset' {
@@ -282,10 +274,7 @@
   zinit as"null" id-as"test/oldpwd-unset" atload"true" for zdharma-continuum/null || true
 
   # A fresh zsh sets OLDPWD to PWD, which makes `cd -' a no-op. Match that.
-  assert "$PWD" same_as "$home"
-  assert "$OLDPWD" same_as "$home"
-  builtin cd - >/dev/null 2>&1 || true
-  assert "$PWD" same_as "$home"
+  _assert_dirs_restored "$home" "$home"
 }
 
 @test 'configure hook restores the current directory' {
@@ -308,10 +297,7 @@
   local -A ICE=( configure '' )
   ∞zinit-configure-base-hook snippet '' '' "$dir" '' '' '' || true
 
-  assert "$PWD" same_as "$home"
-  assert "$OLDPWD" same_as "$away"
-  builtin cd - >/dev/null 2>&1 || true
-  assert "$PWD" same_as "$away"
+  _assert_dirs_restored "$home" "$away"
 }
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=\ {,}:foldmethod=marker
