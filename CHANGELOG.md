@@ -1,3 +1,14 @@
+## [3.15.1](https://github.com/zdharma-continuum/zinit/compare/v3.15.0...v3.15.1) (2026-08-27)
+
+
+### Bug Fixes
+
+* **ices:** expand the atinit'!' ice correctly ([ed80701](https://github.com/zdharma-continuum/zinit/commit/ed807014262aca939d24d9e0e9356aa64ad5ae73))
+* **ices:** restore $OLDPWD around plugin directory hooks ([712cac1](https://github.com/zdharma-continuum/zinit/commit/712cac1952fb4d35861082748068ae33c757f125))
+* **ices:** restore cwd even when the ice body cds ([264526a](https://github.com/zdharma-continuum/zinit/commit/264526ab26715e54fdc7fa36d5b23b881459e19f))
+* **install:** restore cwd after the configure hook ([d875651](https://github.com/zdharma-continuum/zinit/commit/d875651d5986f42b6ba8b37ca07f66d45d083749))
+* **install:** restore cwd on early atclone return ([736403c](https://github.com/zdharma-continuum/zinit/commit/736403cb39e66ec7da7c4c373fdb99961bde5a83))
+
 # [3.15.0](https://github.com/zdharma-continuum/zinit/compare/v3.14.0...v3.15.0) (2026-07-01)
 
 
