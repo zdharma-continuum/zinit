@@ -25,6 +25,17 @@
     [[ ! -e "$file_path" ]] && return 0
     exit "found '${file_path}'"
   }
+  # Loads $1 once so it is already cloned, then cds so that $OLDPWD is a known
+  # directory of our own making, reported in $oldpwd_away. Deliberately not
+  # returning it via $(...): that forks a subshell, which would discard the cd.
+  function _oldpwd_fixture() {
+    local id="$1"
+    typeset -g oldpwd_away="$zi_test_dir/away-${id//\//-}"
+    zinit as"null" id-as"$id" for zdharma-continuum/null || true
+    command mkdir -p "$oldpwd_away"
+    builtin cd -q "$oldpwd_away"
+    builtin cd -q "$zi_test_dir"
+  }
 }
 
 @test 'mv' {
@@ -166,6 +177,141 @@
   assert "$workdir/library.py"    not_executable
 
   rm -rf "$srcdir" "$workdir"
+}
+
+# $OLDPWD regression coverage. See the block comment on .zinit-restore-dir in
+# zinit.zsh: zinit cds into the plugin directory to run atinit/atload/multisrc,
+# and the cd back used to restore $PWD but leave $OLDPWD -- and zsh's internal
+# `cd -' target -- pointing at the plugin directory.
+#
+# Two constraints shape every test below:
+#
+#   - Never use zunit's `run' helper. It wraps its command in a nested $(...)
+#     subshell, which discards the very cd side effects under test.
+#   - Assert on where `cd -' actually lands, not just on $OLDPWD. `cd -' reads
+#     zsh's internal previous-directory state, not the parameter, so a fix that
+#     only assigns $OLDPWD passes a parameter-only assertion while leaving the
+#     bug in place.
+#
+# `|| true' is needed throughout: @test bodies run under ERR_EXIT, which would
+# silently abort the test on any non-zero status unrelated to what we assert.
+
+@test 'atload does not leak $OLDPWD' {
+  _oldpwd_fixture test/oldpwd-atload
+  local away="$oldpwd_away" home="$zi_test_dir"
+
+  zinit as"null" id-as"test/oldpwd-atload" atload"true" for zdharma-continuum/null || true
+
+  # `equals' is arithmetic (-eq) in zunit; `same_as' is string comparison.
+  assert "$PWD" same_as "$home"
+  assert "$OLDPWD" same_as "$away"
+  builtin cd - >/dev/null 2>&1 || true
+  assert "$PWD" same_as "$away"
+}
+
+@test 'atinit does not leak $OLDPWD' {
+  _oldpwd_fixture test/oldpwd-atinit
+  local away="$oldpwd_away" home="$zi_test_dir"
+
+  zinit as"null" id-as"test/oldpwd-atinit" atinit"true" for zdharma-continuum/null || true
+
+  assert "$PWD" same_as "$home"
+  assert "$OLDPWD" same_as "$away"
+  builtin cd - >/dev/null 2>&1 || true
+  assert "$PWD" same_as "$away"
+}
+
+@test 'multisrc does not leak $OLDPWD' {
+  _oldpwd_fixture test/oldpwd-multisrc
+  local away="$oldpwd_away" home="$zi_test_dir"
+  # multisrc evaluates its value with the plugin directory as cwd, so give it
+  # a real file to find there.
+  builtin print -r -- 'true' >! "$ZPLUGINS/test---oldpwd-multisrc/extra.zsh"
+
+  zinit as"null" id-as"test/oldpwd-multisrc" multisrc"extra.zsh" for zdharma-continuum/null || true
+
+  assert "$PWD" same_as "$home"
+  assert "$OLDPWD" same_as "$away"
+  builtin cd - >/dev/null 2>&1 || true
+  assert "$PWD" same_as "$away"
+}
+
+@test 'nocd ice leaves $OLDPWD untouched' {
+  # nocd suppresses the cd into the plugin directory, so the restore must not
+  # run either. It used to run unconditionally, and its no-op cd back to $PWD
+  # still set OLDPWD=$PWD -- turning the user's `cd -' into a dead no-op.
+  _oldpwd_fixture test/oldpwd-nocd
+  local away="$oldpwd_away" home="$zi_test_dir"
+
+  zinit as"null" id-as"test/oldpwd-nocd" atload"true" nocd for zdharma-continuum/null || true
+
+  assert "$PWD" same_as "$home"
+  assert "$OLDPWD" same_as "$away"
+  builtin cd - >/dev/null 2>&1 || true
+  assert "$PWD" same_as "$away"
+}
+
+@test 'atload survives a since-deleted $OLDPWD' {
+  # Restoring by bouncing through the original $OLDPWD must not blow up when
+  # that directory is gone: no error on stderr, and no leak of the plugin dir.
+  local home="$zi_test_dir" stale="$zi_test_dir/stale-oldpwd"
+  zinit as"null" id-as"test/oldpwd-stale" for zdharma-continuum/null || true
+  command mkdir -p "$stale"
+  builtin cd -q "$stale"
+  builtin cd -q "$home"
+  command rmdir "$stale"
+
+  local errfile="$zi_test_dir/oldpwd-stale.err"
+  zinit as"null" id-as"test/oldpwd-stale" atload"true" for zdharma-continuum/null \
+    2>"$errfile" || true
+
+  assert "$PWD" same_as "$home"
+  assert "$(<$errfile)" does_not_contain "no such file or directory"
+  # $OLDPWD cannot be honoured, so `cd -' must degrade to a harmless no-op
+  # rather than navigating into the plugin directory.
+  builtin cd - >/dev/null 2>&1 || true
+  assert "$PWD" same_as "$home"
+}
+
+@test 'atload leaves a usable $OLDPWD when it started unset' {
+  local home="$zi_test_dir"
+  zinit as"null" id-as"test/oldpwd-unset" for zdharma-continuum/null || true
+  builtin cd -q "$home"
+  unset OLDPWD
+
+  zinit as"null" id-as"test/oldpwd-unset" atload"true" for zdharma-continuum/null || true
+
+  # A fresh zsh sets OLDPWD to PWD, which makes `cd -' a no-op. Match that.
+  assert "$PWD" same_as "$home"
+  assert "$OLDPWD" same_as "$home"
+  builtin cd - >/dev/null 2>&1 || true
+  assert "$PWD" same_as "$home"
+}
+
+@test 'configure hook restores the current directory' {
+  # ∞zinit-configure-base-hook cds into the plugin directory inside a plain
+  # { } block -- not a subshell -- and every return path used to leave the
+  # shell parked there. A directory that already has a Makefile takes the
+  # earliest of those return paths.
+  (( ${+functions[∞zinit-configure-base-hook]} )) || \
+    builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+
+  local home="$zi_test_dir" away="$zi_test_dir/away-configure"
+  local dir="$zi_test_dir/configure-plugin"
+  command mkdir -p "$away" "$dir"
+  builtin print -r -- 'all:' >! "$dir/Makefile"
+  builtin cd -q "$away"
+  builtin cd -q "$home"
+
+  # zsh's dynamic scoping makes this ICE visible to the hook we call, without
+  # disturbing the global one.
+  local -A ICE=( configure '' )
+  ∞zinit-configure-base-hook snippet '' '' "$dir" '' '' '' || true
+
+  assert "$PWD" same_as "$home"
+  assert "$OLDPWD" same_as "$away"
+  builtin cd - >/dev/null 2>&1 || true
+  assert "$PWD" same_as "$away"
 }
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=\ {,}:foldmethod=marker
