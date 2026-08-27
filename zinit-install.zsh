@@ -370,7 +370,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             [[ -d "$local_path" ]] || return 1
 
             (
-                () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
+                .zinit-cd-quiet "$local_path" || return 1
                 integer count
 
                 for REPLY ( $reply ) {
@@ -414,7 +414,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             [[ -d "$local_path" ]] || return 1
 
             (
-                () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
+                .zinit-cd-quiet "$local_path" || return 1
                 .zinit-get-cygwin-package "$remote_url_path" || return 1
                 builtin print -r -- $REPLY >! ._zinit/is_release
                 ziextract "$REPLY"
@@ -777,7 +777,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     if [[ "$update" = "-t" ]]; then
         (
-            () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
+            .zinit-cd-quiet "$directory"
             local -a out1 out2
             out1=( "${(f@)"$(LANG=C svn info -r HEAD)"}" )
             out2=( "${(f@)"$(LANG=C svn info)"}" )
@@ -790,7 +790,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         return $?
     fi
     if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]]; then
-        ( () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
+        ( .zinit-cd-quiet "$directory"
           command svn update
           return $? )
     else
@@ -901,7 +901,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     (
         if [[ $url = (ftp(|s)|http(|s)|scp)://* ]] {
             (
-                () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
+                .zinit-cd-quiet "$local_dir" || return 4
 
                 (( !OPTS[opt_-q,--quiet] )) && +zi-log "{i} Downloading {file}$sname{rst} ${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{rst}"
 
@@ -2097,8 +2097,9 @@ zimv() {
     [[ $eflags == $ex ]] || return 0
     typeset -aU configure_opt=(${(@s; ;)configure})
     configure_opt+=("--prefix=${ZPFX:-${ZINIT[HOME_DIR]}/polaris}")
+    local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
     {
-        builtin cd -- "$dir" || return 1
+        .zinit-cd-quiet "$dir" || return 1
         if [[ -n *(#i)makefile(#qN) ]]; then
             return 0
         elif [[ -z *(#i)configure(#qN) ]]; then
@@ -2124,6 +2125,8 @@ zimv() {
             +zi-log "{e} ${ice} Failed project configuration"
             return 1
         fi
+    } always {
+        .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
 } # ]]]
 # FUNCTION: ∞zinit-configure-e-hook [[[
@@ -2258,19 +2261,18 @@ __zinit-cmake-base-hook () {
 
     local rc=0
     [[ -n $atclone ]] && .zinit-countdown atclone && {
-        local ___oldcd=$PWD
+        local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
 
-        (( ${+ICE[nocd]} == 0 )) && {
-            () {
-                setopt localoptions noautopushd
-                builtin cd -q "$dir"
-            }
+        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir"
+
+        # Unlike its atpull siblings this evals inline, with no .zinit-at-eval
+        # frame to absorb a `return' from the ice body.
+        {
+            eval "$atclone"
+            rc="$?"
+        } always {
+            .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
         }
-
-        eval "$atclone"
-        rc="$?"
-
-        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }
     }
 
     return "$rc"
@@ -2320,7 +2322,7 @@ __zinit-cmake-base-hook () {
         local -a afr
 
         (
-            () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
+            .zinit-cd-quiet "$dir" || return 1
             afr=( ${~from}(DN) ) # Expand glob patterns
 
             if (( ! ${#afr} )); then
@@ -2389,13 +2391,11 @@ __zinit-cmake-base-hook () {
     local rc=0
 
     .zinit-countdown atpull && {
-        local ___oldcd=$PWD
-        (( ${+ICE[nocd]} == 0 )) && {
-            () { setopt localoptions noautopushd; builtin cd -q "$dir"; }
-        }
+        local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
+        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir"
         .zinit-at-eval "$atpull" "$ICE[atclone]"
         rc="$?"
-        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };
+        .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
 
     return "$rc"
@@ -2415,13 +2415,11 @@ __zinit-cmake-base-hook () {
     local rc=0
 
     .zinit-countdown atpull && {
-        local ___oldcd=$PWD
-        (( ${+ICE[nocd]} == 0 )) && {
-            () { setopt localoptions noautopushd; builtin cd -q "$dir"; }
-        }
+        local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
+        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir"
         .zinit-at-eval "$atpull" $ICE[atclone]
         rc="$?"
-        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };
+        .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
 
     return "$rc"

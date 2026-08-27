@@ -4,39 +4,42 @@
 # https://github.com/zdharma-continuum/zinit/issues/728
 
 @setup {
-  # Set up minimal zinit environment
+  # Only the hook registries are needed. Do NOT re-source zinit.zsh here: the
+  # bootstrap has already sourced it from the sandbox clone, @setup bodies run
+  # under ERR_EXIT, and sourcing zinit.zsh trips it partway through, which
+  # aborts the setup and reports every test in this file as a failure with an
+  # empty message. Re-pointing ZINIT[BIN_DIR] at $PWD is likewise wrong -- it
+  # aims the tests at the real checkout instead of the sandbox. Neither test
+  # below calls a zinit function.
+  #
+  # HOME still has to point at the sandbox: the second test runs `zsh -c', which
+  # sources $HOME/.zshenv, so the developer's own rc file would otherwise leak
+  # into $output and $state.
   HOME="$zi_test_dir"
-  typeset -gA ZINIT ZINIT_EXTS ZINIT_EXTS2 ICE
-  ZINIT[BIN_DIR]="${PWD}"
-  ZINIT[PLUGINS_DIR]="$zi_test_dir/plugins"
-  ZINIT[SNIPPETS_DIR]="$zi_test_dir/snippets"
-  ZINIT[HOME_DIR]="$zi_test_dir"
-  
-  # Source zinit
-  source "${PWD}/zinit.zsh"
+  typeset -gA ZINIT_EXTS ZINIT_EXTS2
 }
 
 @test 'empty hook handler error is prevented by fix' {
   # This test verifies the fix for issue #728
   # Without the fix, empty hook handlers cause "permission denied:" errors
-  
+
   # Register extension with empty handler (the exact pattern that triggers the bug)
   ZINIT_EXTS["zinit hook:preinit-pre 10"]="10 z-annex-data: test-annex hook:preinit-pre '' '' ''"
-  
+
   # Test the hook processing logic directly
   # This simulates what happens in .zinit-load at line 1648-1652
   local output=""
   local error_code=0
-  
+
   # Get the hook keys (simulating the reply array)
   local -a test_keys
   test_keys=( "zinit hook:preinit-pre 10" )
-  
+
   # Process hooks
   for ___key in "${test_keys[@]}"; do
     local -a ___arr
     ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
-    
+
     # With our fix, this checks if handler is non-empty before executing
     if [[ -n "${___arr[5]:-}" ]]; then
       output="would execute handler"
@@ -44,7 +47,7 @@
       output="skipped empty handler"
     fi
   done
-  
+
   # Verify the fix prevented execution of empty handler
   assert "$output" same_as "skipped empty handler"
 }
@@ -52,10 +55,10 @@
 @test 'direct test of empty command execution fails' {
   # This demonstrates the underlying issue reported in #728
   local empty_var=""
-  
+
   # Executing an empty variable causes "permission denied:"
   run zsh -c 'empty_var=""; "${empty_var}"'
-  
+
   # Verify it fails with permission denied
   assert $state equals 126  # 126 is the error code for permission denied
   assert "$output" contains "permission denied:"

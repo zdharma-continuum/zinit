@@ -2503,10 +2503,10 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     if [[ -n ${sice[ps-on-unload]} ]]; then
         (( quiet )) || builtin print -r "Running plugin's provided unload code: ${ZINIT[col-info]}${sice[ps-on-unload][1,50]}${sice[ps-on-unload][51]:+…}${ZINIT[col-rst]}"
-        local ___oldcd="$PWD"
-        () { setopt localoptions noautopushd; builtin cd -q "$___dir"; }
+        local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"
+        .zinit-cd-quiet "$___dir"
         eval "${sice[ps-on-unload]}"
-        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }
+        .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     fi
 
     # 1. Delete done bindkeys
