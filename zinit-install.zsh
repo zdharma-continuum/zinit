@@ -2258,19 +2258,15 @@ __zinit-cmake-base-hook () {
 
     local rc=0
     [[ -n $atclone ]] && .zinit-countdown atclone && {
-        local ___oldcd=$PWD
+        local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
+        integer ___moved=0
 
-        (( ${+ICE[nocd]} == 0 )) && {
-            () {
-                setopt localoptions noautopushd
-                builtin cd -q "$dir"
-            }
-        }
+        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir" && ___moved=1
 
         eval "$atclone"
         rc="$?"
 
-        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }
+        (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
 
     return "$rc"
@@ -2389,13 +2385,12 @@ __zinit-cmake-base-hook () {
     local rc=0
 
     .zinit-countdown atpull && {
-        local ___oldcd=$PWD
-        (( ${+ICE[nocd]} == 0 )) && {
-            () { setopt localoptions noautopushd; builtin cd -q "$dir"; }
-        }
+        local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
+        integer ___moved=0
+        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir" && ___moved=1
         .zinit-at-eval "$atpull" "$ICE[atclone]"
         rc="$?"
-        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };
+        (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
 
     return "$rc"
@@ -2415,13 +2410,12 @@ __zinit-cmake-base-hook () {
     local rc=0
 
     .zinit-countdown atpull && {
-        local ___oldcd=$PWD
-        (( ${+ICE[nocd]} == 0 )) && {
-            () { setopt localoptions noautopushd; builtin cd -q "$dir"; }
-        }
+        local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
+        integer ___moved=0
+        (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir" && ___moved=1
         .zinit-at-eval "$atpull" $ICE[atclone]
         rc="$?"
-        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };
+        (( ___moved )) && .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
 
     return "$rc"
