@@ -93,8 +93,10 @@
   assert "$ZPLUGINS/test---ignored_completions/_valid" is_file
   assert "$ZPLUGINS/test---ignored_completions/__init__.py" is_file
   assert "$ZINIT[COMPLETIONS_DIR]/_valid" is_file
-  COMPS=( "$ZINIT[COMPLETIONS_DIR]"/_* )
-  assert __init__.py is_not_value_in $COMPS
+  # Basenames, and `not_in' for a flat array: `is_not_value_in' builds a hash,
+  # so it dies on an odd element count and never matches a bare name anyway.
+  local -a comps=( "$ZINIT[COMPLETIONS_DIR]"/_*(N:t) )
+  assert __init__.py not_in $comps
 }
 @test 'ziextract error on missing file' {
   run ziextract /tmp/zi-nonexistent-file.zip
