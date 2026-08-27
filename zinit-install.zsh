@@ -2097,8 +2097,9 @@ zimv() {
     [[ $eflags == $ex ]] || return 0
     typeset -aU configure_opt=(${(@s; ;)configure})
     configure_opt+=("--prefix=${ZPFX:-${ZINIT[HOME_DIR]}/polaris}")
+    local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
     {
-        builtin cd -- "$dir" || return 1
+        .zinit-cd-quiet "$dir" || return 1
         if [[ -n *(#i)makefile(#qN) ]]; then
             return 0
         elif [[ -z *(#i)configure(#qN) ]]; then
@@ -2124,6 +2125,8 @@ zimv() {
             +zi-log "{e} ${ice} Failed project configuration"
             return 1
         fi
+    } always {
+        .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
 } # ]]]
 # FUNCTION: ∞zinit-configure-e-hook [[[
