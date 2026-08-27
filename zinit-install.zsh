@@ -2265,10 +2265,14 @@ __zinit-cmake-base-hook () {
 
         (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir"
 
-        eval "$atclone"
-        rc="$?"
-
-        .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
+        # Unlike its atpull siblings this evals inline, with no .zinit-at-eval
+        # frame to absorb a `return' from the ice body.
+        {
+            eval "$atclone"
+            rc="$?"
+        } always {
+            .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
+        }
     }
 
     return "$rc"
