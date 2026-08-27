@@ -37,6 +37,8 @@ jobs:
           - compile
           - config-zstyle
           - gh-r
+          - hook-handler
+          - ice-validation
           - ices
           - plugins
           - snippets
