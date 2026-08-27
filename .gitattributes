@@ -1,5 +1,5 @@
 # By default, everything is text
-* text
+* text=auto
 
 # These must be unix EOLs
 *.sh             eol=lf
