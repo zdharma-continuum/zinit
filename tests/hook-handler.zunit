@@ -11,6 +11,11 @@
   # empty message. Re-pointing ZINIT[BIN_DIR] at $PWD is likewise wrong -- it
   # aims the tests at the real checkout instead of the sandbox. Neither test
   # below calls a zinit function.
+  #
+  # HOME still has to point at the sandbox: the second test runs `zsh -c', which
+  # sources $HOME/.zshenv, so the developer's own rc file would otherwise leak
+  # into $output and $state.
+  HOME="$zi_test_dir"
   typeset -gA ZINIT_EXTS ZINIT_EXTS2
 }
 
