@@ -6,6 +6,18 @@
 emulate zsh
 setopt no_global_rcs no_rcs no_aliases extended_glob
 
+# Every git clone below -- this repo, the annexes, and each plugin a test
+# installs -- must keep unix EOLs. A developer or CI runner with
+# core.autocrlf=true otherwise gets CRLF sources that zsh cannot parse, which
+# surfaces as unrelated-looking failures (`command not found: ^M', exit 126)
+# across the whole suite. Exported so it reaches the git invocations zinit
+# makes from inside the tests, not just the ones here.
+# core.eol has to be pinned as well: with the text attribute set, autocrlf=false
+# hands the decision to core.eol, so a global core.eol=crlf still produces CRLF.
+export GIT_CONFIG_COUNT=2 \
+    GIT_CONFIG_KEY_0=core.autocrlf GIT_CONFIG_VALUE_0=false \
+    GIT_CONFIG_KEY_1=core.eol      GIT_CONFIG_VALUE_1=lf
+
 # Log functions [[[
 function error(){ print -P "%F{red}[ERROR]%f: ${1}" && return 1; }
 function info() { print -P "%F{green}[INFO]%f:%F{cyan} ${1} %f"; }
