@@ -1641,9 +1641,10 @@ ziextract() {
         return $retval
     }
 
-    →zinit-check() { (( ${+commands[$1]} )) || \
+    →zinit-check() { (( ${+commands[$1]} )) || {
         +zi-log "{info}[{pre}ziextract{info}]{error} Error:{msg} No command {data}$1{msg}, it is required to unpack {file}$2{rst}."
-    }
+        return 1
+    } }
 
     case "${${ext:+.$ext}:-$file}" in
         ((#i)*.zip)
