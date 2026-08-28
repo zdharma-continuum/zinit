@@ -1,3 +1,10 @@
+## [3.15.3](https://github.com/zdharma-continuum/zinit/compare/v3.15.2...v3.15.3) (2026-08-28)
+
+
+### Bug Fixes
+
+* **install:** retry and auth github api downloads ([eaa1056](https://github.com/zdharma-continuum/zinit/commit/eaa10566992e8371a27fbb1300e6fdc2e4161f17)), closes [#r](https://github.com/zdharma-continuum/zinit/issues/r)
+
 ## [3.15.2](https://github.com/zdharma-continuum/zinit/compare/v3.15.1...v3.15.2) (2026-08-28)
 
 
