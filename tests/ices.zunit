@@ -68,6 +68,35 @@
   assert "$ZPLUGINS/test---atclone/atclone.md" is_readable
   assert "$ZPLUGINS/test---atclone/readme.md" not_exists
 }
+# Bare zinit calls on purpose: zunit's run re-quotes and evals its words, expanding bare $@/$#/$* early.
+@test 'atclone does not see internal positional params' {
+  zinit as"null" id-as"test/atclone-args" atclone'builtin print -r -- "args($#)[$@]" >! args.txt' for zdharma-continuum/null &>/dev/null || fail 'zinit load failed'
+  assert "$ZPLUGINS/test---atclone-args/args.txt" is_file
+  assert "$(<$ZPLUGINS/test---atclone-args/args.txt)" same_as 'args(0)[]'
+}
+@test 'atpull replay of atclone does not see internal positional params' {
+  zinit as"null" id-as"test/atpull-args" atclone'builtin print -r -- "args($#)[$@]" >! args.txt' atpull'%atclone' run-atpull for zdharma-continuum/null &>/dev/null || fail 'zinit load failed'
+  command rm -f "$ZPLUGINS/test---atpull-args/args.txt"
+  zinit update test/atpull-args &>/dev/null || true
+  assert "$ZPLUGINS/test---atpull-args/args.txt" is_file
+  assert "$(<$ZPLUGINS/test---atpull-args/args.txt)" same_as 'args(0)[]'
+}
+@test 'if ice condition does not see internal positional params' {
+  zinit as"null" id-as"test/if-args" if'[[ -z "$*" ]]' for zdharma-continuum/null &>/dev/null || true
+  assert "$ZPLUGINS/test---if-args" is_dir
+}
+@test 'return in the if ice exits the whole zinit call' {
+  integer rc=0
+  zinit as"null" for if'return 1' id-as"test/if-ret-one" zdharma-continuum/null id-as"test/if-ret-two" zdharma-continuum/null &>/dev/null || rc=$?
+  assert $rc equals 1
+  assert "$ZPLUGINS/test---if-ret-one" not_exists
+  assert "$ZPLUGINS/test---if-ret-two" not_exists
+}
+@test 'wrap ice installs a tracking wrapper' {
+  function _zi_test_wrapped { builtin print ok; }
+  zinit as"null" id-as"test/wrap" wrap'_zi_test_wrapped' for zdharma-continuum/null &>/dev/null || fail 'zinit load failed'
+  assert "${+functions[_zi_test_wrapped-zinit-bkp]}" equals 1
+}
 @test 'make' {
   run zinit as"null" id-as"test/make" atclone"printf 'all:\n\ttouch whatever\n' > Makefile" make"all" for zdharma-continuum/null
   assert $state equals 0
