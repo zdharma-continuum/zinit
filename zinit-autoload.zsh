@@ -1184,15 +1184,18 @@ ZINIT[EXTENDED_GLOB]=""
 # $2 - expression
 .zinit-confirm() {
     integer retval
+    local ___question="${1}" ___action="${2}"
+    # Hide zinit's internal positional parameters from the eval'd action.
+    builtin set --
     if (( OPTS[opt_-y,--yes] )); then
-        builtin eval "${2}"; retval=$?
+        builtin eval "${___action}"; retval=$?
         (( OPTS[opt_-q,--quiet] )) || +zi-log -lrP "{m} Action executed (exit code: {num}${retval}{rst})"
     else
       local choice prompt
       builtin print -D -v prompt "$(+zi-log '{i} Press [{opt}Y{rst}/{opt}y{rst}] to continue: {nl}')"
-      +zi-log "${1}"
+      +zi-log "${___question}"
       if builtin read -qs "choice?${prompt}"; then
-        builtin eval "${2}"; retval=$?
+        builtin eval "${___action}"; retval=$?
         +zi-log "{m} Action executed (exit code: {num}${retval}{rst})"
         return 0
       else
@@ -1855,7 +1858,10 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 } # ]]]
 # FUNCTION: .zinit-run-delete-hooks [[[
 .zinit-run-delete-hooks () {
-    local make_path=$5/Makefile mfest_path=$5/build/install_manifest.txt quiet='2>/dev/null 1>&2'
+    local ___tpe="$1" ___user_url="$2" ___plugin="$3" ___id_as="$4" ___dir="$5"
+    # Hide zinit's internal positional parameters from the eval'd atdelete'' ice.
+    builtin set --
+    local make_path=$___dir/Makefile mfest_path=$___dir/build/install_manifest.txt quiet='2>/dev/null 1>&2'
     if [[ -f $make_path ]] && grep '^uninstall' $make_path &> /dev/null; then
         +zi-log -n "{m} Make uninstall... "
         eval 'command make -C ${make_path:h} {prefix,{,CMAKE_INSTALL_}PREFIX}=$ZINIT[ZPFX] --ignore-errors uninstall' 2>/dev/null 1>&2
@@ -1876,7 +1882,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     if [[ -n ${ICE[atdelete]} ]]; then
         (
             (( ${+ICE[nocd]} == 0 )) && {
-                builtin cd -q "$5" && eval "${ICE[atdelete]}"
+                builtin cd -q "$___dir" && eval "${ICE[atdelete]}"
                 ((1))
             } || eval "${ICE[atdelete]}"
         )
@@ -1886,7 +1892,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     reply=(${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]} ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]} ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]})
     for key in "${reply[@]}"; do
         arr=("${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}")
-        "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}" delete:TODO
+        "${arr[5]}" "$___tpe" "$___user_url" $___plugin "$___id_as" "$___dir" "${${key##(zinit|z-annex) hook:}%% <->}" delete:TODO
     done
 } # ]]]
 # FUNCTION: .zinit-search-completions [[[
@@ -2496,6 +2502,8 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         (( quiet )) || builtin print -r "Running plugin's provided unload code: ${ZINIT[col-info]}${sice[ps-on-unload][1,50]}${sice[ps-on-unload][51]:+…}${ZINIT[col-rst]}"
         local ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"
         .zinit-cd-quiet "$___dir"
+        # Hide zinit's internal positional parameters from the eval'd ice.
+        builtin set --
         eval "${sice[ps-on-unload]}"
         .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     fi

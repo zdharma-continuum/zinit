@@ -1684,6 +1684,8 @@ builtin setopt noaliases
     typeset -F 3 SECONDS=0
     local ___mode="$3" ___limit="$4" ___rst=0 ___retval=0 ___key
     .zinit-any-to-user-plugin "$1" "$2"
+    # Hide zinit's internal positional parameters from the eval'd ices.
+    builtin set --
     local ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___id_as="${ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
     local ___pdir_path="${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"
     local ___pdir_orig="$___pdir_path"
@@ -2015,6 +2017,10 @@ builtin setopt noaliases
     fi
     .zinit-any-to-user-plugin "$1" ""
     local ___id_as="$1" ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___oldcd="$PWD" ___oldoldpwd="$OLDPWD"
+    local -a ___cmd
+    ___cmd=( "${@[2-correct,-1]}" )
+    # Hide zinit's internal positional parameters from the eval'd command.
+    builtin set --
     () {
         builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
         builtin cd &>/dev/null -q ${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}} || {
@@ -2023,9 +2029,9 @@ builtin setopt noaliases
         }
     }
     if (( $? == 0 )); then
-        (( ___nolast )) && { builtin print -r "$1" >! ${ZINIT[BIN_DIR]}/last-run-object.txt; }
-        ZINIT[last-run-plugin]="$1"
-        eval "${@[2-correct,-1]}"
+        (( ___nolast )) && { builtin print -r "$___id_as" >! ${ZINIT[BIN_DIR]}/last-run-object.txt; }
+        ZINIT[last-run-plugin]="$___id_as"
+        eval "${___cmd[@]}"
         .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     else
         +zi-log "{u-warn}Error{b-warn}:{rst} no such plugin or snippet."
@@ -2445,6 +2451,8 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 # $6 - details: alias name (derived from id-as''), plugin-spec, or snippet URL
 .zinit-run-task() {
     local ___pass="$1" ___t="$2" ___tpe="$3" ___idx="$4" ___mode="$5" ___id="${(Q)6}" ___opt="${(Q)7}" ___action ___s=1 ___retval=0
+    # Hide zinit's internal positional parameters from the eval'd condition ices.
+    builtin set --
 
     local -A ICE ZINIT_ICE
     ICE=( "${(@Q)${(z@)ZINIT[WAIT_ICE_${___idx}]}}" )
@@ -2894,6 +2902,7 @@ zinit() {
                     }
 
                     if [[ ${reply[-1]} -eq 1 && -n ${ICE[trigger-load]} ]] {
+                        # Called with no arguments so the eval'd stub definition sees no positional parameters.
                         () {
                             builtin setopt localoptions extendedglob
                             local ___mode
@@ -2911,14 +2920,19 @@ zinit() {
                                     eval ${MATCH#!} \$@}
                                 }"
                             }
-                        } "$@"
+                        }
                         ___retval+=$?
                         (( $# )) && shift
                         continue
                     }
 
                     if (( ${+ICE[if]} )) {
-                        eval "${ICE[if]}" || { (( $# )) && shift; continue; };
+                        # Eval inline so a `return' in the condition still exits zinit(); hide zinit's internal positional parameters around it.
+                        local -a ___pos
+                        ___pos=( "$@" )
+                        builtin set --
+                        eval "${ICE[if]}" || { builtin set -- "${___pos[@]}"; (( $# )) && shift; continue; };
+                        builtin set -- "${___pos[@]}"
                     }
                     for REPLY ( ${(s.;.)ICE[has]} ) {
                         (( ${+commands[$REPLY]} )) || \
@@ -3062,7 +3076,12 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     ;;
                  (update)
                     if (( ${+ICE[if]} )) {
-                        eval "${ICE[if]}" || return 1;
+                        # Eval inline so a `return' in the condition still exits zinit(); hide zinit's internal positional parameters around it.
+                        local -a ___pos
+                        ___pos=( "$@" )
+                        builtin set --
+                        eval "${ICE[if]}" || return 1
+                        builtin set -- "${___pos[@]}"
                     }
                     for REPLY ( ${(s.;.)ICE[has]} ) {
                         (( ${+commands[$REPLY]} )) || return 1

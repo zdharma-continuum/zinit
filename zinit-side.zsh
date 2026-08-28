@@ -42,15 +42,15 @@
 # $1 - the value of the atpull'' ice
 # $2 - the value of the atclone'' ice
 .zinit-at-eval() {
-  local atpull="$1" atclone="$2"
-  integer retval
-  @zinit-substitute atclone atpull
+  local ___atpull="$1" ___atclone="$2"
+  @zinit-substitute ___atclone ___atpull
 
-  local cmd="$atpull"
-  [[ $atpull == "%atclone" ]] && cmd="$atclone"
+  local ___cmd="$___atpull"
+  [[ $___atpull == "%atclone" ]] && ___cmd="$___atclone"
 
-  eval "$cmd"
-  return "$?"
+  # Hide zinit's internal positional parameters from the eval'd ice.
+  builtin set --
+  eval "$___cmd"
 } # ]]]
 # FUNCTION: .zinit-compute-ice [[[
 # Computes ICE array

@@ -79,6 +79,8 @@
 # FUNCTION: .zinit-wrap-track-functions [[[
 .zinit-wrap-track-functions() {
     local user="$1" plugin="$2" id_as="$3" f
+    # Hide zinit's internal positional parameters from the eval'd wrappers.
+    builtin set --
     local -a wt
     wt=( ${(@s.;.)ICE[wrap-track]} )
     for f in ${wt[@]}; do
