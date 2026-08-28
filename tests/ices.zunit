@@ -104,6 +104,39 @@
   assert $output contains 'ERROR'
   assert $output contains "doesn't exist"
 }
+@test 'ziextract plain single file (not an archive)' {
+  # A bare gh-r-style release binary: no "unrecognized archive" error,
+  # the file is kept as-is and marked executable.
+  local workdir=$(mktemp -d)
+  printf '#!/bin/sh\necho jq\n' > "$workdir/jq-macos-arm64"
+  _zi_extract_plain() { cd "$workdir" && ziextract jq-macos-arm64 }
+  run _zi_extract_plain
+  assert $state equals 0
+  assert $output does_not_contain "didn't recognize archive type"
+  assert $output contains 'not an archive'
+  assert "$workdir/jq-macos-arm64" is_executable
+  rm -rf "$workdir"
+}
+@test 'gh-r appimage: bpick + mv on non-archive asset' {
+  # Real-world recipe for the ziextract non-archive fallback: the AppImage is not
+  # an archive, must be kept, marked executable, and renamed by the mv ice.
+  run zinit as"program" from"gh-r" bpick"*AppImage" mv"gh* -> ghostty" id-as"test/ghostty" for pkgforge-dev/ghostty-appimage
+  assert $state equals 0
+  assert $output does_not_contain 'ERROR'
+  assert $output does_not_contain "didn't recognize archive type"
+  assert "$ZPLUGINS/test---ghostty/ghostty" is_file
+  assert "$ZPLUGINS/test---ghostty/ghostty" is_executable
+  local -a leftovers=( "$ZPLUGINS"/test---ghostty/*.appimage(N) )
+  assert $#leftovers equals 0
+}
+@test 'ziextract still errors on unrecognized explicit type' {
+  local workdir=$(mktemp -d)
+  printf 'plain text\n' > "$workdir/somefile"
+  _zi_extract_bogus() { cd "$workdir" && ziextract somefile bogus-type }
+  run _zi_extract_bogus
+  assert $output contains "didn't recognize archive type"
+  rm -rf "$workdir"
+}
 @test 'ziextract plain (no flattening)' {
   # extract'' → ziextract with no flags: directory structure is preserved
   local workdir=$(mktemp -d)
