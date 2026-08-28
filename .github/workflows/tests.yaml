@@ -58,8 +58,6 @@ jobs:
       - name: "install homebrew"
         id: setup-homebrew
         uses: Homebrew/actions/setup-homebrew@a657b8b0cd35d0f65cce41fce9b24cf054b49869
-        with:
-          setup-sandbox: true
 
       - name: "install ${{ runner.os }} dependencies"
         if: runner.os == 'Linux'
