@@ -15,6 +15,7 @@ Documentation automatically generated with `zshelldoc'
  .zinit-add-report
  .zinit-any-to-pid
  .zinit-any-to-user-plugin
+ .zinit-cd-quiet
  .zinit-compdef-clear
  .zinit-compdef-replay
  .zinit-diff
@@ -42,6 +43,7 @@ Documentation automatically generated with `zshelldoc'
  .zinit-parse-opts
  .zinit-prepare-home
  .zinit-register-plugin
+ .zinit-restore-dir
  .zinit-run
  .zinit-run-task
  .zinit-set-m-func
@@ -85,7 +87,7 @@ PRECMD-HOOK @zinit-scheduler
 
 ==== Script Body
 
-Has 264 line(s). Calls functions:
+Has 285 line(s). Calls functions:
 
  Script-Body
  |-- +zi-log
@@ -120,8 +122,10 @@ Has 264 line(s). Calls functions:
  |   |   |-- .zinit-load
  |   |   |   |-- +zinit-deploy-message
  |   |   |   |-- .zinit-any-to-user-plugin
+ |   |   |   |-- .zinit-cd-quiet
  |   |   |   |-- .zinit-load-plugin
  |   |   |   |   |-- .zinit-add-report
+ |   |   |   |   |-- .zinit-cd-quiet
  |   |   |   |   |-- .zinit-diff
  |   |   |   |   |   |-- .zinit-diff-env
  |   |   |   |   |   |-- .zinit-diff-functions
@@ -129,6 +133,7 @@ Has 264 line(s). Calls functions:
  |   |   |   |   |   `-- .zinit-diff-parameter
  |   |   |   |   |-- .zinit-diff-env
  |   |   |   |   |-- .zinit-find-other-matches
+ |   |   |   |   |-- .zinit-restore-dir
  |   |   |   |   |-- .zinit-tmp-subst-off
  |   |   |   |   |-- .zinit-tmp-subst-on
  |   |   |   |   `-- :zinit-tmp-subst-autoload
@@ -140,10 +145,12 @@ Has 264 line(s). Calls functions:
  |   |   |   |   |-- +zi-log
  |   |   |   |   |-- +zinit-deploy-message
  |   |   |   |   |-- .zinit-add-report
+ |   |   |   |   |-- .zinit-cd-quiet
  |   |   |   |   |-- .zinit-find-other-matches
  |   |   |   |   |-- .zinit-get-object-path
  |   |   |   |   |   `-- .zinit-any-to-user-plugin
  |   |   |   |   |-- .zinit-pack-ice
+ |   |   |   |   |-- .zinit-restore-dir
  |   |   |   |   |-- .zinit-set-m-func
  |   |   |   |   |   `-- +zi-log
  |   |   |   |   |-- .zinit-setup-params
@@ -151,6 +158,7 @@ Has 264 line(s). Calls functions:
  |   |   |   |-- .zinit-pack-ice
  |   |   |   |-- .zinit-register-plugin
  |   |   |   |   `-- +zi-log
+ |   |   |   |-- .zinit-restore-dir
  |   |   |   |-- .zinit-set-m-func
  |   |   |   |   `-- +zi-log
  |   |   |   |-- .zinit-setup-params
@@ -160,10 +168,12 @@ Has 264 line(s). Calls functions:
  |   |       |-- +zi-log
  |   |       |-- +zinit-deploy-message
  |   |       |-- .zinit-add-report
+ |   |       |-- .zinit-cd-quiet
  |   |       |-- .zinit-find-other-matches
  |   |       |-- .zinit-get-object-path
  |   |       |   `-- .zinit-any-to-user-plugin
  |   |       |-- .zinit-pack-ice
+ |   |       |-- .zinit-restore-dir
  |   |       |-- .zinit-set-m-func
  |   |       |   `-- +zi-log
  |   |       |-- .zinit-setup-params
@@ -172,8 +182,9 @@ Has 264 line(s). Calls functions:
  |   |-- .zinit-run
  |   |   |-- +zi-log
  |   |   |-- .zinit-any-to-user-plugin
- |   |   `-- .zinit-get-object-path
- |   |       `-- .zinit-any-to-user-plugin
+ |   |   |-- .zinit-get-object-path
+ |   |   |   `-- .zinit-any-to-user-plugin
+ |   |   `-- .zinit-restore-dir
  |   |-- .zinit-submit-turbo
  |   |-- compinit
  |   |-- zinit-additional.zsh/+zinit-debug
@@ -439,6 +450,35 @@ Called by:
  zinit-side.zsh/.zinit-exists-physically-message
  zinit-side.zsh/.zinit-exists-physically
  zinit-side.zsh/.zinit-first
+
+==== .zinit-cd-quiet
+
+____
+ 
+ Changes directory without running chpwd hooks or touching the directory stack.
+ 
+ $1 - directory to change into
+
+____
+
+Has 2 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ .zinit-load-plugin
+ .zinit-load-snippet
+ .zinit-load
+ zinit-autoload.zsh/.zinit-unload
+ zinit-install.zsh/.zinit-download-snippet
+ zinit-install.zsh/.zinit-mirror-using-svn
+ zinit-install.zsh/.zinit-setup-plugin-dir
+ zinit-install.zsh/∞zinit-atclone-hook
+ zinit-install.zsh/∞zinit-atpull-e-hook
+ zinit-install.zsh/∞zinit-atpull-hook
+ zinit-install.zsh/∞zinit-configure-base-hook
+ zinit-install.zsh/∞zinit-file-cp-mv-operation
 
 ==== .zinit-compdef-clear
 
@@ -721,8 +761,10 @@ Has 97 line(s). Calls functions:
  .zinit-load
  |-- +zinit-deploy-message
  |-- .zinit-any-to-user-plugin
+ |-- .zinit-cd-quiet
  |-- .zinit-load-plugin
  |   |-- .zinit-add-report
+ |   |-- .zinit-cd-quiet
  |   |-- .zinit-diff
  |   |   |-- .zinit-diff-env
  |   |   |-- .zinit-diff-functions
@@ -730,6 +772,7 @@ Has 97 line(s). Calls functions:
  |   |   `-- .zinit-diff-parameter
  |   |-- .zinit-diff-env
  |   |-- .zinit-find-other-matches
+ |   |-- .zinit-restore-dir
  |   |-- .zinit-tmp-subst-off
  |   |-- .zinit-tmp-subst-on
  |   `-- :zinit-tmp-subst-autoload
@@ -741,10 +784,12 @@ Has 97 line(s). Calls functions:
  |   |-- +zi-log
  |   |-- +zinit-deploy-message
  |   |-- .zinit-add-report
+ |   |-- .zinit-cd-quiet
  |   |-- .zinit-find-other-matches
  |   |-- .zinit-get-object-path
  |   |   `-- .zinit-any-to-user-plugin
  |   |-- .zinit-pack-ice
+ |   |-- .zinit-restore-dir
  |   |-- .zinit-set-m-func
  |   |   `-- +zi-log
  |   |-- .zinit-setup-params
@@ -752,13 +797,14 @@ Has 97 line(s). Calls functions:
  |-- .zinit-pack-ice
  |-- .zinit-register-plugin
  |   `-- +zi-log
+ |-- .zinit-restore-dir
  |-- .zinit-set-m-func
  |   `-- +zi-log
  |-- .zinit-setup-params
  |-- zinit-install.zsh/.zinit-get-package
  `-- zinit-install.zsh/.zinit-setup-plugin-dir
 
-Uses feature(s): _eval_, _setopt_, _source_, _zle_
+Uses feature(s): _eval_, _source_, _zle_
 
 Called by:
 
@@ -786,8 +832,10 @@ Has 12 line(s). Calls functions:
  |-- .zinit-load
  |   |-- +zinit-deploy-message
  |   |-- .zinit-any-to-user-plugin
+ |   |-- .zinit-cd-quiet
  |   |-- .zinit-load-plugin
  |   |   |-- .zinit-add-report
+ |   |   |-- .zinit-cd-quiet
  |   |   |-- .zinit-diff
  |   |   |   |-- .zinit-diff-env
  |   |   |   |-- .zinit-diff-functions
@@ -795,6 +843,7 @@ Has 12 line(s). Calls functions:
  |   |   |   `-- .zinit-diff-parameter
  |   |   |-- .zinit-diff-env
  |   |   |-- .zinit-find-other-matches
+ |   |   |-- .zinit-restore-dir
  |   |   |-- .zinit-tmp-subst-off
  |   |   |-- .zinit-tmp-subst-on
  |   |   `-- :zinit-tmp-subst-autoload
@@ -806,10 +855,12 @@ Has 12 line(s). Calls functions:
  |   |   |-- +zi-log
  |   |   |-- +zinit-deploy-message
  |   |   |-- .zinit-add-report
+ |   |   |-- .zinit-cd-quiet
  |   |   |-- .zinit-find-other-matches
  |   |   |-- .zinit-get-object-path
  |   |   |   `-- .zinit-any-to-user-plugin
  |   |   |-- .zinit-pack-ice
+ |   |   |-- .zinit-restore-dir
  |   |   |-- .zinit-set-m-func
  |   |   |   `-- +zi-log
  |   |   |-- .zinit-setup-params
@@ -817,6 +868,7 @@ Has 12 line(s). Calls functions:
  |   |-- .zinit-pack-ice
  |   |-- .zinit-register-plugin
  |   |   `-- +zi-log
+ |   |-- .zinit-restore-dir
  |   |-- .zinit-set-m-func
  |   |   `-- +zi-log
  |   |-- .zinit-setup-params
@@ -826,10 +878,12 @@ Has 12 line(s). Calls functions:
      |-- +zi-log
      |-- +zinit-deploy-message
      |-- .zinit-add-report
+     |-- .zinit-cd-quiet
      |-- .zinit-find-other-matches
      |-- .zinit-get-object-path
      |   `-- .zinit-any-to-user-plugin
      |-- .zinit-pack-ice
+     |-- .zinit-restore-dir
      |-- .zinit-set-m-func
      |   `-- +zi-log
      |-- .zinit-setup-params
@@ -855,6 +909,7 @@ Has 128 line(s). Calls functions:
 
  .zinit-load-plugin
  |-- .zinit-add-report
+ |-- .zinit-cd-quiet
  |-- .zinit-diff
  |   |-- .zinit-diff-env
  |   |-- .zinit-diff-functions
@@ -862,6 +917,7 @@ Has 128 line(s). Calls functions:
  |   `-- .zinit-diff-parameter
  |-- .zinit-diff-env
  |-- .zinit-find-other-matches
+ |-- .zinit-restore-dir
  |-- .zinit-tmp-subst-off
  |-- .zinit-tmp-subst-on
  `-- :zinit-tmp-subst-autoload
@@ -892,10 +948,12 @@ Has 205 line(s). Calls functions:
  |-- +zi-log
  |-- +zinit-deploy-message
  |-- .zinit-add-report
+ |-- .zinit-cd-quiet
  |-- .zinit-find-other-matches
  |-- .zinit-get-object-path
  |   `-- .zinit-any-to-user-plugin
  |-- .zinit-pack-ice
+ |-- .zinit-restore-dir
  |-- .zinit-set-m-func
  |   `-- +zi-log
  |-- .zinit-setup-params
@@ -986,6 +1044,41 @@ Called by:
 
  .zinit-load
 
+==== .zinit-restore-dir
+
+____
+ 
+ Returns to $1 without leaving the visited directory as the `cd -' target.
+ 
+ zsh tracks the `cd -' target internally and only a real cd/pushd/popd moves
+ it, never an assignment to $OLDPWD, so the only way to forget the directory
+ we visited is to hop through the original $OLDPWD for real on the way back.
+ Do not simplify this to a single cd plus an $OLDPWD assignment. Callers call
+ it unconditionally: an ice body that cds on its own must be undone even when
+ zinit itself never cd'd.
+ 
+ $1 - the $PWD to return to
+ $2 - the $OLDPWD to restore; when empty, since-deleted or unreadable we hop
+ through $1 instead, so `cd -' degrades to a harmless no-op
+
+____
+
+Has 4 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ .zinit-load-plugin
+ .zinit-load-snippet
+ .zinit-load
+ .zinit-run
+ zinit-autoload.zsh/.zinit-unload
+ zinit-install.zsh/∞zinit-atclone-hook
+ zinit-install.zsh/∞zinit-atpull-e-hook
+ zinit-install.zsh/∞zinit-atpull-hook
+ zinit-install.zsh/∞zinit-configure-base-hook
+
 ==== .zinit-run
 
 ____
@@ -1000,10 +1093,11 @@ Has 24 line(s). Calls functions:
  .zinit-run
  |-- +zi-log
  |-- .zinit-any-to-user-plugin
- `-- .zinit-get-object-path
-     `-- .zinit-any-to-user-plugin
+ |-- .zinit-get-object-path
+ |   `-- .zinit-any-to-user-plugin
+ `-- .zinit-restore-dir
 
-Uses feature(s): _eval_, _setopt_
+Uses feature(s): _eval_
 
 Called by:
 
@@ -1033,8 +1127,10 @@ Has 47 line(s). Calls functions:
  |-- .zinit-load
  |   |-- +zinit-deploy-message
  |   |-- .zinit-any-to-user-plugin
+ |   |-- .zinit-cd-quiet
  |   |-- .zinit-load-plugin
  |   |   |-- .zinit-add-report
+ |   |   |-- .zinit-cd-quiet
  |   |   |-- .zinit-diff
  |   |   |   |-- .zinit-diff-env
  |   |   |   |-- .zinit-diff-functions
@@ -1042,6 +1138,7 @@ Has 47 line(s). Calls functions:
  |   |   |   `-- .zinit-diff-parameter
  |   |   |-- .zinit-diff-env
  |   |   |-- .zinit-find-other-matches
+ |   |   |-- .zinit-restore-dir
  |   |   |-- .zinit-tmp-subst-off
  |   |   |-- .zinit-tmp-subst-on
  |   |   `-- :zinit-tmp-subst-autoload
@@ -1053,10 +1150,12 @@ Has 47 line(s). Calls functions:
  |   |   |-- +zi-log
  |   |   |-- +zinit-deploy-message
  |   |   |-- .zinit-add-report
+ |   |   |-- .zinit-cd-quiet
  |   |   |-- .zinit-find-other-matches
  |   |   |-- .zinit-get-object-path
  |   |   |   `-- .zinit-any-to-user-plugin
  |   |   |-- .zinit-pack-ice
+ |   |   |-- .zinit-restore-dir
  |   |   |-- .zinit-set-m-func
  |   |   |   `-- +zi-log
  |   |   |-- .zinit-setup-params
@@ -1064,6 +1163,7 @@ Has 47 line(s). Calls functions:
  |   |-- .zinit-pack-ice
  |   |-- .zinit-register-plugin
  |   |   `-- +zi-log
+ |   |-- .zinit-restore-dir
  |   |-- .zinit-set-m-func
  |   |   `-- +zi-log
  |   |-- .zinit-setup-params
@@ -1073,10 +1173,12 @@ Has 47 line(s). Calls functions:
  |   |-- +zi-log
  |   |-- +zinit-deploy-message
  |   |-- .zinit-add-report
+ |   |-- .zinit-cd-quiet
  |   |-- .zinit-find-other-matches
  |   |-- .zinit-get-object-path
  |   |   `-- .zinit-any-to-user-plugin
  |   |-- .zinit-pack-ice
+ |   |-- .zinit-restore-dir
  |   |-- .zinit-set-m-func
  |   |   `-- +zi-log
  |   |-- .zinit-setup-params
@@ -1428,8 +1530,10 @@ Has 75 line(s). *Is a precmd hook*. Calls functions:
  |   |-- .zinit-load
  |   |   |-- +zinit-deploy-message
  |   |   |-- .zinit-any-to-user-plugin
+ |   |   |-- .zinit-cd-quiet
  |   |   |-- .zinit-load-plugin
  |   |   |   |-- .zinit-add-report
+ |   |   |   |-- .zinit-cd-quiet
  |   |   |   |-- .zinit-diff
  |   |   |   |   |-- .zinit-diff-env
  |   |   |   |   |-- .zinit-diff-functions
@@ -1437,6 +1541,7 @@ Has 75 line(s). *Is a precmd hook*. Calls functions:
  |   |   |   |   `-- .zinit-diff-parameter
  |   |   |   |-- .zinit-diff-env
  |   |   |   |-- .zinit-find-other-matches
+ |   |   |   |-- .zinit-restore-dir
  |   |   |   |-- .zinit-tmp-subst-off
  |   |   |   |-- .zinit-tmp-subst-on
  |   |   |   `-- :zinit-tmp-subst-autoload
@@ -1448,10 +1553,12 @@ Has 75 line(s). *Is a precmd hook*. Calls functions:
  |   |   |   |-- +zi-log
  |   |   |   |-- +zinit-deploy-message
  |   |   |   |-- .zinit-add-report
+ |   |   |   |-- .zinit-cd-quiet
  |   |   |   |-- .zinit-find-other-matches
  |   |   |   |-- .zinit-get-object-path
  |   |   |   |   `-- .zinit-any-to-user-plugin
  |   |   |   |-- .zinit-pack-ice
+ |   |   |   |-- .zinit-restore-dir
  |   |   |   |-- .zinit-set-m-func
  |   |   |   |   `-- +zi-log
  |   |   |   |-- .zinit-setup-params
@@ -1459,6 +1566,7 @@ Has 75 line(s). *Is a precmd hook*. Calls functions:
  |   |   |-- .zinit-pack-ice
  |   |   |-- .zinit-register-plugin
  |   |   |   `-- +zi-log
+ |   |   |-- .zinit-restore-dir
  |   |   |-- .zinit-set-m-func
  |   |   |   `-- +zi-log
  |   |   |-- .zinit-setup-params
@@ -1468,10 +1576,12 @@ Has 75 line(s). *Is a precmd hook*. Calls functions:
  |   |   |-- +zi-log
  |   |   |-- +zinit-deploy-message
  |   |   |-- .zinit-add-report
+ |   |   |-- .zinit-cd-quiet
  |   |   |-- .zinit-find-other-matches
  |   |   |-- .zinit-get-object-path
  |   |   |   `-- .zinit-any-to-user-plugin
  |   |   |-- .zinit-pack-ice
+ |   |   |-- .zinit-restore-dir
  |   |   |-- .zinit-set-m-func
  |   |   |   `-- +zi-log
  |   |   |-- .zinit-setup-params
@@ -1540,10 +1650,12 @@ Has 15 line(s). Calls functions:
      |-- +zi-log
      |-- +zinit-deploy-message
      |-- .zinit-add-report
+     |-- .zinit-cd-quiet
      |-- .zinit-find-other-matches
      |-- .zinit-get-object-path
      |   `-- .zinit-any-to-user-plugin
      |-- .zinit-pack-ice
+     |-- .zinit-restore-dir
      |-- .zinit-set-m-func
      |   `-- +zi-log
      |-- .zinit-setup-params
@@ -1653,8 +1765,10 @@ Has 562 line(s). Calls functions:
  |   |-- .zinit-load
  |   |   |-- +zinit-deploy-message
  |   |   |-- .zinit-any-to-user-plugin
+ |   |   |-- .zinit-cd-quiet
  |   |   |-- .zinit-load-plugin
  |   |   |   |-- .zinit-add-report
+ |   |   |   |-- .zinit-cd-quiet
  |   |   |   |-- .zinit-diff
  |   |   |   |   |-- .zinit-diff-env
  |   |   |   |   |-- .zinit-diff-functions
@@ -1662,6 +1776,7 @@ Has 562 line(s). Calls functions:
  |   |   |   |   `-- .zinit-diff-parameter
  |   |   |   |-- .zinit-diff-env
  |   |   |   |-- .zinit-find-other-matches
+ |   |   |   |-- .zinit-restore-dir
  |   |   |   |-- .zinit-tmp-subst-off
  |   |   |   |-- .zinit-tmp-subst-on
  |   |   |   `-- :zinit-tmp-subst-autoload
@@ -1673,10 +1788,12 @@ Has 562 line(s). Calls functions:
  |   |   |   |-- +zi-log
  |   |   |   |-- +zinit-deploy-message
  |   |   |   |-- .zinit-add-report
+ |   |   |   |-- .zinit-cd-quiet
  |   |   |   |-- .zinit-find-other-matches
  |   |   |   |-- .zinit-get-object-path
  |   |   |   |   `-- .zinit-any-to-user-plugin
  |   |   |   |-- .zinit-pack-ice
+ |   |   |   |-- .zinit-restore-dir
  |   |   |   |-- .zinit-set-m-func
  |   |   |   |   `-- +zi-log
  |   |   |   |-- .zinit-setup-params
@@ -1684,6 +1801,7 @@ Has 562 line(s). Calls functions:
  |   |   |-- .zinit-pack-ice
  |   |   |-- .zinit-register-plugin
  |   |   |   `-- +zi-log
+ |   |   |-- .zinit-restore-dir
  |   |   |-- .zinit-set-m-func
  |   |   |   `-- +zi-log
  |   |   |-- .zinit-setup-params
@@ -1693,10 +1811,12 @@ Has 562 line(s). Calls functions:
  |       |-- +zi-log
  |       |-- +zinit-deploy-message
  |       |-- .zinit-add-report
+ |       |-- .zinit-cd-quiet
  |       |-- .zinit-find-other-matches
  |       |-- .zinit-get-object-path
  |       |   `-- .zinit-any-to-user-plugin
  |       |-- .zinit-pack-ice
+ |       |-- .zinit-restore-dir
  |       |-- .zinit-set-m-func
  |       |   `-- +zi-log
  |       |-- .zinit-setup-params
@@ -1705,8 +1825,9 @@ Has 562 line(s). Calls functions:
  |-- .zinit-run
  |   |-- +zi-log
  |   |-- .zinit-any-to-user-plugin
- |   `-- .zinit-get-object-path
- |       `-- .zinit-any-to-user-plugin
+ |   |-- .zinit-get-object-path
+ |   |   `-- .zinit-any-to-user-plugin
+ |   `-- .zinit-restore-dir
  |-- .zinit-submit-turbo
  |-- compinit
  |-- zinit-additional.zsh/+zinit-debug
@@ -1812,8 +1933,10 @@ Has 1 line(s). Calls functions:
      |   |-- .zinit-load
      |   |   |-- +zinit-deploy-message
      |   |   |-- .zinit-any-to-user-plugin
+     |   |   |-- .zinit-cd-quiet
      |   |   |-- .zinit-load-plugin
      |   |   |   |-- .zinit-add-report
+     |   |   |   |-- .zinit-cd-quiet
      |   |   |   |-- .zinit-diff
      |   |   |   |   |-- .zinit-diff-env
      |   |   |   |   |-- .zinit-diff-functions
@@ -1821,6 +1944,7 @@ Has 1 line(s). Calls functions:
      |   |   |   |   `-- .zinit-diff-parameter
      |   |   |   |-- .zinit-diff-env
      |   |   |   |-- .zinit-find-other-matches
+     |   |   |   |-- .zinit-restore-dir
      |   |   |   |-- .zinit-tmp-subst-off
      |   |   |   |-- .zinit-tmp-subst-on
      |   |   |   `-- :zinit-tmp-subst-autoload
@@ -1832,10 +1956,12 @@ Has 1 line(s). Calls functions:
      |   |   |   |-- +zi-log
      |   |   |   |-- +zinit-deploy-message
      |   |   |   |-- .zinit-add-report
+     |   |   |   |-- .zinit-cd-quiet
      |   |   |   |-- .zinit-find-other-matches
      |   |   |   |-- .zinit-get-object-path
      |   |   |   |   `-- .zinit-any-to-user-plugin
      |   |   |   |-- .zinit-pack-ice
+     |   |   |   |-- .zinit-restore-dir
      |   |   |   |-- .zinit-set-m-func
      |   |   |   |   `-- +zi-log
      |   |   |   |-- .zinit-setup-params
@@ -1843,6 +1969,7 @@ Has 1 line(s). Calls functions:
      |   |   |-- .zinit-pack-ice
      |   |   |-- .zinit-register-plugin
      |   |   |   `-- +zi-log
+     |   |   |-- .zinit-restore-dir
      |   |   |-- .zinit-set-m-func
      |   |   |   `-- +zi-log
      |   |   |-- .zinit-setup-params
@@ -1852,10 +1979,12 @@ Has 1 line(s). Calls functions:
      |       |-- +zi-log
      |       |-- +zinit-deploy-message
      |       |-- .zinit-add-report
+     |       |-- .zinit-cd-quiet
      |       |-- .zinit-find-other-matches
      |       |-- .zinit-get-object-path
      |       |   `-- .zinit-any-to-user-plugin
      |       |-- .zinit-pack-ice
+     |       |-- .zinit-restore-dir
      |       |-- .zinit-set-m-func
      |       |   `-- +zi-log
      |       |-- .zinit-setup-params
@@ -1864,8 +1993,9 @@ Has 1 line(s). Calls functions:
      |-- .zinit-run
      |   |-- +zi-log
      |   |-- .zinit-any-to-user-plugin
-     |   `-- .zinit-get-object-path
-     |       `-- .zinit-any-to-user-plugin
+     |   |-- .zinit-get-object-path
+     |   |   `-- .zinit-any-to-user-plugin
+     |   `-- .zinit-restore-dir
      |-- .zinit-submit-turbo
      |-- compinit
      |-- zinit-additional.zsh/+zinit-debug

@@ -1419,7 +1419,9 @@ Has 385 line(s). Calls functions:
  |-- zinit-additional.zsh/.zinit-debug-clear
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |-- zinit.zsh/+zi-log
- `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit.zsh/.zinit-cd-quiet
+ `-- zinit.zsh/.zinit-restore-dir
 
 Uses feature(s): _alias_, _bindkey_, _eval_, _setopt_, _unalias_, _unfunction_, _zle_, _zstyle_
 

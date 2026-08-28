@@ -131,7 +131,7 @@ ____
 
 ____
 
-Has 53 line(s). Calls functions:
+Has 59 line(s). Calls functions:
 
  .zinit-download-file-stdout
  `-- zinit.zsh/+zi-log
@@ -175,8 +175,10 @@ Has 377 line(s). Calls functions:
  |   |-- zinit.zsh/+zi-log
  |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- .zinit-mirror-using-svn
+ |   `-- zinit.zsh/.zinit-cd-quiet
  |-- zinit-side.zsh/.zinit-store-ices
  |-- zinit.zsh/+zi-log
+ |-- zinit.zsh/.zinit-cd-quiet
  `-- zinit.zsh/is-at-least
 
 Uses feature(s): _is-at-least_, _setopt_, _trap_, _zcompile_
@@ -414,7 +416,10 @@ ____
 
 ____
 
-Has 29 line(s). Doesn't call other functions.
+Has 29 line(s). Calls functions:
+
+ .zinit-mirror-using-svn
+ `-- zinit.zsh/.zinit-cd-quiet
 
 Uses feature(s): _setopt_
 
@@ -461,6 +466,7 @@ Has 222 line(s). Calls functions:
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |-- zinit-side.zsh/.zinit-store-ices
  |-- zinit.zsh/+zi-log
+ |-- zinit.zsh/.zinit-cd-quiet
  `-- zinit.zsh/.zinit-get-object-path
 
 Uses feature(s): _setopt_, _trap_
@@ -504,8 +510,10 @@ Has 76 line(s). Calls functions:
  |   |   |-- zinit.zsh/+zi-log
  |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |   |-- .zinit-mirror-using-svn
+ |   |   `-- zinit.zsh/.zinit-cd-quiet
  |   |-- zinit-side.zsh/.zinit-store-ices
  |   |-- zinit.zsh/+zi-log
+ |   |-- zinit.zsh/.zinit-cd-quiet
  |   `-- zinit.zsh/is-at-least
  |-- zinit.zsh/+zi-log
  |-- zinit.zsh/.zinit-get-object-path
@@ -561,7 +569,7 @@ ____
 
 ____
 
-Has 277 line(s). Calls functions:
+Has 284 line(s). Calls functions:
 
  ziextract
  `-- zinit.zsh/+zi-log
@@ -585,39 +593,41 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== ∞zinit-atclone-hook
 
-Has 26 line(s). Calls functions:
+Has 22 line(s). Calls functions:
 
  ∞zinit-atclone-hook
  |-- zinit-side.zsh/.zinit-countdown
+ |-- zinit.zsh/.zinit-cd-quiet
+ |-- zinit.zsh/.zinit-restore-dir
  `-- zinit.zsh/@zinit-substitute
 
-Uses feature(s): _eval_, _setopt_
+Uses feature(s): _eval_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== ∞zinit-atpull-e-hook
 
-Has 22 line(s). Calls functions:
+Has 20 line(s). Calls functions:
 
  ∞zinit-atpull-e-hook
  |-- .zinit-at-eval
  |   `-- zinit.zsh/@zinit-substitute
- `-- zinit-side.zsh/.zinit-countdown
-
-Uses feature(s): _setopt_
+ |-- zinit-side.zsh/.zinit-countdown
+ |-- zinit.zsh/.zinit-cd-quiet
+ `-- zinit.zsh/.zinit-restore-dir
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== ∞zinit-atpull-hook
 
-Has 22 line(s). Calls functions:
+Has 20 line(s). Calls functions:
 
  ∞zinit-atpull-hook
  |-- .zinit-at-eval
  |   `-- zinit.zsh/@zinit-substitute
- `-- zinit-side.zsh/.zinit-countdown
-
-Uses feature(s): _setopt_
+ |-- zinit-side.zsh/.zinit-countdown
+ |-- zinit.zsh/.zinit-cd-quiet
+ `-- zinit.zsh/.zinit-restore-dir
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -640,10 +650,12 @@ ____
 
 ____
 
-Has 46 line(s). Calls functions:
+Has 49 line(s). Calls functions:
 
  ∞zinit-configure-base-hook
  |-- zinit.zsh/+zi-log
+ |-- zinit.zsh/.zinit-cd-quiet
+ |-- zinit.zsh/.zinit-restore-dir
  `-- zinit.zsh/@zinit-substitute
 
 Uses feature(s): _eval_, _setopt_
@@ -660,6 +672,8 @@ Has 1 line(s). Calls functions:
  ∞zinit-configure-e-hook
  `-- ∞zinit-configure-base-hook
      |-- zinit.zsh/+zi-log
+     |-- zinit.zsh/.zinit-cd-quiet
+     |-- zinit.zsh/.zinit-restore-dir
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
@@ -679,6 +693,8 @@ Has 1 line(s). Calls functions:
  ∞zinit-configure-hook
  `-- ∞zinit-configure-base-hook
      |-- zinit.zsh/+zi-log
+     |-- zinit.zsh/.zinit-cd-quiet
+     |-- zinit.zsh/.zinit-restore-dir
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
@@ -690,6 +706,7 @@ Has 1 line(s). Calls functions:
  ∞zinit-cp-hook
  `-- ∞zinit-file-cp-mv-operation
      |-- zinit.zsh/+zi-log
+     |-- zinit.zsh/.zinit-cd-quiet
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
@@ -713,9 +730,8 @@ Has 49 line(s). Calls functions:
 
  ∞zinit-file-cp-mv-operation
  |-- zinit.zsh/+zi-log
+ |-- zinit.zsh/.zinit-cd-quiet
  `-- zinit.zsh/@zinit-substitute
-
-Uses feature(s): _setopt_
 
 Called by:
 
@@ -784,6 +800,7 @@ Has 1 line(s). Calls functions:
  ∞zinit-mv-hook
  `-- ∞zinit-file-cp-mv-operation
      |-- zinit.zsh/+zi-log
+     |-- zinit.zsh/.zinit-cd-quiet
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
