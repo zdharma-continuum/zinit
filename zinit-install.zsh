@@ -666,6 +666,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt localtraps extendedglob
 
+    # Authenticate GitHub API requests when a token is available — the anonymous
+    # limit of 60 requests/hour/IP is too low for e.g. CI runners. Restricted to
+    # api.github.com so the token is never sent to any other host.
+    local -a curl_auth wget_auth
+    local gh_token=${GITHUB_TOKEN:-$GH_TOKEN}
+    if [[ $url == https://api.github.com/* && -n $gh_token ]] {
+        curl_auth=( -H "Authorization: Bearer $gh_token" )
+        wget_auth=( --header="Authorization: Bearer $gh_token" )
+    }
+
     # Return file directly for file:// urls, wget doesn't support this schema
     if [[ "$url" =~ ^file:// ]] {
         local filepath=${url##file://}
@@ -682,12 +692,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
         if (( ${+commands[curl]} )); then
             if [[ -n $progress ]]; then
-                command curl --progress-bar -fSL "$url" 2> >(.zinit-single-line >&2) || return 1
+                command curl --retry 2 --retry-delay 1 "${curl_auth[@]}" --progress-bar -fSL "$url" 2> >(.zinit-single-line >&2) || return 1
             else
-                command curl -fsSL "$url" || return 1
+                command curl --retry 2 --retry-delay 1 "${curl_auth[@]}" -fsSL "$url" || return 1
             fi
         elif (( ${+commands[wget]} )); then
-            command wget ${${progress:--q}:#1} "$url" -O - || return 1
+            command wget --tries=3 "${wget_auth[@]}" ${${progress:--q}:#1} "$url" -O - || return 1
         elif (( ${+commands[lftp]} )); then
             command lftp -c "cat $url" || return 1
         elif (( ${+commands[lynx]} )); then
@@ -701,12 +711,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     } else {
         if type curl 2>/dev/null 1>&2; then
             if [[ -n $progress ]]; then
-                command curl --progress-bar -fSL "$url" 2> >(.zinit-single-line >&2) || return 1
+                command curl --retry 2 --retry-delay 1 "${curl_auth[@]}" --progress-bar -fSL "$url" 2> >(.zinit-single-line >&2) || return 1
             else
-                command curl -fsSL "$url" || return 1
+                command curl --retry 2 --retry-delay 1 "${curl_auth[@]}" -fsSL "$url" || return 1
             fi
         elif type wget 2>/dev/null 1>&2; then
-            command wget ${${progress:--q}:#1} "$url" -O - || return 1
+            command wget --tries=3 "${wget_auth[@]}" ${${progress:--q}:#1} "$url" -O - || return 1
         elif type lftp 2>/dev/null 1>&2; then
             command lftp -c "cat $url" || return 1
         else
