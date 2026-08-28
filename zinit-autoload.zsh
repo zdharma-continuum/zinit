@@ -299,15 +299,6 @@ ZINIT[EXTENDED_GLOB]=""
     fi
     return 0
 } # ]]]
-# FUNCTION: .zinit-at-eval [[[
-.zinit-at-eval() {
-    local atclone="$2" atpull="$1"
-    integer retval
-    @zinit-substitute atclone atpull
-    [[ $atpull = "%atclone" ]] && { eval "$atclone"; retval=$?; } || { eval "$atpull"; retval=$?; }
-    return $retval
-} # ]]]
-
 #
 # Format functions
 #

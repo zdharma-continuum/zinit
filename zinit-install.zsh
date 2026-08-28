@@ -1855,18 +1855,6 @@ ziextract() {
         }
     )
 } # ]]]
-# FUNCTION: .zinit-at-eval [[[
-.zinit-at-eval() {
-    local atpull="$1" atclone="$2"
-    integer retval
-    @zinit-substitute atclone atpull
-
-    local cmd="$atpull"
-    [[ $atpull == "%atclone" ]] && cmd="$atclone"
-
-    eval "$cmd"
-    return "$?"
-} # ]]]
 # FUNCTION: .zinit-get-cygwin-package [[[
 .zinit-get-cygwin-package() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
