@@ -1717,20 +1717,54 @@ ziextract() {
             ;;
         ((#i)*.dmg)
             →zinit-extract() {
-                local prog
-                for prog ( hdiutil cp ) { →zinit-check $prog "$file" || return 1; }
-
-                integer retval
-                local attached_vol="$( command hdiutil attach "$file" | \
-                           command tail -n1 | command cut -f 3 )"
-
-                command cp -Rf ${attached_vol:-${TMPDIR:-/tmp}/acb321GEF}/*(D) .
-                retval=$?
-                command hdiutil detach $attached_vol
-
-                if (( retval )) {
-                    +zi-log "{info}[{pre}ziextract{info}]{error} Error:{msg} problem occurred when attempted to copy the files" \
-                            "from the mounted image: \`{obj}${file}{msg}'.{rst}"
+                →zinit-check hdiutil "$file" || return 1
+                integer retval attached=0 copied=0
+                local mnt="${TMPDIR:-/tmp}/zinit-dmg-$$-$RANDOM"
+                {
+                    command mkdir -p "$mnt" || return 1
+                    # Private -mountpoint: multi-partition-proof, no output
+                    # parsing; -nobrowse keeps Finder away; the `yes' pipe
+                    # auto-accepts embedded license agreements which otherwise
+                    # hang a non-interactive install.
+                    command yes | command hdiutil attach -readonly -nobrowse \
+                        -noverify -noautoopen -mountpoint "$mnt" "$file" >/dev/null
+                    if (( $? )) {
+                        +zi-log "{info}[{pre}ziextract{info}]{error} Error:{msg} \`{cmd}hdiutil attach{msg}' failed for the image \`{obj}${file}{msg}'.{rst}"
+                        return 1
+                    }
+                    attached=1
+                    local entry mnt_real="${mnt:A}"
+                    local -a entries
+                    entries=( "$mnt"/*(DN) )
+                    for entry ( "${entries[@]}" ) {
+                        # Skip volume decoration/metadata and drag-install
+                        # targets (`Applications -> /Applications' etc.).
+                        [[ ${entry:t} = (.fseventsd|.Trashes|.TemporaryItems|.DS_Store|.background|.VolumeIcon.icns|.DocumentRevisions-V100|.Spotlight-V100|.apdisk) ]] && continue
+                        [[ -h $entry && ${entry:A} != $mnt_real/* ]] && continue
+                        # ditto preserves xattrs/resource forks, keeping .app
+                        # code signatures valid; cp -R does not.
+                        if (( ${+commands[ditto]} )) {
+                            command ditto "$entry" "./${entry:t}"
+                        } else {
+                            command cp -Rp "$entry" "./${entry:t}"
+                        }
+                        (( $? )) && retval=1 || (( ++ copied ))
+                    }
+                    if (( retval || ! copied )) {
+                        retval=1
+                        +zi-log "{info}[{pre}ziextract{info}]{error} Error:{msg} problem occurred when attempted to copy the files" \
+                                "from the mounted image: \`{obj}${file}{msg}'.{rst}"
+                    }
+                } always {
+                    if (( attached )) {
+                        integer tries
+                        for (( tries = 1; tries <= 3; ++ tries )) {
+                            command hdiutil detach "$mnt" &>/dev/null && break
+                            command sleep 1
+                        }
+                        (( tries > 3 )) && command hdiutil detach "$mnt" -force &>/dev/null
+                    }
+                    command rmdir "$mnt" 2>/dev/null
                 }
                 return $retval
             }
