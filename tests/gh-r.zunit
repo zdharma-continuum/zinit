@@ -716,6 +716,20 @@
   local skim="$ZBIN/sk"; assert "$skim" is_executable
   run "$skim" --version; assert $state equals 0
 }
+@test 'sniffnet' { # Comfortably monitor your Internet traffic - macOS dmg app bundle
+  [[ $os_type != darwin ]] && skip "dmg extraction requires macOS, not $os_type"
+  # Neither dmg asset name carries a matchable arch token, so pin it.
+  local asset='*AppleSilicon.dmg'
+  [[ $arch == arm64 ]] || asset='*Intel.dmg'
+  run zinit id-as'test/sniffnet' bpick"$asset" for @GyulyVGC/sniffnet; assert $state equals 0
+  local pdir="${ZINIT[PLUGINS_DIR]}/test---sniffnet"
+  assert "$pdir/Sniffnet.app/Contents/MacOS/sniffnet" is_file
+  [[ ! -e $pdir/Applications && ! -h $pdir/Applications ]] || fail 'volume drag-install symlink was copied'
+  assert "$(<$pdir/._zinit/apps)" same_as 'Sniffnet.app'
+  assert "${ZINIT[APPLICATIONS_DIR]}/Sniffnet.app" is_link
+  assert "${ZINIT[APPLICATIONS_DIR]}/Sniffnet.app/Contents/MacOS/sniffnet" is_file
+  assert "$(command hdiutil info)" does_not_contain 'zinit-dmg-'
+}
 @test 'snm' { # Smol and simple node version manager written in rust
   run zinit for @numToStr/snm; assert $state equals 0
   local snm="$ZBIN/snm"; assert "$snm" is_executable
