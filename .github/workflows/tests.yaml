@@ -99,4 +99,6 @@ jobs:
           make all install
 
       - name: "run ${{ matrix.zunit_test }} tests"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: zunit run ${{ matrix.zunit_flag }} tests/${{ matrix.zunit_test }}.zunit
