@@ -1,3 +1,10 @@
+## [3.15.2](https://github.com/zdharma-continuum/zinit/compare/v3.15.1...v3.15.2) (2026-08-28)
+
+
+### Bug Fixes
+
+* **install:** treat non-archive single file gracefully in ziextract. ([981cb15](https://github.com/zdharma-continuum/zinit/commit/981cb1582ece95dfad9d6c53d34a601f6b25391f)), closes [#771](https://github.com/zdharma-continuum/zinit/issues/771) [#r](https://github.com/zdharma-continuum/zinit/issues/r) [Pre-#771](https://github.com/Pre-/issues/771)
+
 ## [3.15.1](https://github.com/zdharma-continuum/zinit/compare/v3.15.0...v3.15.1) (2026-08-27)
 
 
