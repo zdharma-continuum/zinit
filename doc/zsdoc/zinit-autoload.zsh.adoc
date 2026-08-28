@@ -8,7 +8,6 @@ Documentation automatically generated with `zshelldoc'
 == FUNCTIONS
  .zi-check-for-git-changes
  .zinit-any-to-uspl2
- .zinit-at-eval
  .zinit-build-module
  .zinit-cd
  .zinit-cdisable
@@ -122,17 +121,6 @@ Called by:
 
  .zinit-clear-report-for
  .zinit-exists-message
-
-==== .zinit-at-eval
-
-Has 5 line(s). Calls functions:
-
- .zinit-at-eval
- `-- zinit.zsh/@zinit-substitute
-
-Uses feature(s): _eval_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== .zinit-build-module
 
@@ -444,7 +432,7 @@ ____
 
 ____
 
-Has 17 line(s). Calls functions:
+Has 19 line(s). Calls functions:
 
  .zinit-confirm
  `-- zinit.zsh/+zi-log
@@ -1036,7 +1024,7 @@ Called by:
 
 ==== .zinit-run-delete-hooks
 
-Has 33 line(s). Calls functions:
+Has 35 line(s). Calls functions:
 
  .zinit-run-delete-hooks
  `-- zinit.zsh/+zi-log
@@ -1398,7 +1386,7 @@ ____
 
 ____
 
-Has 385 line(s). Calls functions:
+Has 386 line(s). Calls functions:
 
  .zinit-unload
  |-- .zinit-clear-report-for
@@ -1419,7 +1407,9 @@ Has 385 line(s). Calls functions:
  |-- zinit-additional.zsh/.zinit-debug-clear
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |-- zinit.zsh/+zi-log
- `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit.zsh/.zinit-cd-quiet
+ `-- zinit.zsh/.zinit-restore-dir
 
 Uses feature(s): _alias_, _bindkey_, _eval_, _setopt_, _unalias_, _unfunction_, _zle_, _zstyle_
 

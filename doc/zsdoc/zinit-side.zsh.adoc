@@ -7,6 +7,7 @@ Documentation automatically generated with `zshelldoc'
 
 == FUNCTIONS
  .zinit-any-colorify-as-uspl2
+ .zinit-at-eval
  .zinit-compute-ice
  .zinit-countdown
  .zinit-exists-physically
@@ -61,6 +62,30 @@ Called by:
  zinit-install.zsh/.zinit-install-completions
  zinit-install.zsh/.zinit-setup-plugin-dir
  zinit.zsh/.zinit-formatter-pid
+
+==== .zinit-at-eval
+
+____
+ 
+ Runs the atpull'' ice, also replaying the atclone'' one when the
+ atpull'%atclone' form is used.
+ 
+ $1 - the value of the atpull'' ice
+ $2 - the value of the atclone'' ice
+
+____
+
+Has 7 line(s). Calls functions:
+
+ .zinit-at-eval
+ `-- zinit.zsh/@zinit-substitute
+
+Uses feature(s): _eval_
+
+Called by:
+
+ zinit-install.zsh/∞zinit-atpull-e-hook
+ zinit-install.zsh/∞zinit-atpull-hook
 
 ==== .zinit-compute-ice
 

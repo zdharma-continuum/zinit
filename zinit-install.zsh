@@ -69,6 +69,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         ver=${ICE[ver]} local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} \
         pkgjson tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123}
     local URL=https://raw.githubusercontent.com/${ZINIT[PACKAGES_REPO]}/${ver:-${ZINIT[PACKAGES_BRANCH]}}/${pkg}/package.json
+    # Hide zinit's internal positional parameters from the eval'd package ices.
+    builtin set --
 
     # Consume (i.e., delete) the ver ice to avoid being consumed again at git-clone time
     [[ -n "$ver" ]] && unset 'ICE[ver]'
@@ -1282,6 +1284,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     local -a tmp opts
     local url=$1
+    # Hide zinit's internal positional parameters from the eval'd snippet URL.
+    builtin set --
     integer correct=0
     [[ -o ksharrays ]] && correct=1
     opts=( -u ) # for zinit-annex-readurl
@@ -1855,18 +1859,6 @@ ziextract() {
         }
     )
 } # ]]]
-# FUNCTION: .zinit-at-eval [[[
-.zinit-at-eval() {
-    local atpull="$1" atclone="$2"
-    integer retval
-    @zinit-substitute atclone atpull
-
-    local cmd="$atpull"
-    [[ $atpull == "%atclone" ]] && cmd="$atclone"
-
-    eval "$cmd"
-    return "$?"
-} # ]]]
 # FUNCTION: .zinit-get-cygwin-package [[[
 .zinit-get-cygwin-package() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
@@ -1999,6 +1991,8 @@ zimv() {
     } else {
         local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
     }
+    # Hide zinit's internal positional parameters from the eval'd ice.
+    builtin set --
     if (( ( OPTS[opt_-r,--reset] && ZINIT[-r/--reset-opt-hook-has-been-run] == 0 ) || \
         ( ${+ICE[reset]} && ZINIT[-r/--reset-opt-hook-has-been-run] == 1 )
     )) {
@@ -2086,6 +2080,8 @@ zimv() {
     else
         local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
     fi
+    # Hide zinit's internal positional parameters from the eval'd ice.
+    builtin set --
     local flags configure eflags aflags ice='{b}configure{rst}:'
     configure=${ICE[configure]}
     @zinit-substitute configure
@@ -2152,6 +2148,8 @@ zimv() {
     else
         local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
     fi
+    # Hide zinit's internal positional parameters from the eval'd ice.
+    builtin set --
     local make=${ICE[make]} ice='{b}make{rst}:'
     @zinit-substitute make
     (( ${+ICE[make]} )) || return 0
@@ -2232,6 +2230,8 @@ __zinit-cmake-base-hook () {
     else
         local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
     fi
+    # Hide zinit's internal positional parameters from the eval'd ice.
+    builtin set --
     (( OPTS[opt_-q,--quiet] || ZINIT[DEBUG] )) && local QUIET='2>/dev/null 1>&2'
     local c ret=0 ice='{b}cmake{rst}:'
     for c in "-S ${dir} -B ${dir}/build -DCMAKE_BUILD_TYPE=Release --install-prefix ${ZINIT[ZPFX]} ${QUIET}" "--build ${dir}/build --parallel $(nproc) ${QUIET}" "--install ${dir}/build ${QUIET}"; do
@@ -2254,6 +2254,9 @@ __zinit-cmake-base-hook () {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
+
+    # Hide zinit's internal positional parameters from the eval'd ice.
+    builtin set --
 
     local atclone=${ICE[atclone]}
     @zinit-substitute atclone
@@ -2417,7 +2420,7 @@ __zinit-cmake-base-hook () {
     .zinit-countdown atpull && {
         local ___oldcd=$PWD ___oldoldpwd=$OLDPWD
         (( ${+ICE[nocd]} == 0 )) && .zinit-cd-quiet "$dir"
-        .zinit-at-eval "$atpull" $ICE[atclone]
+        .zinit-at-eval "$atpull" "$ICE[atclone]"
         rc="$?"
         .zinit-restore-dir "$___oldcd" "$___oldoldpwd"
     }
@@ -2431,6 +2434,9 @@ __zinit-cmake-base-hook () {
     [[ "$1" = plugin ]] && \
         local tpe="$1" dir="${5#%}" hook="$6" subtype="$7" || \
         local tpe="$1" dir="${4#%}" hook="$5" subtype="$6"
+
+    # Hide zinit's internal positional parameters from the eval'd ice.
+    builtin set --
 
     if (( !OPTS[opt_-q,--quiet] )) {
         +zi-log "Running $tpe's provided update code: {info}${ICE[ps-on-update][1,50]}${ICE[ps-on-update][51]:+…}{rst}"

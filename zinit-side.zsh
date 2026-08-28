@@ -35,6 +35,23 @@
     REPLY="${user:+${ZINIT[col-uname]}${user}${ZINIT[col-rst]}/}${ZINIT[col-pname]}${plugin}${ZINIT[col-rst]}"
   fi
 } # ]]]
+# FUNCTION: .zinit-at-eval [[[
+# Runs the atpull'' ice, also replaying the atclone'' one when the
+# atpull'%atclone' form is used.
+#
+# $1 - the value of the atpull'' ice
+# $2 - the value of the atclone'' ice
+.zinit-at-eval() {
+  local ___atpull="$1" ___atclone="$2"
+  @zinit-substitute ___atclone ___atpull
+
+  local ___cmd="$___atpull"
+  [[ $___atpull == "%atclone" ]] && ___cmd="$___atclone"
+
+  # Hide zinit's internal positional parameters from the eval'd ice.
+  builtin set --
+  eval "$___cmd"
+} # ]]]
 # FUNCTION: .zinit-compute-ice [[[
 # Computes ICE array
 #   - input

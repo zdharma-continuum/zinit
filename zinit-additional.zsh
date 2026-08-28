@@ -76,11 +76,13 @@
         builtin read -t 1 ___tmp <>"${___fle:r}.fifo2"
     done >>! "$ZSRV_WORK_DIR/$ZSRV_ID".log 2>&1
 } # ]]]
-# FUNCTION: .zinit-wrap-track-functions [[[
-.zinit-wrap-track-functions() {
+# FUNCTION: .zinit-wrap-functions [[[
+.zinit-wrap-functions() {
     local user="$1" plugin="$2" id_as="$3" f
+    # Hide zinit's internal positional parameters from the eval'd wrappers.
+    builtin set --
     local -a wt
-    wt=( ${(@s.;.)ICE[wrap-track]} )
+    wt=( ${(@s.;.)ICE[wrap]} )
     for f in ${wt[@]}; do
         functions[${f}-zinit-bkp]="${functions[$f]}"
         eval "
