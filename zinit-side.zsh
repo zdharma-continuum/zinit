@@ -388,6 +388,52 @@
   reply=( "$local_dirA/$dirnameA" "$svn_dirA" "$local_dirB/$dirnameB" "${fileB_there[1]##$local_dirB/$dirnameB/#}" )
 } # ]]]
 
+# FUNCTION: .zinit-unlink-apps [[[
+# Removes from ZINIT[APPLICATIONS_DIR] the symlinks that lead into the
+# given object directory (created for .app bundles from a .dmg image).
+# Only symlinks resolving into $1 are removed - real files/dirs and
+# foreign symlinks are left untouched.
+#
+# $1  - plugin or snippet directory (absolute path)
+# $2… - optional: only these bundle names; default: union of the
+#       ._zinit/apps marker and top-level *.app dirs in $1
+.zinit-unlink-apps() {
+  builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+  setopt extendedglob typesetsilent noshortloops warncreateglobal
+  local dir="${1%/}" appsdir="${ZINIT[APPLICATIONS_DIR]:-$HOME/Applications}"
+  shift
+  [[ -n $dir && -n $appsdir && -d $appsdir ]] || return 0
+  local -aU names
+  if (( $# )) {
+    names=( "$@" )
+  } else {
+    [[ -s $dir/._zinit/apps ]] && names=( ${(f)"$(<$dir/._zinit/apps)"} )
+    names+=( "$dir"/*.app(DN-/:t) )
+  }
+  local name lnk tgt dir_real="${dir:A}"
+  local -a lnk_data
+  for name ( "${names[@]}" ) {
+    name="${name:t}"
+    [[ -n $name ]] || continue
+    lnk="$appsdir/$name"
+    [[ -h $lnk ]] || continue
+    # ${lnk:A} cannot be used here: it refuses to resolve a dangling symlink
+    # (e.g. right after an update backed the old bundle up into ._backup), so
+    # read the link's own target and canonicalize its parent instead.
+    if (( ZINIT[HAVE_ZSTAT] )) {
+      { zstat +link -A lnk_data "$lnk"; } 2>/dev/null && tgt="${lnk_data[1]}" || tgt=
+    } else {
+      tgt="$(command readlink -- "$lnk" 2>/dev/null)"
+    }
+    [[ -n $tgt ]] || continue
+    [[ $tgt != /* ]] && tgt="$appsdir/$tgt"
+    tgt="${tgt:h:A}/${tgt:t}"
+    [[ $tgt = $dir_real/* ]] || continue
+    command rm -f -- "$lnk"
+  }
+  return 0
+} # ]]]
+
 # Local Variables:
 # mode: Shell-Script
 # sh-indentation: 2

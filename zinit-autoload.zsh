@@ -1865,6 +1865,9 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 # FUNCTION: .zinit-run-delete-hooks [[[
 .zinit-run-delete-hooks () {
     local make_path=$5/Makefile mfest_path=$5/build/install_manifest.txt quiet='2>/dev/null 1>&2'
+    # Remove Applications-dir symlinks leading into the object's directory
+    # (created for .app bundles unpacked from a .dmg image).
+    .zinit-unlink-apps "$5"
     if [[ -f $make_path ]] && grep '^uninstall' $make_path &> /dev/null; then
         +zi-log -n "{m} Make uninstall... "
         eval 'command make -C ${make_path:h} {prefix,{,CMAKE_INSTALL_}PREFIX}=$ZINIT[ZPFX] --ignore-errors uninstall' 2>/dev/null 1>&2
@@ -2904,6 +2907,10 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
             fi
         done
     fi
+
+    # Remove Applications-dir symlinks leading into the plugin's directory
+    # (created for .app bundles unpacked from a .dmg image).
+    .zinit-unlink-apps "$___dir"
 
     # 9. Forget the plugin
     if [[ "$uspl2" = "_dtrace/_dtrace" ]]; then

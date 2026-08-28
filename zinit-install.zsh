@@ -1766,6 +1766,26 @@ ziextract() {
                     }
                     command rmdir "$mnt" 2>/dev/null
                 }
+                # Record and link the .app bundles - only for zinit-managed
+                # objects, not for standalone ziextract in arbitrary dirs.
+                if (( ! retval )) {
+                    local -aU apps
+                    apps=( *.app(DN-/:t) )
+                    if [[ ${PWD:A} = (${ZINIT[PLUGINS_DIR]:A}|${ZINIT[SNIPPETS_DIR]:A})/* ]] {
+                        local -a stale
+                        [[ -s ._zinit/apps ]] && stale=( ${(f)"$(<._zinit/apps)"} )
+                        stale=( ${stale:|apps} )
+                        (( ${#stale} )) && .zinit-unlink-apps "$PWD" "${stale[@]}"
+                        if (( ${#apps} )) {
+                            command mkdir -p ._zinit
+                            builtin print -rl -- "${apps[@]}" >! ._zinit/apps
+                            .zinit-link-apps "$PWD"
+                        } else {
+                            command rm -f -- ._zinit/apps
+                        }
+                        ((1))
+                    }
+                }
                 return $retval
             }
             ;;

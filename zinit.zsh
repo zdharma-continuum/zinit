@@ -40,7 +40,7 @@ if zmodload -F zsh/zutil +b:zstyle 2>/dev/null || (( ${+builtins[zstyle]} )); th
             list-command    LIST_COMMAND     zcompdump-path   ZCOMPDUMP_PATH
             compinit-opts   COMPINIT_OPTS    mute-warnings    MUTE_WARNINGS
             no-aliases      NO_ALIASES       packages-branch  PACKAGES_BRANCH
-            packages-repo   PACKAGES_REPO
+            packages-repo   PACKAGES_REPO    applications-dir APPLICATIONS_DIR
             optimize-out-disk-accesses OPTIMIZE_OUT_DISK_ACCESSES
         )
         for _attr _key in "${(kv)_map[@]}"; do
@@ -161,6 +161,7 @@ version|\
 zstatus"
 
 # Can be customized.
+: ${ZINIT[APPLICATIONS_DIR]:=$HOME/Applications}
 : ${ZINIT[COMPLETIONS_DIR]:=${ZINIT[HOME_DIR]}/completions}
 : ${ZINIT[MODULE_DIR]:=${ZINIT[HOME_DIR]}/module}
 : ${ZINIT[PACKAGES_BRANCH]:=HEAD}
@@ -177,6 +178,7 @@ typeset -g ZPFX
 
 ZINIT[PLUGINS_DIR]=${~ZINIT[PLUGINS_DIR]}   ZINIT[COMPLETIONS_DIR]=${~ZINIT[COMPLETIONS_DIR]}
 ZINIT[SNIPPETS_DIR]=${~ZINIT[SNIPPETS_DIR]} ZINIT[SERVICES_DIR]=${~ZINIT[SERVICES_DIR]}
+ZINIT[APPLICATIONS_DIR]=${~ZINIT[APPLICATIONS_DIR]}
 
 # Make sure $ZSH_CACHE_DIR is writable, otherwise use a directory in $HOME
 if [[ ! -w "$ZSH_CACHE_DIR" ]]; then
@@ -1205,6 +1207,50 @@ builtin setopt noaliases
 
     return ret
 } # ]]]
+# FUNCTION: .zinit-link-apps [[[
+# Symlinks into ZINIT[APPLICATIONS_DIR] the macOS .app bundles listed in
+# the object directory's ._zinit/apps marker (written by ziextract for
+# .dmg images). Never overwrites a real file/dir nor a foreign symlink.
+# Idempotent - runs on every load.
+#
+# $1 - plugin or snippet directory (absolute path)
+.zinit-link-apps() {
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    setopt extendedglob typesetsilent noshortloops warncreateglobal
+    local dir="${1%/}" appsdir="${ZINIT[APPLICATIONS_DIR]:-$HOME/Applications}"
+    [[ -n $dir && -n $appsdir && -s $dir/._zinit/apps ]] || return 0
+    local -aU apps
+    apps=( ${(f)"$(<$dir/._zinit/apps)"} )
+    (( ${#apps} )) || return 0
+    command mkdir -p "$appsdir" 2>/dev/null
+    local app target lnk lnkdst
+    integer retval
+    for app ( "${apps[@]}" ) {
+        app="${app:t}"
+        [[ -n $app ]] || continue
+        target="$dir/$app" lnk="$appsdir/$app"
+        [[ -e $target ]] || continue
+        if [[ -h $lnk ]] {
+            lnkdst="${lnk:A}"
+            # Replace only zinit's links (resolving into the stores or to the
+            # target) or dangling ones - never a foreign live symlink.
+            if [[ -e $lnk && $lnkdst != ${target:A} && \
+                $lnkdst != (${ZINIT[PLUGINS_DIR]:A}|${ZINIT[SNIPPETS_DIR]:A})/* ]] {
+                +zi-log "{w} Not linking {obj}$app{rst} into {file}$appsdir{rst}" \
+                    "- a symlink with this name exists and leads elsewhere."
+                retval=1
+                continue
+            }
+        } elif [[ -e $lnk ]] {
+            +zi-log "{w} Not linking {obj}$app{rst} into {file}$appsdir{rst}" \
+                "- a real file/directory with this name exists."
+            retval=1
+            continue
+        }
+        command ln -sfn "$target" "$lnk" || retval=1
+    }
+    return $retval
+} # ]]]
 # FUNCTION: .zinit-get-object-path [[[
 .zinit-get-object-path() {
     local type="$1" id_as="$2" local_dir dirname
@@ -1516,6 +1562,10 @@ builtin setopt noaliases
 
     ZINIT_SNIPPETS[$id_as]="$id_as <${${ICE[svn]+svn}:-single file}>"
 
+    # Restore Applications-dir symlinks for .app bundles shipped by the
+    # snippet (recorded by ziextract when unpacking a .dmg image).
+    [[ -s $local_dir/$dirname/._zinit/apps ]] && { .zinit-link-apps "$local_dir/$dirname"; ((1)); }
+
     ZINIT[CUR_USPL2]="$id_as" ZINIT_REPORTS[$id_as]=
 
     reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\!atinit-<-> <->]} )
@@ -1747,6 +1797,11 @@ builtin setopt noaliases
     (( ${+ICE[cloneonly]} )) && return 0
 
     .zinit-register-plugin "$___id_as" "$___mode" "${ICE[teleid]}"
+
+    # Restore Applications-dir symlinks for .app bundles shipped by the
+    # plugin (recorded by ziextract when unpacking a .dmg image).
+    local ___apps_dir="${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"
+    [[ -s ${___apps_dir}/._zinit/apps ]] && { .zinit-link-apps "$___apps_dir"; ((1)); }
 
     # Set up param'' objects (parameters).
     if [[ -n ${ICE[param]} ]] {

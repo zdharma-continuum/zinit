@@ -222,6 +222,76 @@
 
   rm -rf "$srcdir" "$workdir"
 }
+@test 'ziextract dmg: app copied, junk skipped, volume detached, symlink created' {
+  (( ${+commands[hdiutil]} )) || skip "hdiutil not available on $OSTYPE"
+  local srcdir=$(mktemp -d) workdir=$(mktemp -d)
+  command mkdir -p "$srcdir/Foo.app/Contents/MacOS"
+  printf '#!/bin/sh\necho foo\n' > "$srcdir/Foo.app/Contents/MacOS/foo"
+  command chmod +x "$srcdir/Foo.app/Contents/MacOS/foo"
+  command ln -s /Applications "$srcdir/Applications"
+  command touch "$srcdir/.background"
+  command hdiutil create -quiet -volname ZinitDmgTest -srcfolder "$srcdir" -format UDZO "$workdir/foo.dmg"
+  # Managed location: the apps marker and symlinks only happen under ZINIT[PLUGINS_DIR].
+  local pdir="$ZPLUGINS/test---dmgapp"
+  command mkdir -p "$pdir"
+  command cp "$workdir/foo.dmg" "$pdir/"
+  (( ${+functions[ziextract]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+  _zi_extract_dmg() { cd "$pdir" && ziextract foo.dmg }
+  run _zi_extract_dmg
+  assert $state equals 0
+  assert $output does_not_contain 'Error'
+  assert "$pdir/Foo.app/Contents/MacOS/foo" is_executable
+  assert "$pdir/Applications" not_exists
+  assert "$pdir/.background" not_exists
+  assert "$pdir/foo.dmg" not_exists
+  assert "$(<$pdir/._zinit/apps)" same_as 'Foo.app'
+  assert "${ZINIT[APPLICATIONS_DIR]}/Foo.app" is_link
+  assert "${ZINIT[APPLICATIONS_DIR]}/Foo.app/Contents/MacOS/foo" is_file
+  # The private mountpoint prefix would still show in `hdiutil info' if the
+  # volume had leaked.
+  assert "$(command hdiutil info)" does_not_contain 'zinit-dmg-'
+  rm -rf "$srcdir" "$workdir"
+}
+@test 'dmg app symlink lifecycle: load restores, unload removes' {
+  # Cross-platform: fabricates the ._zinit/apps marker instead of a real dmg.
+  local appsdir="${ZINIT[APPLICATIONS_DIR]}"
+  zinit as"null" id-as"test/dmg-lifecycle" for zdharma-continuum/null || true
+  local pdir="$ZPLUGINS/test---dmg-lifecycle"
+  command mkdir -p "$pdir/Bar.app/Contents/MacOS" "$pdir/._zinit"
+  builtin print -r -- 'Bar.app' >! "$pdir/._zinit/apps"
+  # Loading the already-installed plugin must (re)create the symlink...
+  zinit as"null" id-as"test/dmg-lifecycle" for zdharma-continuum/null || true
+  assert "$appsdir/Bar.app" is_link
+  # ...unload must remove it (bare call - `run' forks away registry state)...
+  zinit unload test/dmg-lifecycle -q || true
+  assert "$appsdir/Bar.app" not_exists
+  # ...and a subsequent load must restore it.
+  zinit as"null" id-as"test/dmg-lifecycle" for zdharma-continuum/null || true
+  assert "$appsdir/Bar.app" is_link
+}
+@test 'zinit delete removes the dmg app symlink' {
+  local appsdir="${ZINIT[APPLICATIONS_DIR]}"
+  zinit as"null" id-as"test/dmg-delete" for zdharma-continuum/null || true
+  local pdir="$ZPLUGINS/test---dmg-delete"
+  command mkdir -p "$pdir/Baz.app" "$pdir/._zinit" "$appsdir"
+  builtin print -r -- 'Baz.app' >! "$pdir/._zinit/apps"
+  command ln -sfn "$pdir/Baz.app" "$appsdir/Baz.app"
+  run zinit delete --yes test/dmg-delete
+  assert $state equals 0
+  assert "$appsdir/Baz.app" not_exists
+  assert "$pdir" not_exists
+}
+@test 'link-apps never clobbers a real entry in the Applications dir' {
+  local appsdir="${ZINIT[APPLICATIONS_DIR]}"
+  local pdir="$ZPLUGINS/test---dmg-clobber"
+  command mkdir -p "$pdir/Real.app" "$pdir/._zinit" "$appsdir/Real.app"
+  builtin print -r -- 'Real.app' >! "$pdir/._zinit/apps"
+  run .zinit-link-apps "$pdir"
+  assert $state equals 1
+  assert $output contains 'Not linking'
+  [[ ! -h $appsdir/Real.app ]] || fail 'real directory was replaced by a symlink'
+  assert "$appsdir/Real.app" is_dir
+}
 
 # $OLDPWD regression coverage. See the block comment on .zinit-restore-dir in
 # zinit.zsh: zinit cds into the plugin directory to run atinit/atload/multisrc,

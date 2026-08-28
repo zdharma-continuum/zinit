@@ -43,7 +43,7 @@ ZINIT+=(
   COMPLETIONS_DIR "${zi_test_dir}/completions" SNIPPETS_DIR "${zi_test_dir}/snippets"
   HOME_DIR        "${zi_test_dir}"             PLUGINS_DIR  "${zi_test_dir}/plugins"
   ZCOMPDUMP_PATH  "${zi_test_dir}/zcompdump"   ZPFX         "${zi_test_dir}/polaris"
-  POLARIS         "${zi_test_dir}/polaris"
+  POLARIS         "${zi_test_dir}/polaris"     APPLICATIONS_DIR "${zi_test_dir}/applications"
 )
 typeset -gxH ZPFX=
 ZPFX="${zi_test_dir}/polaris"
