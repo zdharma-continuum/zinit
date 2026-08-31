@@ -2713,7 +2713,7 @@ zinit() {
         light         "--help|-b|-h"
         snippet       "--command|--force|--help|-f|-h|-x"
         times         "--help|-h|-m|-s"
-        self-update   "--help|--quiet|-h|-q"
+        self-update   "--help|--no-pager|--quiet|-h|-n|-q"
         unload        "--help|--quiet|-h|-q"
         update        "--all|--help|--no-pager|--parallel|--plugins|--quiet|--reset|--snippets|--urge|--verbose|-L|-a|-h|-n|-p|-q|-r|-s|-u|-v"
         version       ""
