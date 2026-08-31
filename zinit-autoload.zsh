@@ -2005,7 +2005,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
             builtin cd -q "$ZINIT[BIN_DIR]" \
             && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..@\{u\})"} )
             # Use '..@{u}' which refers to the configured upstream branch, instead of '..origin/HEAD'
-            if (( ${#lines} > 0 )); then
+            if (( ${#lines} > 0 && ! OPTS[opt_-q,--quiet] )); then
                 # Remove the (origin/main ...) segments, to expect only tags to appear
                 lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
                 # Remove " ||" if it ends the line (i.e. no additional text from the body)
