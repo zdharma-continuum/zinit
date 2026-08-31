@@ -1,3 +1,15 @@
+# [3.16.0](https://github.com/zdharma-continuum/zinit/compare/v3.15.3...v3.16.0) (2026-08-31)
+
+
+### Bug Fixes
+
+* **self-update:** honor -q in changelog display ([a85e9dc](https://github.com/zdharma-continuum/zinit/commit/a85e9dcc3ee2beebf3947ef6091ccd540d94f6f3))
+
+
+### Features
+
+* **self-update:** support -n/--no-pager ([cc3baf3](https://github.com/zdharma-continuum/zinit/commit/cc3baf395fa51de11e7d76b11104e36d8d142601)), closes [#632](https://github.com/zdharma-continuum/zinit/issues/632)
+
 ## [3.15.3](https://github.com/zdharma-continuum/zinit/compare/v3.15.2...v3.15.3) (2026-08-28)
 
 
