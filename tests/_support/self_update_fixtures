@@ -1,0 +1,66 @@
+#!/usr/bin/env zsh
+
+# Fixtures for the `zinit self-update` pager regression tests (issue #632).
+#
+# make_self_update_behind_upstream leaves the sandbox clone exactly one
+# commit behind a scratch bare upstream. The fixture commit reuses HEAD's
+# tree, so the fast-forward pull done by `zinit self-update` moves only the
+# branch pointer: the unstaged diff the bootstrap applies stays intact and
+# no working-tree restore is needed, even when an assertion aborts the
+# test. Everything is offline and also works when the bootstrap clone is a
+# detached HEAD (CI pull_request checkouts), because the `main` branch and
+# its upstream are created here.
+
+typeset -g SU_FIXTURE_SUBJECT='chore: self-update pager regression fixture'
+
+make_self_update_behind_upstream() {
+  local bin="${ZINIT[BIN_DIR]}" up="${ZINIT[HOME_DIR]}/self-update-upstream.git"
+  local fixture_sha
+
+  # The bootstrap clone is depth=1. Complete it (origin is the local repo,
+  # so this is offline) to lift the shallow-repo restrictions from the
+  # local-path push below. From the second call on, the repo is already
+  # complete and this fails harmlessly.
+  command git -C "$bin" fetch --quiet --unshallow 2>/dev/null || true
+
+  # The sandbox tree is dirty (the bootstrap applies the unstaged diff), so
+  # ambient pull.rebase/autostash settings change what `git pull` does and
+  # prints: rebase mode refuses the dirty tree, autostash prints notices
+  # even under --quiet. Pin all three off in the clone so the pull is a
+  # silent fast-forward everywhere. --local keeps the writes inside the
+  # sandbox even where GIT_CONFIG points elsewhere.
+  command git -C "$bin" config --local pull.rebase false 2>/dev/null || true
+  command git -C "$bin" config --local merge.autostash false 2>/dev/null || true
+  command git -C "$bin" config --local rebase.autoStash false 2>/dev/null || true
+
+  fixture_sha=$(command git -C "$bin" -c user.name=zunit -c user.email=zunit@localhost \
+    commit-tree 'HEAD^{tree}' -p HEAD -m "$SU_FIXTURE_SUBJECT") || true
+  [[ -n $fixture_sha ]] || fail 'fixture: commit-tree failed'
+
+  command rm -rf -- "$up"
+  command git -c init.defaultBranch=main init --quiet --bare "$up" 2>/dev/null \
+    || fail 'fixture: git init failed'
+  command git -C "$bin" push --quiet "$up" "${fixture_sha}:refs/heads/main" \
+    || fail 'fixture: git push failed'
+
+  # remove+add also replaces the narrowed single-branch fetch refspec of
+  # the depth=1 bootstrap clone with the wildcard one that the `git pull`
+  # inside self-update relies on.
+  command git -C "$bin" remote remove origin 2>/dev/null || true
+  command git -C "$bin" remote add origin "$up" || fail 'fixture: remote add failed'
+  command git -C "$bin" fetch --quiet origin || fail 'fixture: fetch failed'
+
+  # Covers detached-HEAD sandboxes and avoids the non-main-branch warning
+  # that self-update prints even under --quiet.
+  command git -C "$bin" checkout --quiet -B main || fail 'fixture: checkout failed'
+  command git -C "$bin" branch --quiet --set-upstream-to=origin/main main \
+    || fail 'fixture: set-upstream failed'
+}
+
+restore_self_update_origin() {
+  local bin="${ZINIT[BIN_DIR]}"
+  [[ -n $GIT_REPO ]] || return 0
+  command git -C "$bin" remote remove origin 2>/dev/null || true
+  command git -C "$bin" remote add origin "file://${GIT_REPO:A}" 2>/dev/null || true
+  command rm -rf -- "${ZINIT[HOME_DIR]}/self-update-upstream.git"
+}

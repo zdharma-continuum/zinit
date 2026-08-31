@@ -275,6 +275,7 @@ _zinit_run(){
 _zinit_self_update(){
   _arguments -A \
     '(-h --help)'{-h,--help}'[Show this help message]' \
+    '(-n --no-pager)'{-n,--no-pager}'[Disable the use of the pager]' \
     '(-q --quiet)'{-q,--quiet}'[Turn off messages from the operation]' \
     && ret=0
 } # ]]]

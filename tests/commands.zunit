@@ -11,6 +11,7 @@
 @setup {
   typeset -gx HOME="$zi_test_dir"
   typeset -gx ZBIN="$zi_test_dir/polaris/bin"
+  load "${PWD}/tests/_support/self_update_fixtures"
 }
 
 @test 'help' {
@@ -77,6 +78,7 @@
     run zinit self-update $flag
     assert $output contains 'self-update'
     assert $output contains '--quiet'
+    assert $output contains '--no-pager'
     assert $state equals 1
   done
 }
@@ -92,6 +94,41 @@
   assert $output contains 'Incorrect options given'
   assert $output contains '--foo'
   assert $state equals 1
+}
+@test 'self-update --no-pager / -n accepted when up to date' {
+  for flag in '--no-pager' '-n'; do
+    run zinit self-update $flag
+    assert $output contains 'Already up to date'
+    assert $state equals 0
+  done
+}
+@test 'self-update pages the commit list through less by default' {
+  less() { command cat > /dev/null; builtin print -- 'PAGER-INVOKED'; }
+  make_self_update_behind_upstream
+  run zinit self-update
+  assert $output contains 'PAGER-INVOKED'
+  assert $output does_not_contain $SU_FIXTURE_SUBJECT
+  assert $state equals 0
+}
+@test 'self-update --no-pager / -n prints the commit list without the pager' {
+  less() { command cat > /dev/null; builtin print -- 'PAGER-INVOKED'; }
+  for flag in '--no-pager' '-n'; do
+    make_self_update_behind_upstream
+    run zinit self-update $flag
+    assert $output contains $SU_FIXTURE_SUBJECT
+    assert $output does_not_contain 'PAGER-INVOKED'
+    assert $state equals 0
+  done
+}
+@test 'self-update --quiet / -q skips the pager when behind upstream' {
+  less() { command cat > /dev/null; builtin print -- 'PAGER-INVOKED'; }
+  for flag in '--quiet' '-q'; do
+    make_self_update_behind_upstream
+    run zinit self-update $flag
+    assert $output is_empty
+    assert $state equals 0
+  done
+  restore_self_update_origin
 }
 @test 'set-debug' {
   ZINIT+=(DEBUG 'true')
