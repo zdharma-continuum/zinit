@@ -593,6 +593,18 @@
   local onefetch="$ZBIN/onefetch"; assert "$onefetch" is_executable
   run $onefetch --version; assert $state equals 0
 }
+@test 'ollama' { # Get up and running with large language models
+  # The suite's only `.tar.zst' release asset. darwin ships a `.tgz', so the
+  # zstd extraction path is reachable on Linux only. bpick drops the
+  # accelerator builds (mlx/rocm/jetpack), which sort ahead of the plain one.
+  [[ $OSTYPE =~ 'darwin*' ]] && skip "no .tar.zst asset on $os_type"
+  (( ${+commands[zstd]} )) || skip 'zstd not installed'
+  run zinit id-as lbin'!ollama' bpick'^*(mlx|rocm|jetpack)*' for @ollama/ollama; assert $state equals 0
+  assert $output does_not_contain 'ERROR'
+  assert $output does_not_contain "didn't recognize archive type"
+  local ollama="$ZBIN/ollama"; assert "$ollama" is_executable
+  run "$ollama" --version; assert $state equals 0
+}
 @test 'ouch' { # Painless compression and decompression for your terminal
   run zinit for @ouch-org/ouch; assert $state equals 0
   local ouch="$ZBIN/ouch"; assert "$ouch" is_executable
