@@ -1,3 +1,10 @@
+# [3.17.0](https://github.com/zdharma-continuum/zinit/compare/v3.16.0...v3.17.0) (2026-09-02)
+
+
+### Features
+
+* **ziextract:** support zst archive format ([b8855c7](https://github.com/zdharma-continuum/zinit/commit/b8855c7887e26f79934b6122232b141cdd3106bf))
+
 # [3.16.0](https://github.com/zdharma-continuum/zinit/compare/v3.15.3...v3.16.0) (2026-08-31)
 
 
