@@ -18,6 +18,7 @@ __zinit_commands(){
     'cd:Go to a plugin or snippet direcorty'
     'cdclear:Clear the compdef replay list'
     'cdisable:Disable completions'
+    'cdlist:Show compdef replay list'
     'cdreplay:Replay compdef list'
     'cenable:Enable completions'
     'changes:View plugins git log'
@@ -175,7 +176,7 @@ _zinit_compinit(){
 _zinit_completions(){
   _message "Display a list of completions" && ret=0
 } # ]]]
-# FUNCTION: _zinit_create [[[
+# FUNCTION: _zinit_compile [[[
 _zinit_compile(){
   _arguments \
     '(-h --help)'{-h,--help}'[Show this help message]' \
@@ -198,8 +199,8 @@ _zinit_creinstall(){
 _zinit_csearch(){
   ret=0
 } # ]]]
-# FUNCTION: _zinit_cunistall [[[
-_zinit_cunistall(){
+# FUNCTION: _zinit_cuninstall [[[
+_zinit_cuninstall(){
   _arguments - installed '*::installed:__zinit_installed' && ret=0
 } # ]]]
 # FUNCTION: _zinit_delete [[[
@@ -236,13 +237,9 @@ _zinit_env_whitelist(){
 _zinit_glance(){
   _arguments - installed '1:installed:__zinit_installed' && ret=0
 } # ]]]
-# FUNCTION: _zinit_list [[[
-_zinit_list(){
-  _message 'Hit enter to list the defined key bindings replay' && ret=0
-} # ]]]
-# FUNCTION: _zinit_loaded [[[
-_zinit_loaded(){
-  _message 'Hit enter to list the defined key bindings replay' && ret=0
+# FUNCTION: _zinit_help [[[
+_zinit_help(){
+  _message 'Hit enter for usage information' && ret=0
 } # ]]]
 # FUNCTION: _zinit_man [[[
 _zinit_man(){
@@ -252,6 +249,10 @@ _zinit_man(){
 _zinit_module(){
   _arguments \
     - subcommand '*::subcommand:(build help info)' && ret=0
+} # ]]]
+# FUNCTION: _zinit_plugins [[[
+_zinit_plugins(){
+  _message 'Hit enter to list the status of all installed plugins' && ret=0
 } # ]]]
 # FUNCTION: _zinit_recall [[[
 _zinit_recall(){
@@ -287,6 +288,14 @@ _zinit_snippet(){
     '(-h --help)'{-h,--help}'[Show this help message]'
   _arguments - snippet '*::snippet:__zinit_installed_snippets' && ret=0
 } # ]]]
+# FUNCTION: _zinit_snippets [[[
+_zinit_snippets(){
+  _message 'Hit enter to list the status of all installed snippets' && ret=0
+} # ]]]
+# FUNCTION: _zinit_srv [[[
+_zinit_srv(){
+  _message 'Hit enter to control a service' && ret=0
+} # ]]]
 # FUNCTION: _zinit_status [[[
 _zinit_status(){
   _message 'Display current status of Zinit' && ret=0
@@ -315,6 +324,10 @@ _zinit_uncompile(){
       '*::installed:__zinit_installed' \
     && ret=0
 } # ]]]
+# FUNCTION: _zinit_uninstall [[[
+_zinit_uninstall(){
+  _message 'Hit enter to uninstall a formula or cask' && ret=0
+} # ]]]
 # FUNCTION: _zinit_unload [[[
 _zinit_unload(){
   _arguments -A \
@@ -338,7 +351,15 @@ _zinit_update(){
   - set2 \
       '1:installed:__zinit_installed'
 } # ]]]
-# FUNCTION: _zunit_load [[[
+# FUNCTION: _zinit_version [[[
+_zinit_version(){
+  _message 'Hit enter to print the version numbers of Zinit' && ret=0
+} # ]]]
+# FUNCTION: _zinit_zstatus [[[
+_zinit_zstatus(){
+  _message 'Hit enter to show the overall Zinit status' && ret=0
+} # ]]]
+# FUNCTION: _zinit_load [[[
 _zinit_load() {
   _message 'Hit enter to list the defined key bindings replay' && ret=0
 } # ]]]
