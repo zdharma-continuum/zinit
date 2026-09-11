@@ -283,7 +283,7 @@ _zinit_self_update(){
 # FUNCTION: _zinit_snippet [[[
 _zinit_snippet(){
   _arguments -A \
-    '(-c --command)'{-c,--command}'[Load the snippet as a command (i.e., make executable and apend to $PATH])' \
+    '(-c --command)'{-c,--command}'[Load the snippet as a command (i.e., make executable and apend to \$PATH)]' \
     '(-f --force)'{-f,--force}'[Force new download of the snippet file]' \
     '(-h --help)'{-h,--help}'[Show this help message]'
   _arguments - snippet '*::snippet:__zinit_installed_snippets' && ret=0
