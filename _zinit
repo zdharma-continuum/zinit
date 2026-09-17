@@ -15,7 +15,7 @@ __zinit_commands(){
     'add-fpath:Add plugin folder to $FPATH'
     'bindkeys:List of plugin defined key bindings'
     'cclear:Clear completions list'
-    'cd:Go to a plugin or snippet direcorty'
+    'cd:Go to a plugin or snippet directory'
     'cdclear:Clear the compdef replay list'
     'cdisable:Disable completions'
     'cdlist:Show compdef replay list'
