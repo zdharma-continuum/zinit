@@ -410,7 +410,7 @@ zi snippet OMZP::ruby
 ### Use `zi ice svn` if a plugin/snippet requires an entire subdirectory<a name="use-zi-ice-svn-if-a-pluginsnippet-requires-an-entire-subdirectory"></a>
 
 1. [gitfast](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitfast)
-2. [osx](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/osx)
+2. [macos](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/macos)
 
 ```zsh
 zi ice svn
