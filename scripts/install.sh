@@ -93,7 +93,8 @@ Options:
                       deletes the zinit directories.
   -n, --dry-run       Show the plan and the .zshrc diff. Change nothing.
   -q, --quiet         Show only warnings and errors.
-      --no-edit       Do not change .zshrc. Print the zinit block instead.
+      --no-edit       Do not change .zshrc. An install prints the zinit block
+                      instead. An uninstall only asks to delete the zinit directories.
       --annexes       Load the recommended annexes (default).
       --no-annexes    Do not load the recommended annexes.
       --repo REPO     Install from REPO: owner/name on GitHub, a git URL or a path.
@@ -471,12 +472,13 @@ plan_zshrc() {
   zshrc[block]=$REPLY
   header=${${(@f)zshrc[block]}[2]}
   block=${(F)zshrc_lines[zshrc[start],zshrc[end]]}
-  if (( zshrc[start] && ! zshrc[end] )); then
+  # --no-edit never changes .zshrc. An install prints the zinit block instead.
+  if (( ! opt[edit] )); then
+    if (( opt[uninstall] )); then zshrc[action]=skip; else zshrc[action]=print; fi
+  elif (( zshrc[start] && ! zshrc[end] )); then
     zshrc[action]=broken
   elif (( opt[uninstall] )); then
     if (( zshrc[start] )); then zshrc[action]=remove; else zshrc[action]=none; fi
-  elif (( ! opt[edit] )); then
-    zshrc[action]=print
   elif (( zshrc[start] )); then
     if [[ $block == $zshrc[block] ]]; then
       zshrc[action]=keep
@@ -583,6 +585,8 @@ apply_zshrc() {
     (print)
       info "The installer did not change $file (--no-edit). Add this block to it:"
       print -r -- $zshrc[block] ;;
+    (skip)
+      info "The installer did not change $file (--no-edit)." ;;
   esac
 }
 
@@ -815,6 +819,10 @@ apply_delete() {
     ok "Deleted ${(D)dir}."
   done
   delete_dirs=()
+  # With --no-edit, the block stays. Its clone command runs in the next shell.
+  if [[ $zshrc[action] == skip ]] && (( zshrc[start] )); then
+    warn "The zinit block in ${(D)opt[zshrc]} installs zinit again in a new shell. Remove the block to stop this."
+  fi
 }
 
 # Plan, questions and summary
@@ -842,6 +850,7 @@ show_plan() {
     keep-old       "Keep $rc: it has a block from an earlier installer."
     loaded-elsewhere "Keep $rc: line $zshrc[loads] loads zinit."
     print          "Print the zinit block. Do not change $rc."
+    skip           "Do not change $rc (--no-edit)."
     broken         "Stop: $rc has the start marker on line $zshrc[start], but no end marker."
   )
   print -ru$fd -- "${c_step}==>${c_off} ${c_bold}Zinit installer${c_off}"

@@ -145,7 +145,7 @@ curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/script
 | `-y`, `--yes`               | `NO_INPUT`           | Answer yes to every question.                                        |
 | `-n`, `--dry-run`           |                      | Show the plan and the `.zshrc` diff. Change nothing.                 |
 | `-q`, `--quiet`             |                      | Show only warnings and errors.                                       |
-| `--no-edit`                 | `NO_EDIT`            | Do not change `.zshrc`. Print the Zinit block instead.               |
+| `--no-edit`                 | `NO_EDIT`            | Do not change `.zshrc`. An install prints the Zinit block instead.   |
 | `--annexes`, `--no-annexes` | `NO_ANNEXES`         | Load the recommended annexes (default), or do not load them.         |
 | `--repo REPO`               | `ZINIT_REPO`         | Install from `owner/name` on GitHub, from a git URL or from a path.  |
 | `--branch NAME`             | `ZINIT_BRANCH`       | Install a branch. Default: the default branch of the repository.     |
@@ -158,11 +158,20 @@ curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/script
 To see the defaults and the exit codes, run the installer with `-- --help`.
 
 To uninstall Zinit, run the installer with `--uninstall`. It removes the Zinit block from `.zshrc` and asks before it
-deletes the Zinit directories. The default answer is no. With `--yes`, the installer deletes them without asking:
+deletes the Zinit directories. The default answer is no.
 
 ```zsh
+# Remove the Zinit block, then ask before deleting the Zinit directories
+zsh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)" -- --uninstall
+
+# Keep .zshrc as it is, and only ask before deleting the Zinit directories
+zsh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)" -- --uninstall --no-edit
+
+# Ask no questions: remove the Zinit block and delete the Zinit directories
 zsh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)" -- --uninstall --yes
 ```
+
+With `--no-edit`, the Zinit block stays in `.zshrc`, so a new shell installs Zinit again.
 
 ### Manual<a name="manual"></a>
 
