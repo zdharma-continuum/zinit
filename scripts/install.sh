@@ -136,9 +136,9 @@ setup_output() {
     c_step=$'\e[1;34m' c_ok=$'\e[32m' c_warn=$'\e[33m' c_err=$'\e[31m'
     c_bold=$'\e[1m' c_dim=$'\e[2m' c_off=$'\e[0m'
   fi
-  sym_ok='✔' sym_warn='!' sym_err='✘'
+  sym_ok='ok' sym_warn='!' sym_err='✘'
   if [[ -n ${NO_EMOJI-} ]] || ! is_utf8; then
-    sym_ok='ok' sym_err='x'
+    sym_err='x'
   fi
 }
 
