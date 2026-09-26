@@ -40,8 +40,7 @@
       cat <<- EOF
 @test '${bin_name}' { # ${description}
   run zinit for @${repo}; assert \$state equals 0
-  local $bin_name="\$ZBIN/${bin_name}"; assert "\$${bin_name}" is_executable
-  run "\$${bin_name}" --version; assert \$state equals 0
+  run_bin ${bin_name} --version; assert \$state equals 0
 }
 EOF
   done

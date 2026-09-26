@@ -13,3 +13,9 @@ load_bin_gem_node(){
   run zinit load @zdharma-continuum/zinit-annex-bin-gem-node
   zinit default-ice from'gh-r'
 }
+
+run_bin() { # Run $ZBIN/$1 with the other arguments. Skip x86_64-only binaries on Macs without Rosetta.
+  assert "$ZBIN/$1" is_executable
+  run "$ZBIN/$1" "${@:2}"
+  [[ $output != *'CPU type in executable'* ]] || skip "no $CPUTYPE binary and Rosetta is not installed"
+}
