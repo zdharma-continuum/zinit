@@ -156,6 +156,7 @@
   command rm -rf $home/.local $home/.zshrc
   run zi_install zsh-c --repo $origin --commit 0123456789abcdef0123456789abcdef01234567
   assert $state equals 1
+  assert $output contains 'Error: Commit'
   run test -e $zinit_dir
   assert $state equals 1
 }
@@ -206,6 +207,7 @@
   zi_env=( _ZINIT_INSTALL_TTY=$sb/answers )
   run zi_install zsh-c --uninstall
   assert $state equals 0
+  assert $output contains 'To delete zinit and its plugins later'
   assert $zinit_dir/zinit.zsh is_file
   run zi_install zsh-c --repo $origin
   assert $state equals 0
@@ -222,7 +224,9 @@
   assert $state equals 0
   run zi_install zsh-c --uninstall --yes
   assert $state equals 0
-  assert $output contains '==> Uninstall zinit'
+  assert $output contains '==> Uninstalling zinit'
+  assert $output contains '==> Removing zinit config block from ~/.zshrc'
+  assert $output contains '==> Removing files:'
   assert "$(<$home/.zshrc)" same_as '# user line'
   run test -e $home/.local/share/zinit
   assert $state equals 1
@@ -249,7 +253,7 @@
   print -r -- '# user line' > $home/.zshrc
   run zi_install zsh-c --uninstall --yes --home-dir $home
   assert $state equals 0
-  assert $output contains 'does not look like a zinit directory'
+  assert $output contains 'Warning: ~ does not look like a zinit directory'
   assert "$(<$home/.zshrc)" same_as '# user line'
 }
 
