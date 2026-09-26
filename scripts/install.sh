@@ -405,7 +405,7 @@ block_options() {
   if [[ $opt[home_dir] != $default_home ]]; then words+=( --home-dir=${(D)opt[home_dir]} ); fi
   if [[ $opt[bin_dir] != $opt[home_dir]/zinit.git ]]; then words+=( --bin-dir=${(D)opt[bin_dir]} ); fi
   if (( ! opt[annexes] )); then words+=( --no-annexes ); fi
-  REPLY=${(j: :)${(q-)words}}
+  REPLY=${(j: :)${(@q-)words}}
 }
 
 # Write a path as zsh code. Use $HOME for a path in the home directory. The result goes to $REPLY.

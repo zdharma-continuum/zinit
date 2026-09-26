@@ -197,3 +197,10 @@
   local -a files=( $home/*(DN) )
   assert ${#files} equals 0
 }
+
+@test 'default options leave the block header without options' {
+  run zi_install zsh-c --dry-run
+  assert $state equals 0
+  assert $output contains '+# zinit-installer v1:'
+  assert $output does_not_contain "v1: ''"
+}
