@@ -30,7 +30,7 @@
   setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_bat
 }
 @test 'brew-completion' {
-  run install_completion 'brew-completion/_brew' 'Homebrew/brew/blob/main/completions/zsh/_brew'
+  run install_completion 'brew-completion/_brew' 'Homebrew/brew/main/completions/zsh/_brew'
   setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_brew
 }
 @test 'docker-completion' {
