@@ -142,7 +142,7 @@ curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/script
 
 | Option                      | Environment variable | What it does                                                         |
 | --------------------------- | -------------------- | -------------------------------------------------------------------- |
-| `-y`, `--yes`               | `NO_INPUT`           | Do not ask for confirmation.                                         |
+| `-y`, `--yes`               | `NO_INPUT`           | Answer yes to every question.                                        |
 | `-n`, `--dry-run`           |                      | Show the plan and the `.zshrc` diff. Change nothing.                 |
 | `-q`, `--quiet`             |                      | Show only warnings and errors.                                       |
 | `--no-edit`                 | `NO_EDIT`            | Do not change `.zshrc`. Print the Zinit block instead.               |
@@ -153,9 +153,16 @@ curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/script
 | `--home-dir DIR`            | `ZINIT_HOME`         | Keep plugins and other Zinit data in `DIR`.                          |
 | `--bin-dir DIR`             | `ZINIT_INSTALL_DIR`  | Keep the Zinit checkout in `DIR`.                                    |
 | `--zshrc FILE`              | `ZSHRC`              | Add the Zinit block to `FILE`.                                       |
-| `--uninstall`               |                      | Remove the Zinit block from `.zshrc`. Delete no files.               |
+| `--uninstall`               |                      | Remove the Zinit block. Ask to delete the Zinit directories.         |
 
 To see the defaults and the exit codes, run the installer with `-- --help`.
+
+To uninstall Zinit, run the installer with `--uninstall`. It removes the Zinit block from `.zshrc` and asks before it
+deletes the Zinit directories. The default answer is no. With `--yes`, the installer deletes them without asking:
+
+```zsh
+zsh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)" -- --uninstall --yes
+```
 
 ### Manual<a name="manual"></a>
 

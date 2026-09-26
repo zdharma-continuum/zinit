@@ -183,11 +183,48 @@
   run zi_install zsh-c --uninstall
   assert $state equals 0
   assert "$(<$home/.zshrc)" same_as '# user line'
+  assert $zinit_dir/zinit.zsh is_file
   command cp -p $home/.zshrc $sb/zshrc.before
   run zi_install zsh-c --uninstall
   assert $state equals 0
   run command cmp $home/.zshrc $sb/zshrc.before
   assert $state equals 0
+}
+
+@test 'uninstall deletes the zinit directory only after a yes' {
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  print -rl -- y n > $sb/answers
+  zi_env=( _ZINIT_INSTALL_TTY=$sb/answers )
+  run zi_install zsh-c --uninstall
+  assert $state equals 0
+  assert $zinit_dir/zinit.zsh is_file
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  print -rl -- y y > $sb/answers
+  run zi_install zsh-c --uninstall
+  assert $state equals 0
+  run test -e $home/.local/share/zinit
+  assert $state equals 1
+}
+
+@test 'uninstall with yes removes the block and deletes the zinit directory' {
+  print -r -- '# user line' > $home/.zshrc
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  run zi_install zsh-c --uninstall --yes
+  assert $state equals 0
+  assert "$(<$home/.zshrc)" same_as '# user line'
+  run test -e $home/.local/share/zinit
+  assert $state equals 1
+}
+
+@test 'uninstall never deletes HOME' {
+  print -r -- '# user line' > $home/.zshrc
+  run zi_install zsh-c --uninstall --yes --home-dir $home
+  assert $state equals 0
+  assert $output contains 'does not look like a zinit directory'
+  assert "$(<$home/.zshrc)" same_as '# user line'
 }
 
 @test 'dry-run prints a diff and changes nothing' {

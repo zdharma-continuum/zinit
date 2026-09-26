@@ -70,7 +70,7 @@ typeset -rA ENV_OPTIONS=(
 
 typeset -A opt from        # option values, and the source of each value that is not a default
 typeset -A zshrc checkout  # facts about .zshrc and about the zinit checkout
-typeset -a zshrc_lines notes temp_files
+typeset -a zshrc_lines notes temp_files delete_dirs
 typeset REPLY= tty_in= tty_out= clone_dir=
 typeset c_step= c_ok= c_warn= c_err= c_bold= c_dim= c_off= sym_ok= sym_warn= sym_err=
 
@@ -89,7 +89,8 @@ the block, so the next run uses them again.
   curl -fsSL $SCRIPT_URL | zsh -s -- [options]
 
 Options:
-  -y, --yes           Do not ask for confirmation.
+  -y, --yes           Answer yes to every question. With --uninstall, this also
+                      deletes the zinit directories.
   -n, --dry-run       Show the plan and the .zshrc diff. Change nothing.
   -q, --quiet         Show only warnings and errors.
       --no-edit       Do not change .zshrc. Print the zinit block instead.
@@ -103,7 +104,8 @@ Options:
                       Default: \${XDG_DATA_HOME:-~/.local/share}/zinit
       --bin-dir DIR   Keep the zinit checkout in DIR. Default: HOME-DIR/zinit.git
       --zshrc FILE    Add the zinit block to FILE. Default: \${ZDOTDIR:-~}/.zshrc
-      --uninstall     Remove the zinit block from .zshrc. Delete no files.
+      --uninstall     Remove the zinit block from .zshrc. Then ask to delete the
+                      zinit directories. The default answer is no.
   -h, --help          Show this help.
 
 Environment variables (an option on the command line overrides them):
@@ -644,21 +646,24 @@ inspect_checkout() {
   fi
 }
 
+# Use the zinit checkout that .zshrc loads, unless an option names another one.
+locate_install() {
+  [[ -z ${from[bin_dir]-} ]] || return 0
+  if (( zshrc[start] )) && [[ -z $zshrc[header] && -n $zshrc[block_dir] ]]; then
+    set_opt bin_dir $zshrc[block_dir] ${(D)opt[zshrc]}
+  elif (( zshrc[loads] && ! zshrc[start] )) && [[ -n $zshrc[loads_dir] ]]; then
+    set_opt bin_dir $zshrc[loads_dir] "line $zshrc[loads] of ${(D)opt[zshrc]}"
+  fi
+}
+
 # Decide what to do with the zinit checkout. The result goes to checkout[action].
 plan_checkout() {
   checkout=( action '' state '' branch '' origin '' )
   (( ! opt[uninstall] )) || return 0
-  # Use the checkout that .zshrc loads, unless an option names another one.
-  if [[ -z ${from[bin_dir]-} ]]; then
-    if (( zshrc[start] )) && [[ -z $zshrc[header] && -n $zshrc[block_dir] ]]; then
-      set_opt bin_dir $zshrc[block_dir] ${(D)opt[zshrc]}
-    elif (( zshrc[loads] && ! zshrc[start] )); then
-      if [[ -z $zshrc[loads_dir] ]]; then
-        checkout[action]=unknown
-        return 0
-      fi
-      set_opt bin_dir $zshrc[loads_dir] "line $zshrc[loads] of ${(D)opt[zshrc]}"
-    fi
+  # .zshrc loads zinit from a path that locate_install cannot read.
+  if [[ -z ${from[bin_dir]-} ]] && (( zshrc[loads] && ! zshrc[start] )); then
+    checkout[action]=unknown
+    return 0
   fi
   inspect_checkout
   if [[ $checkout[state] == not-git ]]; then
@@ -768,13 +773,57 @@ apply_checkout() {
   esac
 }
 
-# Plan, confirmation and summary
+# Uninstall
+
+# Succeed when directory $1 holds zinit files. Never accept /, $HOME or a parent of $HOME.
+is_zinit_dir() {
+  local dir=${1:A}
+  if [[ $dir == / || ${HOME:A}/ == "$dir"/* ]]; then return 1; fi
+  [[ -f $dir/zinit.zsh || -f $dir/zinit.git/zinit.zsh || -d $dir/plugins/_local---zinit ]]
+}
+
+# Find the zinit directories that --uninstall can delete. The result goes to delete_dirs.
+plan_delete() {
+  delete_dirs=()
+  (( opt[uninstall] )) || return 0
+  add_delete_dir $opt[home_dir]
+  # Deleting the home directory also deletes a checkout inside it.
+  if [[ $delete_dirs[1] != $opt[home_dir] || $opt[bin_dir] != $opt[home_dir]/* ]]; then
+    add_delete_dir $opt[bin_dir]
+  fi
+}
+
+add_delete_dir() {
+  [[ -d $1 ]] || return 0
+  if is_zinit_dir $1; then
+    delete_dirs+=( $1 )
+  else
+    notes+=( "${(D)1} does not look like a zinit directory, so the installer keeps it." )
+  fi
+}
+
+# Ask, then delete the zinit directories. The default answer is no.
+apply_delete() {
+  local dir list=${(j: and :)${(@D)delete_dirs}}
+  (( $#delete_dirs )) || return 0
+  if ! ask "Delete zinit and its plugins ($list)?" no; then
+    info "The installer kept $list."
+    return 0
+  fi
+  for dir in $delete_dirs; do
+    command rm -rf -- $dir
+    ok "Deleted ${(D)dir}."
+  done
+  delete_dirs=()
+}
+
+# Plan, questions and summary
 
 show_plan() {
   local fd=2
   if (( opt[dry_run] )); then fd=1; elif (( opt[quiet] )); then return 0; fi
   local repo=$opt[repo] branch=${opt[branch]:-default branch} bin=${(D)opt[bin_dir]}
-  local rc=${(D)opt[zshrc]} annexes=no note
+  local rc=${(D)opt[zshrc]} annexes=no note dir
   if (( opt[annexes] )); then annexes=yes; fi
   local -A actions=(
     clone          "Clone $repo into $bin."
@@ -809,6 +858,13 @@ show_plan() {
   print -ru$fd -- "${c_step}==>${c_off} ${c_bold}Plan${c_off}"
   if [[ -n $checkout[action] ]]; then print -ru$fd -- "    ${actions[$checkout[action]]}"; fi
   print -ru$fd -- "    ${actions[$zshrc[action]]}"
+  for dir in $delete_dirs; do
+    if (( opt[yes] )); then
+      print -ru$fd -- "    Delete ${(D)dir}."
+    else
+      print -ru$fd -- "    Ask to delete ${(D)dir}. The default answer is no."
+    fi
+  done
 }
 
 # Print one setting of the plan: label, value and the source of the value.
@@ -818,42 +874,52 @@ plan_row() {
 }
 
 needs_confirmation() {
-  (( ! opt[yes] )) || return 1
   case $checkout[action]:$zshrc[action] in
     (clone:*|*:append|*:replace|*:remove) return 0 ;;
   esac
   return 1
 }
 
-# Ask on the terminal, also when stdin is a pipe. With no terminal, the answer is yes.
-confirm() {
-  local answer dev=${_ZINIT_INSTALL_TTY:-/dev/tty}
+# Open the terminal for questions, also when stdin is a pipe. With no terminal, tty_in stays empty.
+open_tty() {
+  local dev=${_ZINIT_INSTALL_TTY:-/dev/tty}
+  [[ -z $tty_in ]] || return 0
   { exec {tty_in}<$dev } 2>/dev/null || tty_in=
   [[ -n $tty_in ]] || return 0
   { exec {tty_out}>>$dev } 2>/dev/null || tty_out=2
+}
+
+# Ask question $1. $2 (yes or no) is the answer for an empty reply or when there is no terminal.
+# With --yes, the answer is always yes.
+ask() {
+  local answer hint='[Y/n]'
+  (( ! opt[yes] )) || return 0
+  if [[ $2 == no ]]; then hint='[y/N]'; fi
+  open_tty
   while true; do
-    print -rn -u $tty_out -- 'Continue? [Y/n] '
-    if ! read -r -u $tty_in answer; then
-      print -u $tty_out
-      return 0
+    answer=
+    if [[ -n $tty_in ]]; then
+      print -rn -u $tty_out -- "$1 $hint "
+      if ! read -r -u $tty_in answer; then print -u $tty_out; fi
     fi
     case $answer in
-      (''|[Yy]|[Yy][Ee][Ss]) return 0 ;;
+      ([Yy]|[Yy][Ee][Ss]) return 0 ;;
       ([Nn]|[Nn][Oo]) return 1 ;;
+      ('') if [[ $2 == yes ]]; then return 0; fi; return 1 ;;
     esac
   done
 }
 
 show_next_steps() {
+  local dir
   (( ! opt[quiet] )) || return 0
   if (( opt[uninstall] )); then
     if [[ $zshrc[action] == remove ]]; then
       info 'Start a new shell to stop loading zinit: exec zsh'
     fi
-    info "To delete zinit and its plugins: rm -rf ${(q-)opt[home_dir]}"
-    if [[ $opt[bin_dir] != $opt[home_dir]/* ]]; then
-      info "To delete the zinit checkout: rm -rf ${(q-)opt[bin_dir]}"
-    fi
+    for dir in $delete_dirs; do
+      info "To delete ${(D)dir} later: rm -rf ${(q-)dir}"
+    done
     return 0
   fi
   case $checkout[action]:$zshrc[action] in
@@ -882,9 +948,11 @@ run() {
   fi
   read_zshrc
   if [[ -n $zshrc[options] ]]; then load_options "$@"; fi
+  locate_install
   preflight
   plan_checkout
   plan_zshrc
+  plan_delete
   show_plan
   if [[ $zshrc[action] == broken ]]; then
     error "Add \"$MARK_END\" after the zinit block in ${(D)opt[zshrc]}, or remove the block."
@@ -894,12 +962,16 @@ run() {
     show_diff
     return 0
   fi
-  if needs_confirmation && ! confirm; then
+  if needs_confirmation && ! ask 'Continue?' yes; then
     warn 'Cancelled. Nothing changed.'
     return 1
   fi
   apply_checkout
   apply_zshrc
+  if (( opt[uninstall] && zshrc[loads] )); then
+    warn "${(D)opt[zshrc]} still loads zinit on line $zshrc[loads]. Remove that line by hand."
+  fi
+  apply_delete
   show_next_steps
 }
 
