@@ -68,6 +68,14 @@
   assert $state equals 1
 }
 
+@test 'no-edit prints no block when .zshrc already loads zinit' {
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  run zi_install zsh-c --no-edit --quiet
+  assert $state equals 0
+  assert "$output" is_empty
+}
+
 @test 'an existing manual setup keeps .zshrc and updates that checkout' {
   command git clone -q $origin $zinit_dir
   print -rl -- 'ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"' \
@@ -214,6 +222,7 @@
   assert $state equals 0
   run zi_install zsh-c --uninstall --yes
   assert $state equals 0
+  assert $output contains '==> Uninstall zinit'
   assert "$(<$home/.zshrc)" same_as '# user line'
   run test -e $home/.local/share/zinit
   assert $state equals 1
@@ -229,6 +238,7 @@
   run zi_install zsh-c --uninstall --no-edit --yes
   assert $state equals 0
   assert $output contains 'installs zinit again'
+  assert "$(print -r -- $output | command grep -c -- '--no-edit')" equals 1
   run test -e $home/.local/share/zinit
   assert $state equals 1
   run command cmp $home/.zshrc $sb/zshrc.before

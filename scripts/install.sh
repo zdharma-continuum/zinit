@@ -70,7 +70,7 @@ typeset -rA ENV_OPTIONS=(
 
 typeset -A opt from        # option values, and the source of each value that is not a default
 typeset -A zshrc checkout  # facts about .zshrc and about the zinit checkout
-typeset -a zshrc_lines notes temp_files delete_dirs
+typeset -a zshrc_lines notes warnings temp_files delete_dirs
 typeset REPLY= tty_in= tty_out= clone_dir=
 typeset c_step= c_ok= c_warn= c_err= c_bold= c_dim= c_off= sym_ok= sym_warn= sym_err=
 
@@ -153,7 +153,6 @@ is_utf8() {
 }
 
 # Messages go to stderr. Data (help, dry-run output, the zinit block) goes to stdout.
-step()  { (( opt[quiet] )) || print -ru2 -- "${c_step}==>${c_off} ${c_bold}$*${c_off}"; }
 info()  { (( opt[quiet] )) || print -ru2 -- "${*:+    $*}"; }
 ok()    { (( opt[quiet] )) || print -ru2 -- "${c_ok}${sym_ok}${c_off} $*"; }
 warn()  { print -ru2 -- "${c_warn}${sym_warn}${c_off} $*"; }
@@ -472,13 +471,17 @@ plan_zshrc() {
   zshrc[block]=$REPLY
   header=${${(@f)zshrc[block]}[2]}
   block=${(F)zshrc_lines[zshrc[start],zshrc[end]]}
-  # --no-edit never changes .zshrc. An install prints the zinit block instead.
-  if (( ! opt[edit] )); then
-    if (( opt[uninstall] )); then zshrc[action]=skip; else zshrc[action]=print; fi
-  elif (( zshrc[start] && ! zshrc[end] )); then
+  if (( zshrc[start] && ! zshrc[end] )); then
     zshrc[action]=broken
   elif (( opt[uninstall] )); then
-    if (( zshrc[start] )); then zshrc[action]=remove; else zshrc[action]=none; fi
+    if (( zshrc[start] )); then
+      zshrc[action]=remove
+    elif (( zshrc[loads] )); then
+      zshrc[action]=manual
+      warnings+=( "${(D)opt[zshrc]} loads zinit on line $zshrc[loads]. The installer does not change that line. Remove it by hand." )
+    else
+      zshrc[action]=none
+    fi
   elif (( zshrc[start] )); then
     if [[ $block == $zshrc[block] ]]; then
       zshrc[action]=keep
@@ -494,6 +497,14 @@ plan_zshrc() {
     zshrc[action]=loaded-elsewhere
   else
     zshrc[action]=append
+  fi
+  # --no-edit never changes .zshrc. An install prints the block that it would write.
+  if (( ! opt[edit] )); then
+    case $opt[uninstall]:$zshrc[action] in
+      (1:remove|1:broken)  zshrc[action]=skip ;;
+      (0:append)           zshrc[action]=print-add ;;
+      (0:replace|0:broken) zshrc[action]=print-replace ;;
+    esac
   fi
 }
 
@@ -572,31 +583,19 @@ apply_zshrc() {
         (replace) ok "Replaced the zinit block in $file. Backup: ${(D)REPLY}" ;;
         (remove)  ok "Removed the zinit block from $file. Backup: ${(D)REPLY}" ;;
       esac ;;
-    (keep)
-      ok "$file already loads zinit." ;;
-    (keep-edited)
-      ok "$file already loads zinit. The installer kept the changes in the zinit block." ;;
-    (keep-old)
-      ok "$file already loads zinit. To replace its block with the current one, give --annexes or --no-annexes." ;;
-    (loaded-elsewhere)
-      ok "$file loads zinit on line $zshrc[loads], so the installer added no block." ;;
-    (none)
-      ok "$file has no zinit block. Nothing to remove." ;;
-    (print)
-      info "The installer did not change $file (--no-edit). Add this block to it:"
+    (print-add)
+      info "Add this block to $file:"
       print -r -- $zshrc[block] ;;
-    (skip)
-      info "The installer did not change $file (--no-edit)." ;;
+    (print-replace)
+      info "Replace the zinit block in $file with this block:"
+      print -r -- $zshrc[block] ;;
   esac
 }
 
 show_diff() {
   local file=${(D)opt[zshrc]}
   render_zshrc
-  if [[ $REPLY == $zshrc[content] ]]; then
-    print -r -- "No changes to $file."
-    return 0
-  fi
+  [[ $REPLY != $zshrc[content] ]] || return 0
   command diff -u -L $file -L "$file (new)" <(print -rn -- $zshrc[content]) <(print -rn -- $REPLY) || :
 }
 
@@ -662,11 +661,13 @@ locate_install() {
 
 # Decide what to do with the zinit checkout. The result goes to checkout[action].
 plan_checkout() {
-  checkout=( action '' state '' branch '' origin '' )
+  local bin=${(D)opt[bin_dir]}
+  checkout=( action '' state '' branch '' origin '' version '' )
   (( ! opt[uninstall] )) || return 0
   # .zshrc loads zinit from a path that locate_install cannot read.
   if [[ -z ${from[bin_dir]-} ]] && (( zshrc[loads] && ! zshrc[start] )); then
     checkout[action]=unknown
+    warnings+=( "The installer cannot read the zinit path on line $zshrc[loads] of ${(D)opt[zshrc]}. It does not update zinit. To update zinit, give --bin-dir DIR." )
     return 0
   fi
   inspect_checkout
@@ -679,12 +680,14 @@ plan_checkout() {
       error "${(D)opt[bin_dir]} is a clone of $checkout[origin], not of $opt[repo]. Remove it, or give another --bin-dir."
       return 1
     fi
-    set_opt repo $checkout[origin] ${(D)opt[bin_dir]}
+    set_opt repo $checkout[origin] 'the checkout'
     opt[url]=$checkout[origin]
   fi
   case $checkout[state] in
     (missing) checkout[action]=clone ;;
-    (dirty)   checkout[action]=keep-dirty ;;
+    (dirty)
+      checkout[action]=keep-dirty
+      warnings+=( "$bin has local changes. The installer does not update it. Commit or stash the changes. Then run the installer again." ) ;;
     (*)
       if [[ -n $opt[commit] ]]; then
         checkout[action]=commit
@@ -692,6 +695,7 @@ plan_checkout() {
         checkout[action]=switch
       elif [[ $checkout[state] == pinned ]]; then
         checkout[action]=keep-pinned
+        checkout[version]=$(zinit_version)
       else
         checkout[action]=update
       fi ;;
@@ -740,12 +744,10 @@ apply_checkout() {
   local dir=${(D)opt[bin_dir]} before after
   case $checkout[action] in
     (clone)
-      step "Cloning $opt[repo] into $dir"
       clone_zinit
       compile_zinit
-      ok "Installed zinit $(zinit_version) in $dir." ;;
+      ok "Installed zinit $(zinit_version)." ;;
     (update|switch|commit)
-      step "Updating zinit in $dir"
       before=$(git_zinit rev-parse HEAD)
       git_zinit fetch --quiet
       case $checkout[action] in
@@ -762,18 +764,11 @@ apply_checkout() {
       esac
       after=$(git_zinit rev-parse HEAD)
       if [[ $before == $after ]]; then
-        ok "zinit $(zinit_version) in $dir is up to date."
+        ok "zinit is up to date ($(zinit_version))."
       else
         compile_zinit
-        ok "Updated zinit in $dir to $(zinit_version)."
+        ok "Updated zinit to $(zinit_version)."
       fi ;;
-    (keep-dirty)
-      warn "$dir has local changes, so the installer did not update it."
-      info 'Commit or stash the changes, then run the installer again.' ;;
-    (keep-pinned)
-      ok "zinit in $dir is pinned at $(zinit_version). To follow a branch, give --branch NAME." ;;
-    (unknown)
-      warn "The installer cannot find the zinit that ${(D)opt[zshrc]} loads. To update it, give --bin-dir DIR." ;;
   esac
 }
 
@@ -795,6 +790,10 @@ plan_delete() {
   if [[ $delete_dirs[1] != $opt[home_dir] || $opt[bin_dir] != $opt[home_dir]/* ]]; then
     add_delete_dir $opt[bin_dir]
   fi
+  # With --no-edit, the block stays. Its clone command runs in the next shell.
+  if [[ $zshrc[action] == skip ]] && (( $#delete_dirs )); then
+    warnings+=( "After the deletion, the zinit block in ${(D)opt[zshrc]} installs zinit again in a new shell. Remove the block to stop this." )
+  fi
 }
 
 add_delete_dir() {
@@ -802,7 +801,7 @@ add_delete_dir() {
   if is_zinit_dir $1; then
     delete_dirs+=( $1 )
   else
-    notes+=( "${(D)1} does not look like a zinit directory, so the installer keeps it." )
+    warnings+=( "${(D)1} does not look like a zinit directory. The installer does not delete it." )
   fi
 }
 
@@ -811,18 +810,15 @@ apply_delete() {
   local dir list=${(j: and :)${(@D)delete_dirs}}
   (( $#delete_dirs )) || return 0
   if ! ask "Delete zinit and its plugins ($list)?" no; then
-    info "The installer kept $list."
+    for dir in $delete_dirs; do
+      info "Kept ${(D)dir}. To delete it later: rm -rf ${(q-)dir}"
+    done
     return 0
   fi
   for dir in $delete_dirs; do
     command rm -rf -- $dir
     ok "Deleted ${(D)dir}."
   done
-  delete_dirs=()
-  # With --no-edit, the block stays. Its clone command runs in the next shell.
-  if [[ $zshrc[action] == skip ]] && (( zshrc[start] )); then
-    warn "The zinit block in ${(D)opt[zshrc]} installs zinit again in a new shell. Remove the block to stop this."
-  fi
 }
 
 # Plan, questions and summary
@@ -831,42 +827,58 @@ show_plan() {
   local fd=2
   if (( opt[dry_run] )); then fd=1; elif (( opt[quiet] )); then return 0; fi
   local repo=$opt[repo] branch=${opt[branch]:-default branch} bin=${(D)opt[bin_dir]}
-  local rc=${(D)opt[zshrc]} annexes=no note dir
+  local rc=${(D)opt[zshrc]} annexes=no title='Update zinit' line dir
   if (( opt[annexes] )); then annexes=yes; fi
+  if (( opt[uninstall] )); then
+    title='Uninstall zinit'
+  elif [[ $checkout[action] == clone ]]; then
+    title='Install zinit'
+  fi
+  if (( opt[dry_run] )); then title+=' (dry run)'; fi
+  # Actions that need attention have no line here. A warning reports them.
   local -A actions=(
-    clone          "Clone $repo into $bin."
-    update         "Update $bin (fast-forward only)."
-    switch         "Switch $bin to branch $opt[branch]."
-    commit         "Check out commit $opt[commit] in $bin."
-    keep-dirty     "Keep $bin: it has local changes."
-    keep-pinned    "Keep $bin: it is pinned to a commit."
-    unknown        "Keep the zinit that $rc loads."
-    append         "Add the zinit block to $rc."
-    replace        "Replace the zinit block in $rc."
-    remove         "Remove the zinit block from $rc."
-    none           "Nothing to remove from $rc."
-    keep           "Keep $rc: it already loads zinit."
-    keep-edited    "Keep $rc: the zinit block has manual changes."
-    keep-old       "Keep $rc: it has a block from an earlier installer."
+    clone            "Clone $repo into $bin."
+    update           "Update $bin (fast-forward only)."
+    switch           "Switch $bin to branch $opt[branch]."
+    commit           "Check out commit $opt[commit] in $bin."
+    keep-pinned      "Keep $bin at $checkout[version] (pinned). To follow a branch, give --branch NAME."
+    append           "Add the zinit block to $rc."
+    replace          "Replace the zinit block in $rc."
+    remove           "Remove the zinit block from $rc."
+    none             "$rc has no zinit block."
+    keep             "Keep $rc: it already loads zinit."
+    keep-edited      "Keep $rc: its zinit block has manual changes."
+    keep-old         "Keep $rc: its zinit block is from an earlier installer. To replace it, give --annexes or --no-annexes."
     loaded-elsewhere "Keep $rc: line $zshrc[loads] loads zinit."
-    print          "Print the zinit block. Do not change $rc."
-    skip           "Do not change $rc (--no-edit)."
-    broken         "Stop: $rc has the start marker on line $zshrc[start], but no end marker."
+    print-add        "Print the zinit block to add to $rc. Do not change the file."
+    print-replace    "Print the zinit block to use in $rc. Do not change the file."
+    skip             "Keep $rc as it is (--no-edit)."
   )
-  print -ru$fd -- "${c_step}==>${c_off} ${c_bold}Zinit installer${c_off}"
-  if (( ! opt[uninstall] )); then
+  print -ru$fd -- "${c_step}==>${c_off} ${c_bold}$title${c_off}"
+  if (( opt[uninstall] )); then
+    plan_row zshrc $rc zshrc
+    plan_row 'home dir' ${(D)opt[home_dir]} home_dir
+    if [[ $opt[bin_dir] != $opt[home_dir]/* ]]; then plan_row 'bin dir' $bin bin_dir; fi
+  else
     plan_row repo "$repo" repo
     plan_row branch "$branch" branch
     if [[ -n $opt[commit] ]]; then plan_row commit $opt[commit] commit; fi
-    plan_row 'bin dir' $bin bin_dir
+    if [[ $checkout[action] == unknown ]]; then
+      plan_row 'bin dir' unknown
+    else
+      plan_row 'bin dir' $bin bin_dir
+    fi
     plan_row 'home dir' ${(D)opt[home_dir]} home_dir
     plan_row annexes $annexes annexes
+    plan_row zshrc $rc zshrc
   fi
-  plan_row zshrc $rc zshrc
-  for note in $notes; do print -ru$fd -- "    $note"; done
+  for line in $notes; do print -ru$fd -- "    $line"; done
+  # With broken markers, run() stops with an error before any change.
+  [[ $zshrc[action] != broken ]] || return 0
   print -ru$fd -- "${c_step}==>${c_off} ${c_bold}Plan${c_off}"
-  if [[ -n $checkout[action] ]]; then print -ru$fd -- "    ${actions[$checkout[action]]}"; fi
-  print -ru$fd -- "    ${actions[$zshrc[action]]}"
+  for line in ${actions[$checkout[action]]-} ${actions[$zshrc[action]]-}; do
+    print -ru$fd -- "    $line"
+  done
   for dir in $delete_dirs; do
     if (( opt[yes] )); then
       print -ru$fd -- "    Delete ${(D)dir}."
@@ -874,11 +886,20 @@ show_plan() {
       print -ru$fd -- "    Ask to delete ${(D)dir}. The default answer is no."
     fi
   done
+  if (( opt[uninstall] && ! $#delete_dirs )); then
+    print -ru$fd -- '    No zinit directory to delete.'
+  fi
+}
+
+# Print the warnings from the plan. They also show with --quiet.
+show_warnings() {
+  local line
+  for line in $warnings; do warn $line; done
 }
 
 # Print one setting of the plan: label, value and the source of the value.
 plan_row() {
-  local origin=${from[$3]-}
+  local origin=${from[${3:-none}]-}
   print -ru$fd -- "    ${(r:9:)1} $2${origin:+  ${c_dim}(from $origin)${c_off}}"
 }
 
@@ -920,18 +941,16 @@ ask() {
 }
 
 show_next_steps() {
-  local dir
   (( ! opt[quiet] )) || return 0
   if (( opt[uninstall] )); then
     if [[ $zshrc[action] == remove ]]; then
       info 'Start a new shell to stop loading zinit: exec zsh'
     fi
-    for dir in $delete_dirs; do
-      info "To delete ${(D)dir} later: rm -rf ${(q-)dir}"
-    done
     return 0
   fi
   case $checkout[action]:$zshrc[action] in
+    (*:print-add|*:print-replace)
+      info 'After you change .zshrc, start a new shell to load zinit: exec zsh' ;;
     (clone:*|*:append|*:replace)
       info 'Start a new shell to load zinit: exec zsh' ;;
   esac
@@ -963,8 +982,9 @@ run() {
   plan_zshrc
   plan_delete
   show_plan
+  show_warnings
   if [[ $zshrc[action] == broken ]]; then
-    error "Add \"$MARK_END\" after the zinit block in ${(D)opt[zshrc]}, or remove the block."
+    error "${(D)opt[zshrc]} has the zinit start marker on line $zshrc[start] but no end marker. Add \"$MARK_END\" after the block, or remove the block."
     return 1
   fi
   if (( opt[dry_run] )); then
@@ -977,9 +997,6 @@ run() {
   fi
   apply_checkout
   apply_zshrc
-  if (( opt[uninstall] && zshrc[loads] )); then
-    warn "${(D)opt[zshrc]} still loads zinit on line $zshrc[loads]. Remove that line by hand."
-  fi
   apply_delete
   show_next_steps
 }
