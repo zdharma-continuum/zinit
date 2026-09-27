@@ -748,6 +748,11 @@
   local stern="$ZBIN/stern"; assert "$stern" is_executable
   run "$stern" --version; assert $state equals 0
 }
+@test 'super' { # Tooling for super-structured data: a new and easier way to manipulate data
+  run zinit for @brimdata/super; assert $state equals 0
+  local super="$ZBIN/super"; assert "$super" is_executable
+  run $super -version; assert $state equals 0
+}
 @test 'tealdeer' { # A very fast implementation of tldr in Rust
   run zinit lbin'!tealdeer* -> tealdeer' for @tealdeer-rs/tealdeer; assert $state equals 0
   local tealdeer="$ZBIN/tealdeer"; assert "$tealdeer" is_executable
@@ -825,12 +830,6 @@
   run zinit lbin'!* -> yq' for @mikefarah/yq; assert $state equals 0
   local yq="$ZBIN/yq"; assert "$yq" is_executable
   run $yq --version; assert $state equals 0
-}
-@test 'zed' { # Tooling for super-structured data: a new and easier way to manipulate data
-  skip "Official Doc: SuperDB is still under development so there's not yet a GA release."
-  run zinit for @brimdata/super; assert $state equals 0
-  local zed="$ZBIN/zed"; assert "$zed" is_executable
-  run $zed --version; assert $state equals 0
 }
 @test 'zoxide' { # A smarter cd command
   run zinit for @ajeetdsouza/zoxide; assert $state equals 0
