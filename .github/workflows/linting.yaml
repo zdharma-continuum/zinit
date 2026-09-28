@@ -70,6 +70,7 @@ jobs:
             noexec)
               find . -name '*.zsh' -type f -print0 \
                 | xargs -0 -n1 -P4 zsh -n
+              zsh -n scripts/install.sh
               ;;
             zcompile)
               find . -name '*.zsh' -type f \

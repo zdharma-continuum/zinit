@@ -1,0 +1,60 @@
+#!/usr/bin/env zsh
+#
+# Helpers for tests/installer.zunit. The tests run scripts/install.sh offline:
+# each test has its own HOME and installs from a local git repository.
+
+# Make the base origin repository once for the test run: commits C1 and C2 on main.
+zi_base_origin() {
+  local base=$zi_test_dir/installer-origin
+  local -a git=( command git -c user.name=zunit -c user.email=zunit@example.com -C $base )
+  if [[ ! -d $base/.git ]]; then
+    command mkdir -p $base
+    command git -C ${GIT_REPO:-$PWD} archive HEAD | command tar -x -C $base
+    $git init -q -b main
+    $git add -A
+    $git commit -q -m C1
+    $git commit -q --allow-empty -m C2
+  fi
+  REPLY=$base
+}
+
+# Make a sandbox for one test. $home is the HOME of the installer, and $origin
+# is a private copy of the base origin, so a test can add commits to it.
+zi_sandbox() {
+  zi_base_origin
+  sb=$(command mktemp -d "$zi_test_dir/installer.XXXXXX")
+  home=$sb/home
+  origin=$sb/origin
+  zinit_dir=$home/.local/share/zinit/zinit.git
+  zi_env=()
+  command mkdir -p $home
+  command git clone -q $REPLY $origin
+}
+
+# Add an empty commit to $origin.
+zi_commit() {
+  command git -c user.name=zunit -c user.email=zunit@example.com -C $origin commit -q --allow-empty -m $1
+}
+
+# Run the installer in the sandbox. $1 selects how it starts: zsh-c, zsh-file,
+# zsh-pipe, bash-c, bash-pipe or dash-c. The other arguments go to the installer.
+# The array zi_env adds environment variables.
+zi_install() {
+  local via=$1 script=${GIT_REPO:-$PWD}/scripts/install.sh
+  shift
+  local -a env=(
+    command env -i HOME=$home PATH=$PATH TERM=dumb
+    GIT_CONFIG_NOSYSTEM=1 GIT_ALLOW_PROTOCOL=file _ZINIT_INSTALL_TTY=/dev/null
+    $zi_env
+  )
+  case $via in
+    (zsh-c)     $env zsh -c "$(<$script)" -- "$@" ;;
+    (zsh-file)  $env zsh $script "$@" ;;
+    (zsh-pipe)  command cat $script | $env zsh -s -- "$@" ;;
+    (bash-c)    $env bash -c "$(<$script)" install.sh "$@" ;;
+    (bash-pipe) command cat $script | $env bash -s -- "$@" ;;
+    (dash-c)    $env dash -c "$(<$script)" install.sh "$@" ;;
+  esac
+}
+
+# vim: set expandtab filetype=zsh shiftwidth=2 softtabstop=2 tabstop=2:
