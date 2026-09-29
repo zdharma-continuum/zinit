@@ -1467,7 +1467,22 @@ EOF
                     .zinit-any-to-user-plugin "${ICE2[teleid]}"
                     .zinit-run-delete-hooks plugin "${reply[-2]}" "${reply[-1]}" "$the_id" "$local_dir"
                 }
-                command rm -d -f -r "${ZINIT[HOME_DIR]}"/**/*(-@N) "${ZINIT[HOME_DIR]}"/{'plugins','snippets'}/*(N/^F) ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}(N)
+                # Find the enabled completions of local_dir. Their links resolve only before the rm below.
+                local c link real_dir=${local_dir:A}
+                local -a comp_names=()
+                for link in "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(N@); do
+                    [[ ${link:A} == "$real_dir"/* ]] && comp_names+=( "${link:t}" )
+                done
+                command rm -d -f -r ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}(N)
+                # A glob expands before rm starts. Links into local_dir dangle only after the rm above.
+                command rm -d -f -r "${ZINIT[HOME_DIR]}"/**/*(-@N) "${ZINIT[COMPLETIONS_DIR]}"/*(-@N) "${ZINIT[HOME_DIR]}"/{'plugins','snippets'}/*(N/^F)
+                # Remove the completions from _comps of this shell. Their files are gone, so TAB would fail.
+                if (( $#comp_names )); then
+                    (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+                    for c in "${comp_names[@]}"; do
+                        .zinit-forget-completion "$c" 1
+                    done
+                fi
                 builtin unset "ZINIT[STATES__${i}]" || builtin unset "ZINIT[STATES__${ICE2[teleid]}]"
                 (( $#o_quiet )) || +zi-log "{m} Uninstalled {b}$i{rst}"
             else
