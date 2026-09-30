@@ -46,8 +46,10 @@ jobs:
         include:
           - zunit_test: gh-r
             zunit_flag: --slice
+            brew_deps: unzip xz zsh zstd
           - zunit_test: plugins
             zunit_flag: --slice
+            brew_deps: autoconf automake binutils byacc coreutils curl gettext gnu-sed jemalloc libevent libtool libuv lua lua@5.4 make ninja parallel pkg-config texinfo unzip xz zsh zstd
 
     steps:
       - name: "checkout ${{ github.repository }}"
@@ -60,7 +62,7 @@ jobs:
         uses: Homebrew/actions/setup-homebrew@e99025eb970cfa124b8284a35463d87426917478
 
       - name: "install ${{ runner.os }} dependencies"
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && matrix.zunit_test == 'plugins'
         run: |
           sudo apt-get update --yes
           sudo apt-get install --no-install-recommends --yes \
@@ -78,9 +80,11 @@ jobs:
 
       - name: "install dependencies via brew"
         id: install-deps
-        run: |
-          brew install --quiet --force --overwrite autoconf automake binutils byacc coreutils curl gettext gnu-sed jemalloc libevent libtool libuv lua lua@5.4 make ninja parallel pkg-config texinfo unzip xz zsh zstd
-          brew unlink ncurses && brew link --force ncurses
+        run: brew install --quiet --force --overwrite ${{ matrix.brew_deps || 'zsh' }}
+
+      - name: "link ncurses"
+        if: matrix.zunit_test == 'plugins'
+        run: brew unlink ncurses && brew link --force ncurses
 
       - name: "checkout zdharma-continuum/zunit"
         uses: actions/checkout@v7
