@@ -58,6 +58,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   build-container-latest:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
@@ -86,7 +87,6 @@ jobs:
       - name: build & push new image
         id: docker_build_latest
         uses: docker/build-push-action@v7
-        if: github.ref == 'refs/heads/main'
         with:
           push: true
           file: ./docker/Dockerfile
