@@ -758,6 +758,11 @@
   local tealdeer="$ZBIN/tealdeer"; assert "$tealdeer" is_executable
   run "$tealdeer" --version; assert $state equals 0
 }
+@test 'tessera' { # The personal information dashboard for your terminal
+  run zinit lbin'!tessera* -> tessera' for wtfutil/wtf; assert $state equals 0
+  local tessera="$ZBIN/tessera"; assert "$tessera" is_executable
+  run $tessera --version; assert $state equals 0
+}
 @test 'tin-summer' { # Find build artifacts that are taking up disk space
   run zinit for @vmchale/tin-summer; assert $state equals 0
   local tin_summer="$ZBIN/sn"; assert "$tin_summer" is_executable
@@ -804,11 +809,6 @@
   run zinit lbin'!* -> wifiqr' for reugn/wifiqr; assert $state equals 0
   local wifiqr="$ZBIN/wifiqr"; assert "$wifiqr" is_executable
   run $wifiqr --version; assert $state equals 0
-}
-@test 'wtf' { # The personal information dashboard for your terminal
-  run zinit lbin'!wtf* -> wtf' for wtfutil/wtf; assert $state equals 0
-  local wtf="$ZBIN/wtf"; assert "$wtf" is_executable
-  run $wtf --version; assert $state equals 0
 }
 @test 'xh' { # Friendly and fast tool for sending HTTP requests
   run zinit for @ducaale/xh; assert $state equals 0

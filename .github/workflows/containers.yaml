@@ -4,35 +4,36 @@ on:
   push:
     branches:
       - main
-    tags:        
+    tags:
       - v[0-9]+.[0-9]+.[0-9]+
   workflow_dispatch:
 
 jobs:
   build-containers-with-zsh:
-    runs-on: ubuntu-latest
+    name: "build-containers-with-zsh (${{ matrix.zsh_version }}, ${{ matrix.arch }})"
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
         zsh_version:
           - 5.8
           - 5.9
+        platform:
+          - linux/amd64
+          - linux/arm64/v8
+        include:
+          - platform: linux/amd64
+            arch: amd64
+            runner: ubuntu-24.04
+          - platform: linux/arm64/v8
+            arch: arm64
+            runner: ubuntu-24.04-arm
     steps:
       - name: check out repository code
         uses: actions/checkout@v7
 
-      - name: Grab git slugs (short commit id, branch etc.)
-        uses: rlespinasse/github-slug-action@v3.x
-
-      - name: set up qemu
-        uses: docker/setup-qemu-action@v4
-
       - name: setup docker buildx
-        id: buildx
         uses: docker/setup-buildx-action@v4
-        with:
-          install: true
-          use: true
 
       - name: login to github container registry
         uses: docker/login-action@v4
@@ -41,24 +42,83 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: build and push
+      - name: build and push by digest
         id: docker_build_zsh_versions
         uses: docker/build-push-action@v7
         timeout-minutes: 90 # compiling older zsh versions take a long time
         with:
-          push: ${{ github.event.number == 0 }}
           file: ./docker/Dockerfile
           build-args: |
             ZINIT_ZSH_VERSION=${{ matrix.zsh_version }}-tcsetpgrp
-          tags: |
-            ghcr.io/${{ github.repository }}:zsh-${{ matrix.zsh_version }}
-            ghcr.io/${{ github.repository }}:zsh-${{ matrix.zsh_version }}-${{ env.GITHUB_SHA_SHORT }}
-          platforms: linux/amd64,linux/arm64/v8
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          outputs: type=image,name=ghcr.io/${{ github.repository }},push-by-digest=true,name-canonical=true,push=true
+          platforms: ${{ matrix.platform }}
+          cache-from: type=gha,scope=zsh-${{ matrix.zsh_version }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=zsh-${{ matrix.zsh_version }}-${{ matrix.arch }}
+
+      - name: export digest
+        run: |
+          mkdir -p "${{ runner.temp }}/digests"
+          digest="${{ steps.docker_build_zsh_versions.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+      - name: upload digest
+        uses: actions/upload-artifact@v7
+        with:
+          name: digests-zsh-${{ matrix.zsh_version }}-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge-containers-with-zsh:
+    needs: build-containers-with-zsh
+    # Also run after a failed build job. One failed zsh version then does not block the other.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        zsh_version:
+          - 5.8
+          - 5.9
+    steps:
+      - name: download digests
+        uses: actions/download-artifact@v8
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-zsh-${{ matrix.zsh_version }}-*
+          merge-multiple: true
+
+      - name: Grab git slugs (short commit id, branch etc.)
+        uses: rlespinasse/github-slug-action@v3.x
+
+      - name: setup docker buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: login to github container registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: create and push multi-platform manifest
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          digests=(*)
+          # Stop on a missing platform digest. A partial manifest does not contain that platform.
+          if (( ${#digests[@]} != 2 )); then
+            echo "ERROR: expected 2 digests, found ${#digests[@]}" >&2
+            exit 1
+          fi
+          image="ghcr.io/${{ github.repository }}"
+          docker buildx imagetools create \
+            --tag "${image}:zsh-${{ matrix.zsh_version }}" \
+            --tag "${image}:zsh-${{ matrix.zsh_version }}-${{ env.GITHUB_SHA_SHORT }}" \
+            "${digests[@]/#/${image}@sha256:}"
 
   build-container-latest:
-    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
     steps:
       - name: checkout code
         uses: actions/checkout@v7
@@ -86,7 +146,6 @@ jobs:
       - name: build & push new image
         id: docker_build_latest
         uses: docker/build-push-action@v7
-        if: github.ref == 'refs/heads/main'
         with:
           push: true
           file: ./docker/Dockerfile
