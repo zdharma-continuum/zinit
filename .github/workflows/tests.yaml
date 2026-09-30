@@ -81,7 +81,9 @@ jobs:
 
       - name: "install dependencies via brew"
         id: install-deps
-        run: brew install --quiet --force --overwrite ${{ matrix.brew_deps || 'zsh' }}
+        # An empty GITHUB_ACTIONS stops Homebrew annotations.
+        # Homebrew warnings stay in the job log.
+        run: GITHUB_ACTIONS='' brew install --quiet --force --overwrite ${{ matrix.brew_deps || 'zsh' }}
 
       - name: "link ncurses"
         if: matrix.zunit_test == 'plugins'
