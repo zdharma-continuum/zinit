@@ -28,7 +28,7 @@ on:
 jobs:
   zunit-tests:
     name: "${{ matrix.zunit_test }} | ${{ matrix.os }}"
-    runs-on: "${{ matrix.os }}-latest"
+    runs-on: "${{ matrix.runner }}"
     strategy:
       fail-fast: false
       matrix:
@@ -45,6 +45,10 @@ jobs:
           - snippets
         os: [macos, ubuntu]
         include:
+          - os: macos
+            runner: macos-latest
+          - os: ubuntu
+            runner: ubuntu-24.04
           - zunit_test: gh-r
             zunit_flag: --slice
             brew_deps: unzip xz zsh zstd

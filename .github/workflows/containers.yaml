@@ -24,7 +24,7 @@ jobs:
         include:
           - platform: linux/amd64
             arch: amd64
-            runner: ubuntu-latest
+            runner: ubuntu-24.04
           - platform: linux/arm64/v8
             arch: arm64
             runner: ubuntu-24.04-arm
@@ -73,7 +73,7 @@ jobs:
     needs: build-containers-with-zsh
     # Also run after a failed build job. One failed zsh version then does not block the other.
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -118,7 +118,7 @@ jobs:
 
   build-container-latest:
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: checkout code
         uses: actions/checkout@v7

@@ -16,7 +16,7 @@ jobs:
     
   mdlint:
     name: markdown
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
 
@@ -45,7 +45,7 @@ jobs:
 
   zshlint:
     name: zsh
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false
