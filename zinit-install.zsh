@@ -429,8 +429,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                         else
                             clone_url="${ICE[proto]:-https}://${site:-${ICE[from]:-github.com}}/$remote_url_path"
                         fi
+                        # With the depth ice, git clones only the branch it checks
+                        # out, so clone the branch or tag named by the ver ice
+                        # directly. A commit hash cannot be cloned this way; it is
+                        # checked out after the clone.
+                        local -a branch_opt
+                        [[ -n ${ICE[ver]} && ${ICE[ver]} != [[:xdigit:]](#c7,40) ]] && branch_opt=( --branch "${ICE[ver]}" )
                         command git clone --progress ${(s: :)ICE[cloneopts]---recursive} \
                             ${(s: :)ICE[depth]:+--depth ${ICE[depth]}} \
+                            "${branch_opt[@]}" \
                             "$clone_url" \
                             "$local_path" \
                             --config transfer.fsckobjects=false \
@@ -459,9 +466,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     return 1
             esac
 
-            if [[ -n ${ICE[ver]} ]] {
-                command git -C "$local_path" checkout "${ICE[ver]}"
-            }
+            if [[ -n ${ICE[ver]} ]] && ! command git -C "$local_path" checkout -q "${ICE[ver]}"; then
+                builtin print -Pr -- "$ZINIT[col-error]Cannot check out $ZINIT[col-obj]${ICE[ver]}$ZINIT[col-error] (ver ice).%f%b"
+                return 1
+            fi
         }
 
         if [[ $update != -u ]] {
