@@ -749,7 +749,7 @@
   run "$stern" --version; assert $state equals 0
 }
 @test 'super' { # Tooling for super-structured data: a new and easier way to manipulate data
-  run zinit for @brimdata/super; assert $state equals 0
+  run zinit for @superdb/super; assert $state equals 0
   local super="$ZBIN/super"; assert "$super" is_executable
   run $super -version; assert $state equals 0
 }
