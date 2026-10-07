@@ -335,4 +335,31 @@
   _assert_dirs_restored "$home" "$away"
 }
 
+@test 'atinit with ! on a command plugin turns compdef recording off again' {
+  # While a plugin loads, zinit replaces compdef with its own version, which
+  # writes each call down so that zicdreplay can apply it later. When the load
+  # is over, zinit must put the previous compdef back. This test loads a command
+  # plugin with atinit'!…' and checks that zinit did so.
+
+  # Load the plugin once without atinit, so that zinit downloads it now. zinit
+  # runs compinit after a download, and compinit defines compdef. The second
+  # load, the one being tested, finds the plugin on disk and does not run
+  # compinit. If compdef has changed after that load, zinit did not put it
+  # back as it is actually supposed to do, and the test fails.
+  zinit as"command" id-as"test/atinit-bang-command" for zdharma-continuum/null || true
+
+  local had_compdef old_compdef
+  had_compdef=${+functions[compdef]}
+  old_compdef=${functions[compdef]}
+
+  zinit as"command" id-as"test/atinit-bang-command" atinit'!true' for zdharma-continuum/null || true
+
+  assert "$ZINIT[TMP_SUBST]" same_as "inactive"
+  assert "${+functions[compdef]}" same_as "$had_compdef"
+  # zunit's assert only compares the first line of a value, so compare the
+  # function bodies here.
+  [[ ${functions[compdef]} == $old_compdef ]]
+  assert $? equals 0
+}
+
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=\ {,}:foldmethod=marker
