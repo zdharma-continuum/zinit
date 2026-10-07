@@ -753,7 +753,7 @@ You may safely assume a given ice works with both plugins and snippets unless ex
 | Modifier     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | :----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `atclone`    | Run command after cloning, within plugin's directory, e.g. `zinit ice atclone"echo Cloned"`. Ran also after downloading snippet.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `atinit`     | Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `atinit`     | Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading. For plugins, passed code can be preceded with `!`, it will then run within the loading, right before the plugin is sourced. If using `load` (not `light`), Zinit records what the code defines (functions, aliases, key bindings, etc.), so that `zinit report` lists it and `zinit unload` removes it. During the loading Zinit provides its own `compdef` function, so `compdef` calls in the code are recorded for `zicdreplay` even if `compinit` has not run yet. Alias expansion is off while the code runs, unless the `aliases` ice is given.                |
 | `atload`     | Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be investigated (if using `load`, not `light`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `atpull`     | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod.                                                                                                                                                                                                                                                                                                                                                              |
 | `configure`  | Runs `./configure` script and by default changes the installation directory by passing `--prefix=$ZPFX` to the script. Runs before `make''` and after `make'!'`, you can pass `'!'` too to this ice (i.e.: `configure'!'`) to make it execute earlier – before `make'!'` and after `make'!!'`. If `#` given in the ice value then also executes script `./autogen.sh` first before running `./configure`. The script is run anyway if there is no `configure` script. Also, when there exist another build-system related files, then it is run if no `configure` script is found. Currently supported systems are: CMake, scons and meson, checked-for/run in this order |
@@ -1023,6 +1023,26 @@ zi for \
     wait \
   zsh-users/zsh-completions
 ```
+
+While Zinit loads a plugin, it records the plugin's `compdef` calls, also after `compinit` has run. `zicdreplay` applies
+the calls recorded so far. A `compdef` call recorded after `zicdreplay` has run takes no effect, unless `zicdreplay` is
+called again. To call `zicompinit` and `zicdreplay` only once, run them after every plugin that calls `compdef`, for
+example in a last Turbo stage:
+
+```zsh
+# Finalize Zsh initialization after all plugins and completions are loaded
+zinit ice id-as'zinit/compinit' lucid as'null' wait'0c' atload'
+  # Initialize the Zsh completion system
+  zicompinit
+
+  # Replay any `compdef` calls that plugins made before `compinit` was ready
+  zicdreplay
+'
+zinit light zdharma-continuum/null
+```
+
+`wait'0c'` runs after the plugins loaded with `wait`, `wait'0'`, `wait'0a'` or `wait'0b'`, and before the plugins loaded
+with a longer wait, such as `wait'1'`.
 
 ### Ignoring Compdefs<a name="ignoring-compdefs"></a>
 
