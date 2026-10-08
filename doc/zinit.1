@@ -267,8 +267,8 @@ Plugins can be loaded using \f[C]load\f[R] or \f[C]light\f[R].
 .IP
 .nf
 \f[C]
-zinit load  <repo/plugin> # Load with reporting/investigating.
-zinit light <repo/plugin> # Load without reporting/investigating.
+zinit load  <repo/plugin> # Load with tracking (for \[ga]zinit report\[ga] and \[ga]zinit unload\[ga]).
+zinit light <repo/plugin> # Load without tracking (faster).
 \f[R]
 .fi
 .PP
@@ -291,10 +291,10 @@ plugins).
 .IP
 .nf
 \f[C]
-# Plugin history-search-multi-word loaded with investigating.
+# Plugin history-search-multi-word loaded with tracking.
 zinit load zdharma-continuum/history-search-multi-word
 
-# Two regular plugins loaded without investigating.
+# Two regular plugins loaded without tracking.
 zinit light zsh-users/zsh-autosuggestions
 zinit light zdharma-continuum/fast-syntax-highlighting
 
