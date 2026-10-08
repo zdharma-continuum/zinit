@@ -1025,6 +1025,26 @@ zi for \
   zsh-users/zsh-completions
 ```
 
+While Zinit loads a plugin, it records the plugin's `compdef` calls, also after `compinit` has run. `zicdreplay` applies
+the calls recorded so far. A `compdef` call recorded after `zicdreplay` has run takes no effect, unless `zicdreplay` is
+called again. To call `zicompinit` and `zicdreplay` only once, run them after every plugin that calls `compdef`, for
+example in a last Turbo stage:
+
+```zsh
+# Finalize Zsh initialization after all plugins and completions are loaded
+zinit ice id-as'zinit/compinit' lucid as'null' wait'0c' atload'
+  # Initialize the Zsh completion system
+  zicompinit
+
+  # Replay any `compdef` calls that plugins made before `compinit` was ready
+  zicdreplay
+'
+zinit light zdharma-continuum/null
+```
+
+`wait'0c'` runs after the plugins loaded with `wait`, `wait'0'`, `wait'0a'` or `wait'0b'`, and before the plugins loaded
+with a longer wait, such as `wait'1'`.
+
 ### Ignoring Compdefs<a name="ignoring-compdefs"></a>
 
 If you want to ignore compdefs provided by some plugins or snippets, place their load commands before commands loading
