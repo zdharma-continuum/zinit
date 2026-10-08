@@ -1487,6 +1487,13 @@ Then, the \f[C]cdreplay\f[R] (\f[I]compdef-replay\f[R]) can be used,
 after \f[C]compinit\f[R] will be called (and the original
 \f[C]compdef\f[R] function will become available), to execute all
 detected \f[C]compdef\f[R] calls.
+Zinit provides this \f[C]compdef\f[R] function only while it loads a
+plugin.
+Elsewhere, e.g.\ directly in \f[C].zshrc\f[R] or in a plain
+\f[C]atinit\[aq]\[aq]\f[R] or \f[C]atload\[aq]\[aq]\f[R] hook, call
+\f[C]zicompdef\f[R] with the same
+arguments: it records the call in the same array, for the same
+\f[C]cdreplay\f[R].
 To summarize:
 .IP
 .nf
@@ -1496,12 +1503,11 @@ source \[dq]${ZINIT_HOME}/zinit.zsh\[dq]
 
 zinit load \[dq]some/plugin\[dq]
 \&...
-compdef _gnu_generic fd  # this will be intercepted by Zinit, because as the compinit
-                         # isn\[aq]t yet loaded, thus there\[aq]s no such function \[ga]compdef\[aq]; yet
-                         # Zinit provides its own \[ga]compdef\[aq] function which saves the
-                         # completion-definition for later possible re-run with \[ga]zinit
-                         # cdreplay\[aq] or \[ga]zicdreplay\[aq] (the second one can be used in hooks
-                         # like atload\[aq]\[aq], atinit\[aq]\[aq], etc.)
+zicompdef _gnu_generic fd  # compinit isn\[aq]t yet loaded, thus there\[aq]s no function
+                           # \[ga]compdef\[aq] here; \[ga]zicompdef\[aq] saves the completion-definition
+                           # for later possible re-run with \[ga]zinit cdreplay\[aq] or
+                           # \[ga]zicdreplay\[aq] (the second one can be used in hooks like
+                           # atload\[aq]\[aq], atinit\[aq]\[aq], etc.)
 \&...
 zinit load \[dq]other/plugin\[dq]
 

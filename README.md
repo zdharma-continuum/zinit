@@ -961,8 +961,10 @@ function.
 The `compdef` function is provided by `compinit` call. As it should be called later, after loading all of the plugins,
 Zinit provides its own `compdef` function that catches (i.e.: records in an array) the arguments of the call, so that
 the loaded plugins can freely call `compdef`. Then, the `cdreplay` (_compdef-replay_) can be used, after `compinit` will
-be called (and the original `compdef` function will become available), to execute all detected `compdef` calls. To
-summarize:
+be called (and the original `compdef` function will become available), to execute all detected `compdef` calls. Zinit
+provides this `compdef` function only while it loads a plugin. Elsewhere, e.g. directly in `.zshrc` or in a plain
+`atinit''` or `atload''` hook, call `zicompdef` with the same arguments: it records the call in the same array, for the
+same `cdreplay`. To summarize:
 
 ```zsh
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -970,12 +972,11 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 zinit load "some/plugin"
 ...
-compdef _gnu_generic fd  # this will be intercepted by Zinit, because as the compinit
-                         # isn't yet loaded, thus there's no such function `compdef'; yet
-                         # Zinit provides its own `compdef' function which saves the
-                         # completion-definition for later possible re-run with `zinit
-                         # cdreplay' or `zicdreplay' (the second one can be used in hooks
-                         # like atload'', atinit'', etc.)
+zicompdef _gnu_generic fd  # compinit isn't yet loaded, thus there's no function
+                           # `compdef' here; `zicompdef' saves the completion-definition
+                           # for later possible re-run with `zinit cdreplay' or
+                           # `zicdreplay' (the second one can be used in hooks like
+                           # atload'', atinit'', etc.)
 ...
 zinit load "other/plugin"
 
