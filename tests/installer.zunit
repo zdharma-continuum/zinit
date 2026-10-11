@@ -1,0 +1,273 @@
+#!/usr/bin/env zunit
+# vim:ft=zsh:sw=2:sts=2:et
+#
+# Offline tests for scripts/install.sh. Each test has its own HOME and origin repository.
+
+@setup {
+  load "${PWD}/tests/_support/installer_helpers"
+  zi_sandbox
+}
+
+@test 'fresh install clones zinit and adds one zinit block' {
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  assert $output does_not_contain 'created globally'
+  assert $zinit_dir/zinit.zsh is_file
+  assert $zinit_dir/zinit.zsh.zwc is_file
+  assert "$(command git -C $zinit_dir log -1 --format=%s)" same_as C2
+  assert "$(command grep -c "^### Added by Zinit's installer" $home/.zshrc)" equals 1
+  local -a temp=( $home/.zshrc.????????(DN) )
+  assert ${#temp} equals 0
+}
+
+@test 'a second run changes nothing' {
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  command cp -p $home/.zshrc $sb/zshrc.before
+  run zi_install zsh-c
+  assert $state equals 0
+  assert $output contains 'up to date'
+  run command cmp $home/.zshrc $sb/zshrc.before
+  assert $state equals 0
+  local -a backups=( $home/.zshrc.zinit-backup.*(DN) )
+  assert ${#backups} equals 0
+}
+
+@test 'a changed option replaces the block in place and keeps a backup' {
+  print -r -- '# before' > $home/.zshrc
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  print -r -- '# after' >> $home/.zshrc
+  command cp -p $home/.zshrc $sb/zshrc.before
+  local -a old=( $home/.zshrc.zinit-backup.*(DN) )
+  run zi_install zsh-c --no-annexes
+  assert $state equals 0
+  local -a new=( $home/.zshrc.zinit-backup.*(DN) )
+  new=( ${new:|old} )
+  assert ${#new} equals 1
+  run command cmp $new[1] $sb/zshrc.before
+  assert $state equals 0
+  local zshrc="$(<$home/.zshrc)"
+  assert $zshrc contains '# before'
+  assert $zshrc contains '# after'
+  assert $zshrc contains 'zinit-installer v1:'
+  assert $zshrc does_not_contain zinit-annex-rust
+  assert "$(command grep -c "^### Added by Zinit's installer" $home/.zshrc)" equals 1
+}
+
+@test 'no-edit and NO_EDIT leave .zshrc alone and print the block' {
+  run zi_install zsh-c --repo $origin --no-edit --quiet
+  assert $state equals 0
+  assert $output contains "### Added by Zinit's installer"
+  run test -e $home/.zshrc
+  assert $state equals 1
+  zi_env=( NO_EDIT=1 )
+  run zi_install zsh-c --quiet
+  assert $state equals 0
+  run test -e $home/.zshrc
+  assert $state equals 1
+}
+
+@test 'no-edit prints no block when .zshrc already loads zinit' {
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  run zi_install zsh-c --no-edit --quiet
+  assert $state equals 0
+  assert "$output" is_empty
+}
+
+@test 'an existing manual setup keeps .zshrc and updates that checkout' {
+  command git clone -q $origin $zinit_dir
+  print -rl -- 'ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"' \
+    'source "${ZINIT_HOME}/zinit.zsh"' > $home/.zshrc
+  command cp -p $home/.zshrc $sb/zshrc.before
+  zi_commit C3
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  assert $output contains 'line 2 of ~/.zshrc'
+  assert "$(command git -C $zinit_dir log -1 --format=%s)" same_as C3
+  run command cmp $home/.zshrc $sb/zshrc.before
+  assert $state equals 0
+}
+
+@test 'a symlinked .zshrc stays a symlink and keeps its mode' {
+  command mkdir -p $home/dots
+  print -r -- '# mine' > $home/dots/zshrc
+  command chmod 600 $home/dots/zshrc
+  command ln -s dots/zshrc $home/.zshrc
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  assert $home/.zshrc is_link
+  local -a mode=( $home/dots/zshrc(Nf600) )
+  assert ${#mode} equals 1
+  assert "$(<$home/dots/zshrc)" contains "### Added by Zinit's installer"
+}
+
+@test 'help exits 0 and usage errors exit 2 without changes' {
+  run zi_install zsh-c --help
+  assert $state equals 0
+  assert $output contains 'Usage: install.sh'
+  run zi_install zsh-c --bogus
+  assert $state equals 2
+  run zi_install zsh-c stray-argument
+  assert $state equals 2
+  run zi_install zsh-c --repo
+  assert $state equals 2
+  local -a files=( $home/*(DN) )
+  assert ${#files} equals 0
+}
+
+@test 'legacy variables work and command-line options override them' {
+  zi_env=( ZINIT_HOME=$sb/a NO_ANNEXES=1 )
+  run zi_install zsh-c --repo $origin --home-dir $sb/b
+  assert $state equals 0
+  assert $sb/b/zinit.git/zinit.zsh is_file
+  run test -e $sb/a
+  assert $state equals 1
+  assert "$(<$home/.zshrc)" contains '--no-annexes'
+}
+
+@test 'bash, pipes and a script file give the same result as zsh -c' {
+  local via
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  command mv $home/.zshrc $sb/zshrc.zsh-c
+  for via in zsh-file zsh-pipe bash-c bash-pipe; do
+    run zi_install $via --repo $origin
+    assert $state equals 0
+    run command cmp $home/.zshrc $sb/zshrc.zsh-c
+    assert $state equals 0
+    command rm -f $home/.zshrc
+  done
+}
+
+@test 'dash exits 1 and shows the zsh command' {
+  (( ${+commands[dash]} )) || skip 'dash is not installed'
+  run zi_install dash-c --repo $origin
+  assert $state equals 1
+  assert $output contains 'zsh -c'
+}
+
+@test 'a commit option checks out that commit and a bad commit leaves nothing' {
+  local c1=$(command git -C $origin rev-parse HEAD~1)
+  run zi_install zsh-c --repo $origin --commit $c1
+  assert $state equals 0
+  assert "$(command git -C $zinit_dir rev-parse HEAD)" same_as $c1
+  command rm -rf $home/.local $home/.zshrc
+  run zi_install zsh-c --repo $origin --commit 0123456789abcdef0123456789abcdef01234567
+  assert $state equals 1
+  assert $output contains 'Error: Commit'
+  run test -e $zinit_dir
+  assert $state equals 1
+}
+
+@test 'a checkout with local changes is not updated' {
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  local head=$(command git -C $zinit_dir rev-parse HEAD)
+  print -r -- '# local edit' >> $zinit_dir/zinit.zsh
+  zi_commit C3
+  run zi_install zsh-c
+  assert $state equals 0
+  assert $output contains 'local changes'
+  assert "$(command git -C $zinit_dir rev-parse HEAD)" same_as $head
+  assert "$(command tail -n 1 $zinit_dir/zinit.zsh)" same_as '# local edit'
+}
+
+@test 'a hostile .zshenv does not break the installer and its ZDOTDIR is used' {
+  command mkdir -p $home/z
+  print -rl -- 'alias local="print hacked"' 'alias git=false' \
+    'setopt ksh_arrays sh_word_split' "ZDOTDIR=$home/z" > $home/.zshenv
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  assert $home/z/.zshrc is_file
+  run test -e $home/.zshrc
+  assert $state equals 1
+}
+
+@test 'uninstall removes the block and a second run changes nothing' {
+  print -r -- '# user line' > $home/.zshrc
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  run zi_install zsh-c --uninstall
+  assert $state equals 0
+  assert "$(<$home/.zshrc)" same_as '# user line'
+  assert $zinit_dir/zinit.zsh is_file
+  command cp -p $home/.zshrc $sb/zshrc.before
+  run zi_install zsh-c --uninstall
+  assert $state equals 0
+  run command cmp $home/.zshrc $sb/zshrc.before
+  assert $state equals 0
+}
+
+@test 'uninstall deletes the zinit directory only after a yes' {
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  print -rl -- y n > $sb/answers
+  zi_env=( _ZINIT_INSTALL_TTY=$sb/answers )
+  run zi_install zsh-c --uninstall
+  assert $state equals 0
+  assert $output contains 'To delete zinit and its plugins later'
+  assert $zinit_dir/zinit.zsh is_file
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  print -rl -- y y > $sb/answers
+  run zi_install zsh-c --uninstall
+  assert $state equals 0
+  run test -e $home/.local/share/zinit
+  assert $state equals 1
+}
+
+@test 'uninstall with yes removes the block and deletes the zinit directory' {
+  print -r -- '# user line' > $home/.zshrc
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  run zi_install zsh-c --uninstall --yes
+  assert $state equals 0
+  assert $output contains '==> Uninstalling zinit'
+  assert $output contains '==> Removing zinit config block from ~/.zshrc'
+  assert $output contains '==> Removing files:'
+  assert "$(<$home/.zshrc)" same_as '# user line'
+  run test -e $home/.local/share/zinit
+  assert $state equals 1
+}
+
+@test 'uninstall with no-edit keeps .zshrc and only asks to delete the directory' {
+  run zi_install zsh-c --repo $origin
+  assert $state equals 0
+  command cp -p $home/.zshrc $sb/zshrc.before
+  run zi_install zsh-c --uninstall --no-edit
+  assert $state equals 0
+  assert $zinit_dir/zinit.zsh is_file
+  run zi_install zsh-c --uninstall --no-edit --yes
+  assert $state equals 0
+  assert $output contains 'installs zinit again'
+  assert "$(print -r -- $output | command grep -c -- '--no-edit')" equals 1
+  run test -e $home/.local/share/zinit
+  assert $state equals 1
+  run command cmp $home/.zshrc $sb/zshrc.before
+  assert $state equals 0
+}
+
+@test 'uninstall never deletes HOME' {
+  print -r -- '# user line' > $home/.zshrc
+  run zi_install zsh-c --uninstall --yes --home-dir $home
+  assert $state equals 0
+  assert $output contains 'Warning: ~ does not look like a zinit directory'
+  assert "$(<$home/.zshrc)" same_as '# user line'
+}
+
+@test 'dry-run prints a diff and changes nothing' {
+  run zi_install zsh-c --repo $origin --dry-run
+  assert $state equals 0
+  assert $output contains "+### Added by Zinit's installer"
+  local -a files=( $home/*(DN) )
+  assert ${#files} equals 0
+}
+
+@test 'default options leave the block header without options' {
+  run zi_install zsh-c --dry-run
+  assert $state equals 0
+  assert $output contains '+# zinit-installer v1:'
+  assert $output does_not_contain "v1: ''"
+}
