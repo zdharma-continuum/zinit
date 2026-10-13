@@ -63,7 +63,7 @@ jobs:
 
       - name: "install homebrew"
         id: setup-homebrew
-        uses: Homebrew/actions/setup-homebrew@e99025eb970cfa124b8284a35463d87426917478
+        uses: Homebrew/actions/setup-homebrew@eb02c69dbabdb66ff183c614f4ce7ab3c077592c
 
       - name: "install ${{ runner.os }} dependencies"
         if: runner.os == 'Linux' && matrix.zunit_test == 'plugins'
