@@ -169,8 +169,8 @@ recommend you read it at least once.
 Plugins can be loaded using `load` or `light`.
 
 ```zsh
-zinit load  <repo/plugin> # Load with reporting/investigating.
-zinit light <repo/plugin> # Load without reporting/investigating.
+zinit load  <repo/plugin> # Load with tracking (for `zinit report` and `zinit unload`).
+zinit light <repo/plugin> # Load without tracking (faster).
 ```
 
 If you want to source local or remote files (using direct URL), you can do so with `snippet`.
@@ -185,10 +185,10 @@ snippet or `zinit update {URL}`. You can also use `zinit update --all` to update
 **Example**
 
 ```zsh
-# Plugin history-search-multi-word loaded with investigating.
+# Plugin history-search-multi-word loaded with tracking.
 zinit load zdharma-continuum/history-search-multi-word
 
-# Two regular plugins loaded without investigating.
+# Two regular plugins loaded without tracking.
 zinit light zsh-users/zsh-autosuggestions
 zinit light zdharma-continuum/fast-syntax-highlighting
 
@@ -753,8 +753,8 @@ You may safely assume a given ice works with both plugins and snippets unless ex
 | Modifier     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | :----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `atclone`    | Run command after cloning, within plugin's directory, e.g. `zinit ice atclone"echo Cloned"`. Ran also after downloading snippet.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `atinit`     | Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `atload`     | Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be investigated (if using `load`, not `light`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `atinit`     | Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading. For plugins, passed code can be preceded with `!` (see the explanation after the table).                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `atload`     | Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!` (see the explanation after the table).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `atpull`     | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod.                                                                                                                                                                                                                                                                                                                                                              |
 | `configure`  | Runs `./configure` script and by default changes the installation directory by passing `--prefix=$ZPFX` to the script. Runs before `make''` and after `make'!'`, you can pass `'!'` too to this ice (i.e.: `configure'!'`) to make it execute earlier – before `make'!'` and after `make'!!'`. If `#` given in the ice value then also executes script `./autogen.sh` first before running `./configure`. The script is run anyway if there is no `configure` script. Also, when there exist another build-system related files, then it is run if no `configure` script is found. Currently supported systems are: CMake, scons and meson, checked-for/run in this order |
 | `countdown`  | Causes an interruptable (by Ctrl-C) countdown 5…4…3…2…1…0 to be displayed before executing `atclone''`,`atpull''` and `make` ices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -764,6 +764,33 @@ You may safely assume a given ice works with both plugins and snippets unless ex
 | `nocd`       | Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `reset`      | Invokes `git reset --hard HEAD` for plugins or `svn revert` for SVN snippets before pulling any new changes. This way `git` or `svn` will not report conflicts if some changes were done in e.g.: `atclone''` ice. For file snippets and `gh-r` plugins it invokes `rm -rf *`.                                                                                                                                                                                                                                                                                                                                                                                            |
 | `run-atpull` | Always run the atpull hook (when updating), not only when there are new commits to be downloaded.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+
+With `!`, the code of `atinit` or `atload` runs as part of the loading: `atinit'!…'` right before the plugin is sourced,
+`atload'!…'` right after. This matters with `zinit load`, which tracks what the plugin defines (functions, aliases, key
+bindings, `compdef` calls, etc.), so that `zinit report` lists it and `zinit unload` removes it. Therefore, with `!`,
+Zinit also tracks everything that the code of `atinit'!…'` and `atload'!…'` defines, just the same way. For example:
+
+```zsh
+zinit ice atload'!bindkey "^[[A" history-substring-search-up'
+zinit load zsh-users/zsh-history-substring-search
+```
+
+Here `zinit unload zsh-users/zsh-history-substring-search` also restores the key's previous binding. Likewise, with
+`atload'!_zsh_autosuggest_start'` for `zsh-users/zsh-autosuggestions` (see also the
+[wiki](https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/#turbo_mode_zsh_53)), `zinit unload` also restores
+the widgets that zsh-autosuggestions wraps when it starts.
+
+`zinit light` does not track the plugin, and so it does not track the code of `atinit'!…'` or `atload'!…'` hooks either.
+With `light`, `!` still runs the code of `atinit'!…'` and `atload'!…'` hooks inside the loading, as with `load`. But
+since `light` does not track, the only effect of `!` is that this code sees Zinit's own `compdef`: its `compdef` calls
+are recorded, and `zicdreplay` applies them later. To declare completions, `zicompdef` is simpler: it records the call
+in the same way and is available everywhere, with or without `!` (see [Calling `compinit` Without Turbo
+Mode](#calling-compinit-without-turbo-mode)).
+
+By default, Zinit turns off alias expansion while it loads a plugin. Your aliases therefore do not work in the code of
+`atinit'!…'` and `atload'!…'` hooks, which runs inside the loading. With the `aliases` ice, they do.
+
+`atinit'!…'` works for plugins only.
 
 ### Sticky-Emulation Of Other Shells<a name="sticky-emulation-of-other-shells"></a>
 
@@ -782,16 +809,16 @@ You may safely assume a given ice works with both plugins and snippets unless ex
 | `link`         | Use a symlink to cache a local snippet instead of copying into the snippets directory. Uses relative links if realpath >= 8.23 is found. **_Does not apply to URL-based snippets. Does not work with plugins._**                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `id-as`        | Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | `subst`        | Substitute the given string into another string when sourcing the plugin script, e.g.: `zinit subst'autoload → autoload -Uz' …`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `aliases`      | Load the plugin with the aliases mechanism enabled. Use with plugins that define **and use** aliases in their scripts.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `aliases`      | Keep alias expansion on while the plugin loads. Zinit turns it off by default, so that your aliases do not change the plugin's code. Use it for a plugin that defines aliases and then uses them in its own code.                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `autoload`     | Autoload the given functions (from their files). Equivalent to calling `atinit'autoload the-function'`. Supports renaming of the function – pass `'… → new-name'` or `'… -> new-name'`, e.g.: `zinit autoload'fun → my-fun; fun2 → my-fun2'`.                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `bindmap`      | To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. **Does not work with snippets.**                                                                                                                                                                                                                                                                                                                                                                   |
 | `compile`      | Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile'*.zsh'`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `extract`      | Performs archive extraction supporting multiple formats like `zip`, `tar.gz`, etc. and also notably OS X `dmg` images. Supports optional prefix modifiers and/or an explicit filename. **Without a value** (`extract`): scans the plugin/snippet directory for files with recognized archive extensions (`zip`, `tar.gz`, `gz`, `xz`, etc.) at most one level deep (to avoid unpacking helper archives buried deeper in the tree); if no such files are found, runs the `file` Unix command on all files to detect archives that lack a standard extension (e.g. a file named `binary` that is actually a gzip stream). In both cases the archive is extracted **preserving its internal directory structure** (no flattening). **With a filename** (`extract'file.tar.gz'`): extracts that specific file instead of scanning — useful when a cloned repository contains an embedded archive. Multiple space-separated filenames are supported. **Prefix modifiers** control flattening after extraction and whether the archive is deleted afterwards: `!` flattens one directory level (e.g. `tool-1.2.3/binary` → `binary`), `!!` flattens two levels (e.g. `tool-1.2.3/bin/binary` → `binary`), `-` keeps the archive file instead of deleting it after extraction. Modifiers can be combined: `!-` or `-!` flattens one level and keeps the archive. Examples: `extract'!'`, `extract'!!'`, `extract'-'`, `extract'!-'`, `extract'!tool.tar.gz'` (extract and flatten a specific file). |
 | `service`      | Make following plugin or snippet a _service_, which will be ran in background, and only in single Zshell instance. See [the zservice-\* repositories](https://github.com/orgs/zdharma-continuum/repositories?q=zservice-).                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `light-mode`   | Load the plugin without the investigating, i.e.: as if it would be loaded with the `light` command. Useful for the for-syntax, where there is no `load` nor `light` subcommand                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `light-mode`   | Load the plugin without tracking, i.e.: as if it would be loaded with the `light` command. Useful for the for-syntax, where there is no `load` nor `light` subcommand                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `nocompile`    | Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at the location of their installation).                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `trackbinds`   | Shadow but only `bindkey` calls even with `zinit light ...`, i.e. even with investigating disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zinit light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**                                                                                                                                                                                                                                                                                                                                                                   |
-| `wrap-track`   | Takes a `;`-separated list of function names that are to be investigated (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a investigating-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the investigating beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**                                                            |
+| `trackbinds`   | Shadow but only `bindkey` calls even with `zinit light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zinit light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**                                                                                                                                                                                                                                                                                                                                                                        |
+| `wrap-track`   | Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**                                                                           |
 | `reset-prompt` | Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 ### Order of Execution<a name="order-of-execution"></a>
@@ -827,7 +854,7 @@ Following commands are passed to `zinit ...` to obtain described effects.
 | :----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `load {plg-spec}`        | Load plugin, can also receive absolute local path.                                                                                                                                                                                                                                                                   |
 | `snippet [-f] {url}`     | Source local or remote file (by direct URL). `-f` – don't use cache (force redownload). The URL can use the following shorthands: `PZT::` (Prezto), `PZTM::` (Prezto module), `OMZ::` (Oh My Zsh), `OMZP::` (OMZ plugin), `OMZL::` (OMZ library), `OMZT::` (OMZ theme), e.g.: `PZTM::environment`, `OMZP::git`, etc. |
-| `light [-b] {plg-spec}`  | Light plugin load, without reporting/investigating. `-b` – investigate `bindkey`-calls only. There's also `light-mode` ice which can be used to induce the no-investigating (i.e.: _light_) loading, regardless of the command used.                                                                                 |
+| `light [-b] {plg-spec}`  | Light plugin load, without tracking. `-b` – track `bindkey`-calls only. There's also `light-mode` ice which can be used to induce the untracked (i.e.: _light_) loading, regardless of the command used.                                                                                                             |
 | `unload [-q] {plg-spec}` | Unload plugin loaded with `zinit load ...`. `-q` – quiet.                                                                                                                                                                                                                                                            |
 
 ### Completions<a name="completions-1"></a>
@@ -851,10 +878,10 @@ Following commands are passed to `zinit ...` to obtain described effects.
 | Command          | Description                                       |
 | ---------------- | ------------------------------------------------- |
 | `dclear`         | Clear report of what was going on in session.     |
-| `dstop`          | Stop investigating what's going on in session.    |
+| `dstop`          | Stop tracking what's going on in session.         |
 | `dreport`        | Report what was going on in session.              |
 | `dunload`        | Revert changes recorded between dstart and dstop. |
-| `dtrace, dstart` | Start investigating what's going on in session.   |
+| `dtrace, dstart` | Start tracking what's going on in session.        |
 
 ### Reports and Statistics<a name="reports-and-statistics"></a>
 
@@ -961,8 +988,10 @@ function.
 The `compdef` function is provided by `compinit` call. As it should be called later, after loading all of the plugins,
 Zinit provides its own `compdef` function that catches (i.e.: records in an array) the arguments of the call, so that
 the loaded plugins can freely call `compdef`. Then, the `cdreplay` (_compdef-replay_) can be used, after `compinit` will
-be called (and the original `compdef` function will become available), to execute all detected `compdef` calls. To
-summarize:
+be called (and the original `compdef` function will become available), to execute all detected `compdef` calls. Zinit
+provides this `compdef` function only while it loads a plugin. Elsewhere, e.g. directly in `.zshrc` or in a plain
+`atinit''` or `atload''` hook, call `zicompdef` with the same arguments: it records the call in the same array, for the
+same `cdreplay`. To summarize:
 
 ```zsh
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -970,12 +999,11 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 zinit load "some/plugin"
 ...
-compdef _gnu_generic fd  # this will be intercepted by Zinit, because as the compinit
-                         # isn't yet loaded, thus there's no such function `compdef'; yet
-                         # Zinit provides its own `compdef' function which saves the
-                         # completion-definition for later possible re-run with `zinit
-                         # cdreplay' or `zicdreplay' (the second one can be used in hooks
-                         # like atload'', atinit'', etc.)
+zicompdef _gnu_generic fd  # compinit isn't yet loaded, thus there's no function
+                           # `compdef' here; `zicompdef' saves the completion-definition
+                           # for later possible re-run with `zinit cdreplay' or
+                           # `zicdreplay' (the second one can be used in hooks like
+                           # atload'', atinit'', etc.)
 ...
 zinit load "other/plugin"
 
@@ -1023,6 +1051,26 @@ zi for \
     wait \
   zsh-users/zsh-completions
 ```
+
+While Zinit loads a plugin, it records the plugin's `compdef` calls, also after `compinit` has run. `zicdreplay` applies
+the calls recorded so far. A `compdef` call recorded after `zicdreplay` has run takes no effect, unless `zicdreplay` is
+called again. To call `zicompinit` and `zicdreplay` only once, run them after every plugin that calls `compdef`, for
+example in a last Turbo stage:
+
+```zsh
+# Finalize Zsh initialization after all plugins and completions are loaded
+zinit ice id-as'zinit/compinit' lucid as'null' wait'0c' atload'
+  # Initialize the Zsh completion system
+  zicompinit
+
+  # Replay any `compdef` calls that plugins made before `compinit` was ready
+  zicdreplay
+'
+zinit light zdharma-continuum/null
+```
+
+`wait'0c'` runs after the plugins loaded with `wait`, `wait'0'`, `wait'0a'` or `wait'0b'`, and before the plugins loaded
+with a longer wait, such as `wait'1'`.
 
 ### Ignoring Compdefs<a name="ignoring-compdefs"></a>
 
