@@ -73,6 +73,17 @@
   assert $state equals 0
   assert "$ZPLUGINS/test---make/whatever" is_file
 }
+@test 'ver with depth checks out the branch' {
+  # A shallow clone should also work when a branch is specified by the ver ice.
+  run zinit as"null" id-as"test/depth-ver" depth"1" ver"ci/gh-action-lint-workflow" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$(git -C $ZPLUGINS/test---depth-ver branch --show-current)" same_as "ci/gh-action-lint-workflow"
+}
+@test 'ver naming no branch stops the install' {
+  # If the branch specified by the ver ice does not exist, the install must fail, not stay on the default branch.
+  run zinit as"null" id-as"test/bad-ver" ver"no-such-branch" for zdharma-continuum/null
+  assert $state not_equal_to 0
+}
 @test 'completions' {
   run zinit as"null" id-as"test/completions" atclone"touch _whatever" completions for zdharma-continuum/null
   assert $state equals 0

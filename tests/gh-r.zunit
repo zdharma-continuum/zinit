@@ -748,10 +748,20 @@
   local stern="$ZBIN/stern"; assert "$stern" is_executable
   run "$stern" --version; assert $state equals 0
 }
+@test 'super' { # Tooling for super-structured data: a new and easier way to manipulate data
+  run zinit for @superdb/super; assert $state equals 0
+  local super="$ZBIN/super"; assert "$super" is_executable
+  run $super -version; assert $state equals 0
+}
 @test 'tealdeer' { # A very fast implementation of tldr in Rust
   run zinit lbin'!tealdeer* -> tealdeer' for @tealdeer-rs/tealdeer; assert $state equals 0
   local tealdeer="$ZBIN/tealdeer"; assert "$tealdeer" is_executable
   run "$tealdeer" --version; assert $state equals 0
+}
+@test 'tessera' { # The personal information dashboard for your terminal
+  run zinit lbin'!tessera* -> tessera' for wtfutil/wtf; assert $state equals 0
+  local tessera="$ZBIN/tessera"; assert "$tessera" is_executable
+  run $tessera --version; assert $state equals 0
 }
 @test 'tin-summer' { # Find build artifacts that are taking up disk space
   run zinit for @vmchale/tin-summer; assert $state equals 0
@@ -800,11 +810,6 @@
   local wifiqr="$ZBIN/wifiqr"; assert "$wifiqr" is_executable
   run $wifiqr --version; assert $state equals 0
 }
-@test 'wtf' { # The personal information dashboard for your terminal
-  run zinit lbin'!wtf* -> wtf' for wtfutil/wtf; assert $state equals 0
-  local wtf="$ZBIN/wtf"; assert "$wtf" is_executable
-  run $wtf --version; assert $state equals 0
-}
 @test 'xh' { # Friendly and fast tool for sending HTTP requests
   run zinit for @ducaale/xh; assert $state equals 0
   local xh="$ZBIN/xh"; assert "$xh" is_executable
@@ -825,12 +830,6 @@
   run zinit lbin'!* -> yq' for @mikefarah/yq; assert $state equals 0
   local yq="$ZBIN/yq"; assert "$yq" is_executable
   run $yq --version; assert $state equals 0
-}
-@test 'zed' { # Tooling for super-structured data: a new and easier way to manipulate data
-  skip "Official Doc: SuperDB is still under development so there's not yet a GA release."
-  run zinit for @brimdata/super; assert $state equals 0
-  local zed="$ZBIN/zed"; assert "$zed" is_executable
-  run $zed --version; assert $state equals 0
 }
 @test 'zoxide' { # A smarter cd command
   run zinit for @ajeetdsouza/zoxide; assert $state equals 0
