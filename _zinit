@@ -75,7 +75,7 @@ __zinit_completion_caching_policy(){
   local -a tmp
   (( $#tmp )) || return 0
   tmp=( $ZINIT[BIN_DIR]/*.git/index(om[1]N) )
-  [[ -z $tmp || $tmp -nt $1 ]]
+  [[ -z $tmp || $tmp -nt ${1:-} ]]
 } # ]]]
 # FUNCTION: __zinit_installed [[[
 __zinit_installed() {
