@@ -1,3 +1,12 @@
+## [3.17.1](https://github.com/zdharma-continuum/zinit/compare/v3.17.0...v3.17.1) (2026-10-10)
+
+
+### Bug Fixes
+
+* clone the branch named by the ver ice so the depth ice keeps it ([d7f990e](https://github.com/zdharma-continuum/zinit/commit/d7f990e08520fc689363de872e7b98eab98e29ee))
+* **completion:** add missing _zinit_* handlers, drop orphans, fix labels ([#822](https://github.com/zdharma-continuum/zinit/issues/822)) ([cdc7e0c](https://github.com/zdharma-continuum/zinit/commit/cdc7e0cfd98ac396512c74478a4f3d48b8265116))
+* **completion:** balance paren and escape $PATH in snippet --command spec ([#821](https://github.com/zdharma-continuum/zinit/issues/821)) ([aa243da](https://github.com/zdharma-continuum/zinit/commit/aa243da8c5ba1e1781f35dd98e8515bd82dd82c4))
+
 # [3.17.0](https://github.com/zdharma-continuum/zinit/compare/v3.16.0...v3.17.0) (2026-09-02)
 
 
