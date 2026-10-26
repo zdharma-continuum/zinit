@@ -15,9 +15,10 @@ __zinit_commands(){
     'add-fpath:Add plugin folder to $FPATH'
     'bindkeys:List of plugin defined key bindings'
     'cclear:Clear completions list'
-    'cd:Go to a plugin or snippet direcorty'
+    'cd:Go to a plugin or snippet directory'
     'cdclear:Clear the compdef replay list'
     'cdisable:Disable completions'
+    'cdlist:Show compdef replay list'
     'cdreplay:Replay compdef list'
     'cenable:Enable completions'
     'changes:View plugins git log'
@@ -143,6 +144,10 @@ _zinit_cdclear(){
 # FUNCTION: _zinit_cdisable [[[
 _zinit_cdisable(){
   _message 'Press enter to disable completions' && ret=0
+} # ]]]
+# FUNCTION: _zinit_cdlist [[[
+_zinit_cdlist(){
+  _message 'List of compdef replays' && ret=0
 } # ]]]
 # FUNCTION: _zinit_cdreplay [[[
 _zinit_cdreplay(){
@@ -278,7 +283,7 @@ _zinit_self_update(){
 # FUNCTION: _zinit_snippet [[[
 _zinit_snippet(){
   _arguments -A \
-    '(-c --command)'{-c,--command}'[Load the snippet as a command (i.e., make executable and apend to $PATH])' \
+    '(-c --command)'{-c,--command}'[Load the snippet as a command (i.e., make executable and apend to \$PATH)]' \
     '(-f --force)'{-f,--force}'[Force new download of the snippet file]' \
     '(-h --help)'{-h,--help}'[Show this help message]'
   _arguments - snippet '*::snippet:__zinit_installed_snippets' && ret=0
