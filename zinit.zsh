@@ -2545,11 +2545,12 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 #      (delay), i.e. "burst" allows to run package installations from
 #      script, not from prompt.
 @zinit-scheduler() {
+    (( $# )) || set -- ''  # Ensure $1 is set for `set -u` shells
     integer ___ret="${${ZINIT[lro-data]%:*}##*:}"
     # lro stands for lastarg-retval-option.
-    [[ ${1:-} = following ]] && sched +1 'ZINIT[lro-data]="$_:$?:${options[printexitvalue]}"; @zinit-scheduler following "${ZINIT[lro-data]%:*:*}"'
-    [[ -n ${1:-} && ${1:-} != (following*|burst) ]] && { local THEFD="${1:-}"; zle -F "$THEFD"; exec {THEFD}<&-; }
-    [[ ${1:-} = burst ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
+    [[ $1 = following ]] && sched +1 'ZINIT[lro-data]="$_:$?:${options[printexitvalue]}"; @zinit-scheduler following "${ZINIT[lro-data]%:*:*}"'
+    [[ -n $1 && $1 != (following*|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
+    [[ $1 = burst ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
     ZINIT[START_TIME]="${ZINIT[START_TIME]:-$EPOCHREALTIME}"
 
     integer ___t=EPOCHSECONDS ___i correct
@@ -2558,8 +2559,8 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
     [[ -o ksharrays ]] && correct=1
 
-    if [[ -n ${1:-} ]] {
-        if [[ ${#ZINIT_RUN} -le 1 || ${1:-} = following ]]  {
+    if [[ -n $1 ]] {
+        if [[ ${#ZINIT_RUN} -le 1 || $1 = following ]]  {
             () {
                 builtin emulate -L zsh ${=${options[xtrace]:#off}:+-o xtrace}
                 builtin setopt extendedglob
@@ -2625,7 +2626,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     # All wait'' objects.
     for ___task ( "${ZINIT_RUN[@]}" ) {
         .zinit-run-task 1 "${(@z)___task}" && ZINIT_TASKS+=( "$___task" )
-        if [[ $(( ++___idx, ___count += ${${REPLY:+1}:-0} )) -gt 0 && ${1:-} != burst ]] {
+        if [[ $(( ++___idx, ___count += ${${REPLY:+1}:-0} )) -gt 0 && $1 != burst ]] {
             AFD=13371337 # for older Zsh + noclobber option
             exec {AFD}< <(LANG=C command sleep 0.0002; builtin print run;)
             command true
