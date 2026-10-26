@@ -32,15 +32,15 @@ __zinit_commands(){
     'cuninstall:Uninstall completions for plugin'
     'debug:Functions for debugging Zinit'
     'delete:Uninstall a plugin or snippet'
-    'edit:Edit a plugins or snippet with \$EDITOR'
+    'edit:Edit a plugin or snippet with \$EDITOR'
     'env-whitelist:Specify names (also patterns) of parameters to be left unchanged during an unload'
-    'glance:Look at plugins source'
+    'glance:Look at plugin'\''s source'
     'help:Usage information'
     'load:Load plugin'
     'man:Display Zinit'\''s manpage'
     'module:Manage binary Zsh module shipped with Zinit'
     'plugins:List status of all installed plugins'
-    'recall:Fetch saved ice modifiers and construct '
+    'recall:Fetch saved ice modifiers and construct'
     'recently:Show plugins that changed recently'
     'report:Show plugins report'
     'run:Run a command inside plugins folder'
@@ -121,7 +121,7 @@ _zinit_add_fpath(){
 } # ]]]
 # FUNCTION: _zinit_bindkeys [[[
 _zinit_bindkeys(){
-  _message 'Hit enter to list the defined key bindings replay' && ret=0
+  _message 'Hit enter to list the defined key bindings' && ret=0
 } # ]]]
 # FUNCTION: _zinit_cclear [[[
 _zinit_cclear(){
@@ -145,6 +145,10 @@ _zinit_cdclear(){
 _zinit_cdisable(){
   _message 'Press enter to disable completions' && ret=0
 } # ]]]
+# FUNCTION: _zinit_cdlist [[[
+_zinit_cdlist(){
+  _message 'List of compdef replays' && ret=0
+} # ]]]
 # FUNCTION: _zinit_cdreplay [[[
 _zinit_cdreplay(){
   _arguments -A \
@@ -162,7 +166,7 @@ _zinit_changes(){
 } # ]]]
 # FUNCTION: _zinit_compiled [[[
 _zinit_compiled(){
-  _message 'Hit enter to get list of compiled plugins and snippets'
+  _message 'Hit enter to get the list of compiled plugins and snippets'
 } # ]]]
 # FUNCTION: _zinit_compinit [[[
 _zinit_compinit(){
@@ -212,6 +216,7 @@ _zinit_delete(){
       {-c,--clean}'[Delete only the currently-not loaded plugins and snippets]' \
     && ret=0
 } # ]]]
+# FUNCTION: _zinit_debug [[[
 _zinit_debug(){
   _arguments \
     '1: :_zinit_debug_cmds'
@@ -260,7 +265,7 @@ _zinit_recently(){
 } # ]]]
 # FUNCTION: _zinit_report [[[
 _zinit_report(){
-  _message 'Hit enter to list the defined key bindings replay' && ret=0
+  _message 'Hit enter to show plugins report' && ret=0
 } # ]]]
 # FUNCTION: _zinit_run [[[
 _zinit_run(){
@@ -279,7 +284,7 @@ _zinit_self_update(){
 # FUNCTION: _zinit_snippet [[[
 _zinit_snippet(){
   _arguments -A \
-    '(-c --command)'{-c,--command}'[Load the snippet as a command (i.e., make executable and apend to \$PATH)]' \
+    '(-c --command)'{-c,--command}'[Load the snippet as a command (i.e., make executable and append to \$PATH)]' \
     '(-f --force)'{-f,--force}'[Force new download of the snippet file]' \
     '(-h --help)'{-h,--help}'[Show this help message]'
   _arguments - snippet '*::snippet:__zinit_installed_snippets' && ret=0
@@ -357,7 +362,7 @@ _zinit_zstatus(){
 } # ]]]
 # FUNCTION: _zinit_load [[[
 _zinit_load() {
-  _message 'Hit enter to list the defined key bindings replay' && ret=0
+  _message 'Hit enter to load a plugin' && ret=0
 } # ]]]
 
 # FUNCTION: _zinit [[[
