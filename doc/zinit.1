@@ -199,22 +199,23 @@ Make sure to read it to get the most out of Zinit.
 .SS Install
 .SS Automatic Installation (Recommended)
 .PP
-The easiest way to install Zinit is to execute:
+The easiest way to install Zinit is to run:
 .IP
 .nf
 \f[C]
-sh -c \[dq]$(curl -fsSL https://git.io/zinit-install)\[dq]
+zsh -c \[dq]$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)\[dq]
 \f[R]
 .fi
 .PP
-This will install Zinit in \f[C]\[ti]/.local/share/zinit/zinit.git\f[R].
-\f[C].zshrc\f[R] will be updated with three lines of code that will be
-added to the bottom.
-The lines will be sourcing \f[C]zinit.zsh\f[R] and setting up completion
-for command \f[C]zinit\f[R].
+The installer shows a plan and asks you to confirm it.
+It then clones Zinit into \f[C]\[ti]/.local/share/zinit/zinit.git\f[R],
+compiles it, and adds a block to the end of \f[C].zshrc\f[R].
+The block loads Zinit, adds completion for the \f[C]zinit\f[R] command
+and loads four recommended annexes.
+Start a new shell with \f[C]exec zsh\f[R] to load Zinit.
 .PP
-After installing and reloading the shell compile Zinit with
-\f[C]zinit self-update\f[R].
+You can run the installer again at any time.
+To see its options, run it with \f[C]-- --help\f[R].
 .SS Manual Installation
 .PP
 To manually install Zinit clone the repo to
