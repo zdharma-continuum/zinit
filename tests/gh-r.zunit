@@ -67,6 +67,18 @@
   local bazel="$ZBIN/bazel"; assert "$bazel" is_executable
   run "$bazel" --version; assert $state equals 0
 }
+@test 'bicep' { # Domain-specific language (DSL) for deploying Azure resources declaratively
+  run zinit lbin'!bicep* -> bicep' for @Azure/bicep; assert $state equals 0
+  local bicep="$ZBIN/bicep"; assert "$bicep" is_executable
+  run "$bicep" --version; assert $state equals 0
+  # regression: the asset must match the host libc — musl only on musl systems
+  run ls "${ZINIT[PLUGINS_DIR]}/Azure---bicep"
+  if [[ $OSTYPE == *musl* || "$(command ldd --version 2>&1)" == *musl* ]]; then
+    assert "$output" matches 'musl'
+  else
+    assert "$output" does_not_match 'musl'
+  fi
+}
 @test 'blast' { # Blast is a simple tool for API load testing and batch jobs
   [[ $OSTYPE =~ 'darwin*' ]] && skip "on $os_type"
   run zinit for @dave/blast; assert $state equals 0
