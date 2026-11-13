@@ -50,6 +50,32 @@
     run return ${+commands[wd]}; assert $state equals 0
     run zinit delete --yes mfaerevaag/wd
 }
+@test 'delete removes the completion links of the plugin' {
+    local dir="$ZINIT[PLUGINS_DIR]/_local---cddel"
+    mkdir -p "$dir"
+    touch "$dir/_cddelfile"
+    zinit creinstall _local/cddel >/dev/null 2>&1 || true
+    local -a linked=( "$ZINIT[COMPLETIONS_DIR]"/_cddel*(N) )
+    run zinit delete --yes _local/cddel
+    local -a left=( "$ZINIT[COMPLETIONS_DIR]"/_cddel*(N) )
+    rm -rf "$dir" "${left[@]}"
+    assert $state equals 0
+    assert "${linked[*]:t}" same_as '_cddelfile'
+    (( ! ${#left} )) || fail "delete left ${left[*]:t}"
+}
+@test 'delete forgets the completions of the plugin in the current shell' {
+    local dir="$ZINIT[PLUGINS_DIR]/_local---cdforget"
+    mkdir -p "$dir"
+    print -r -- '#compdef cdforget' >"$dir/_cdforget"
+    # Bare calls, because run forks and hides the _comps changes of compinit and delete.
+    zinit creinstall _local/cdforget >/dev/null 2>&1 || true
+    local before=${_comps[cdforget]-}
+    zinit delete --yes _local/cdforget >/dev/null 2>&1 || true
+    rm -rf "$dir" "$ZINIT[COMPLETIONS_DIR]"/_cdforget(N)
+    assert "$before" same_as '_cdforget'
+    [[ -z ${_comps[cdforget]-} ]] || fail "_comps still maps cdforget to ${_comps[cdforget]}"
+    (( ! ${+functions[_cdforget]} )) || fail '_cdforget is still defined'
+}
 
 @test 'plugins' {
   run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit plugins)
