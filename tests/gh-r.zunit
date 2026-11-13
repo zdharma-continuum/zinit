@@ -198,7 +198,7 @@
 }
 @test 'dysk' { # A linux utility to get information on filesystems, like df but better
   [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
-  run zinit lbin"!**/$arch*$os_type/* -> dysk" for @Canop/dysk; assert $state equals 0
+  run zinit lbin'!dysk' for @Canop/dysk; assert $state equals 0
   local dysk="$ZBIN/dysk"; assert "$dysk" is_executable
   run $dysk --version; assert $state equals 0
 }
