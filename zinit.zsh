@@ -278,6 +278,8 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
 
     col-↔     ${${${(M)LANG:#*UTF-8*}:+$'\e[38;5;82m↔\e[0m'}:-$'\e[38;5;82m«-»\e[0m'}
   )
+  # Legacy names, still used by annexes (e.g. z-a-eval)
+  ZINIT+=( col-log-info $ZINIT[col-i] col-log-msg $ZINIT[col-m] col-log-err "$ZINIT[col-e] " col-log-warn "$ZINIT[col-w] " )
   if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 ) ]]; then
     ZINIT+=( col-pname $'\e[1;4m\e[38;5;39m' col-uname  $'\e[1;4m\e[38;5;207m' )
   fi
