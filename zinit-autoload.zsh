@@ -3113,194 +3113,199 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     command rm -f $local_dir/.zinit_lastupd
 
-    if (( 1 )); then
-        if [[ -z ${ice[is_release]} && ${ice[from]} = (gh-r|github-rel|cygwin) ]] {
-            ice[is_release]=true
-        }
+    if [[ -z ${ice[is_release]} && ${ice[from]} = (gh-r|github-rel|cygwin) ]] {
+        ice[is_release]=true
+    }
 
-        integer count is_release=0
-        for (( count = 1; count <= 5; ++ count )) {
-            if (( ${+ice[is_release${count:#1}]} )) {
-                is_release=1
+    integer count is_release=0
+    for (( count = 1; count <= 5; ++ count )) {
+        if (( ${+ice[is_release${count:#1}]} )) {
+            is_release=1
+        }
+    }
+
+    (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
+    if [[ $ice[from] == (gh-r|github-rel) ]] {
+        {
+            ICE=( "${(kv)ice[@]}" )
+            .zinit-get-latest-gh-r-url-part "$user" "$plugin" || return $?
+        } always {
+            ICE=()
+        }
+    } else {
+        REPLY=""
+    }
+
+    if (( is_release )) {
+        count=0
+        for REPLY ( $reply ) {
+            count+=1
+            local version=${REPLY/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
+            if [[ ${ice[is_release${count:#1}]} = $REPLY ]] {
+                (( ${+ice[run-atpull]} || OPTS[opt_-u,--urge] )) && \
+                    ZINIT[annex-multi-flag:pull-active]=1 || \
+                    ZINIT[annex-multi-flag:pull-active]=0
+            } else {
+                ZINIT[annex-multi-flag:pull-active]=2
+                break
             }
         }
-
-        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
-        if [[ $ice[from] == (gh-r|github-rel) ]] {
-            {
-                ICE=( "${(kv)ice[@]}" )
-                .zinit-get-latest-gh-r-url-part "$user" "$plugin" || return $?
-            } always {
-                ICE=()
-            }
-        } else {
-            REPLY=""
+        if (( ZINIT[annex-multi-flag:pull-active] <= 1 && !OPTS[opt_-q,--quiet] )) {
+            +zi-log "{info}[{pre}${ice[from]}{info}]{rst} latest version ({version}${version}{rst}) already installed"
         }
+    }
 
-        if (( is_release )) {
-            count=0
-            for REPLY ( $reply ) {
-                count+=1
-                local version=${REPLY/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
-                if [[ ${ice[is_release${count:#1}]} = $REPLY ]] {
-                    (( ${+ice[run-atpull]} || OPTS[opt_-u,--urge] )) && \
-                        ZINIT[annex-multi-flag:pull-active]=1 || \
-                        ZINIT[annex-multi-flag:pull-active]=0
-                } else {
-                    ZINIT[annex-multi-flag:pull-active]=2
-                    break
+    if (( 1 )) {
+        if (( ZINIT[annex-multi-flag:pull-active] >= 1 )) {
+            if (( OPTS[opt_-q,--quiet] && !PUPDATE )) {
+                .zinit-any-colorify-as-uspl2 "$id_as"
+                (( ZINIT[first-plugin-mark] )) && {
+                    ZINIT[first-plugin-mark]=0
+                } || builtin print
+                builtin print "\rUpdating $REPLY"
+            }
+
+            ICE=( "${(kv)ice[@]}" )
+            # Run annexes' atpull hooks (the before atpull-ice ones).
+            # The gh-r / GitHub releases block.
+            reply=(
+                ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]}
+                ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-post <->]}
+            )
+            for key in "${reply[@]}"; do
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:bin
+                hook_rc=$?
+                [[ "$hook_rc" -ne 0 ]] && {
+                    # note: this will effectively return the last != 0 rc
+                    retval="$hook_rc"
+                    builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
+                }
+            done
+
+            if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
+                if ! .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version; then
+                    ZINIT[annex-multi-flag:pull-active]=0
+                fi
+                if (( OPTS[opt_-q,--quiet] != 1 )) {
+                    builtin print
                 }
             }
-            if (( ZINIT[annex-multi-flag:pull-active] <= 1 && !OPTS[opt_-q,--quiet] )) {
-                +zi-log "{info}[{pre}${ice[from]}{info}]{rst} latest version ({version}${version}{rst}) already installed"
-            }
+            ICE=()
         }
+    }
 
-        if (( 1 )) {
-            if (( ZINIT[annex-multi-flag:pull-active] >= 1 )) {
-                if (( OPTS[opt_-q,--quiet] && !PUPDATE )) {
-                    .zinit-any-colorify-as-uspl2 "$id_as"
-                    (( ZINIT[first-plugin-mark] )) && {
-                        ZINIT[first-plugin-mark]=0
-                    } || builtin print
-                    builtin print "\rUpdating $REPLY"
-                }
+    if [[ -d $local_dir/.git ]] && ( builtin cd -q $local_dir ; command git show-ref --verify --quiet refs/heads/main ); then
+        local main_branch=main
+    else
+        local main_branch=master
+    fi
 
-                ICE=( "${(kv)ice[@]}" )
-                # Run annexes' atpull hooks (the before atpull-ice ones).
-                # The gh-r / GitHub releases block.
-                reply=(
-                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]}
-                    ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
-                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-post <->]}
-                )
-                for key in "${reply[@]}"; do
-                    arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                    "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:bin
-                    hook_rc=$?
-                    [[ "$hook_rc" -ne 0 ]] && {
-                        # note: this will effectively return the last != 0 rc
-                        retval="$hook_rc"
-                        builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                    }
-                done
-
-                if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
-                    if ! .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version; then
-                        ZINIT[annex-multi-flag:pull-active]=0
-                    fi
-                    if (( OPTS[opt_-q,--quiet] != 1 )) {
-                        builtin print
-                    }
-                }
-                ICE=()
-            }
-        }
-
-        if [[ -d $local_dir/.git ]] && ( builtin cd -q $local_dir ; command git show-ref --verify --quiet refs/heads/main ); then
-            local main_branch=main
-        else
-            local main_branch=master
-        fi
-
-        if (( ! is_release )) {
-            ( builtin cd -q "$local_dir" || return 1
-              integer had_output=0
-              local IFS=$'\n'
-              command git fetch --quiet && \
-                command git --no-pager log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s%n' ..FETCH_HEAD | \
-                while read line; do
-                  [[ -n ${line%%[[:space:]]##} ]] && {
-                      [[ $had_output -eq 0 ]] && {
-                          had_output=1
-                          if (( OPTS[opt_-q,--quiet] && !PUPDATE )) {
-                              .zinit-any-colorify-as-uspl2 "$id_as"
-                              (( ZINIT[first-plugin-mark] )) && {
-                                  ZINIT[first-plugin-mark]=0
-                              } || builtin print
-                              builtin print "Updating $REPLY"
-                          }
-                      }
-                      builtin print $line
-                  }
-                done | \
-                command tee .zinit_lastupd | \
-                .zinit-pager &
-
-              integer pager_pid=$!
-              { sleep 20 && kill -9 $pager_pid 2>/dev/null 1>&2; } &!
-              { wait $pager_pid; } > /dev/null 2>&1
-
-              local -a log
-              { log=( ${(@f)"$(<$local_dir/.zinit_lastupd)"} ); } 2>/dev/null
-              command rm -f $local_dir/.zinit_lastupd
-
-              if [[ ${#log} -gt 0 ]] {
-                  ZINIT[annex-multi-flag:pull-active]=2
-              } else {
-                  if (( ${+ice[run-atpull]} || OPTS[opt_-u,--urge] )) {
-                      ZINIT[annex-multi-flag:pull-active]=1
-
-                      # Handle the snippet/plugin boundary in the messages
+    if (( ! is_release )) {
+        ( builtin cd -q "$local_dir" || return 1
+          integer had_output=0
+          local IFS=$'\n'
+          command git fetch --quiet && \
+            command git --no-pager log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s%n' ..FETCH_HEAD | \
+            while read line; do
+              [[ -n ${line%%[[:space:]]##} ]] && {
+                  [[ $had_output -eq 0 ]] && {
+                      had_output=1
                       if (( OPTS[opt_-q,--quiet] && !PUPDATE )) {
                           .zinit-any-colorify-as-uspl2 "$id_as"
                           (( ZINIT[first-plugin-mark] )) && {
                               ZINIT[first-plugin-mark]=0
                           } || builtin print
-                          builtin print "\rUpdating $REPLY"
+                          builtin print "Updating $REPLY"
                       }
-                  } else {
-                      ZINIT[annex-multi-flag:pull-active]=0
                   }
+                  builtin print $line
               }
+            done | \
+            command tee .zinit_lastupd | \
+            .zinit-pager &
 
-              if (( ZINIT[annex-multi-flag:pull-active] >= 1 )) {
-                  ICE=( "${(kv)ice[@]}" )
-                  # Run annexes' atpull hooks (the before atpull-ice ones).
-                  # The regular Git-plugins block.
-                  reply=(
-                      ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]}
-                      ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
-                      ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-post <->]}
-                  )
-                  for key in "${reply[@]}"; do
-                      arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                      "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:git
-                      hook_rc=$?
-                      [[ "$hook_rc" -ne 0 ]] && {
-                          # note: this will effectively return the last != 0 rc
-                          retval="$hook_rc"
-                          builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                      }
-                  done
-                  ICE=()
-                  (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} |& command grep -E -v '(FETCH_HEAD|up.to.date\.|From.*://)'
+          integer pager_pid=$!
+          { sleep 20 && kill -9 $pager_pid 2>/dev/null 1>&2; } &!
+          { wait $pager_pid; } > /dev/null 2>&1
+
+          local -a log
+          { log=( ${(@f)"$(<$local_dir/.zinit_lastupd)"} ); } 2>/dev/null
+          command rm -f $local_dir/.zinit_lastupd
+
+          if [[ ${#log} -gt 0 ]] {
+              ZINIT[annex-multi-flag:pull-active]=2
+          } else {
+              if (( ${+ice[run-atpull]} || OPTS[opt_-u,--urge] )) {
+                  ZINIT[annex-multi-flag:pull-active]=1
+
+                  # Handle the snippet/plugin boundary in the messages
+                  if (( OPTS[opt_-q,--quiet] && !PUPDATE )) {
+                      .zinit-any-colorify-as-uspl2 "$id_as"
+                      (( ZINIT[first-plugin-mark] )) && {
+                          ZINIT[first-plugin-mark]=0
+                      } || builtin print
+                      builtin print "\rUpdating $REPLY"
+                  }
+              } else {
+                  ZINIT[annex-multi-flag:pull-active]=0
               }
-              return ${ZINIT[annex-multi-flag:pull-active]}
-            )
-            ZINIT[annex-multi-flag:pull-active]=$?
-        }
+          }
 
-        if [[ -d $local_dir/.git ]]; then
-            (
-                builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
-                if (( OPTS[opt_-q,--quiet] )) {
-                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} &> /dev/null
-                } else {
-                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} |& command grep -E -v '(FETCH_HEAD|up.to.date\.|From.*://)'
-                }
-            )
-        fi
-        if [[ -n ${(v)ice[(I)(mv|cp|atpull|ps-on-update|cargo)]} || $+ice[sbin]$+ice[make]$+ice[extract]$+ice[configure] -ne 0 ]] {
-            if (( !OPTS[opt_-q,--quiet] && ZINIT[annex-multi-flag:pull-active] == 1 )) {
-                if (( ${+ice[run-atpull]} )); then
-                    +zi-log "{info}[{pre}update{info}]{rst} No new commits found, but running post-update hooks as requested by the {ice}run-atpull{apo}{rst} ice."
-                else
-                    +zi-log "{info}[{pre}update{info}]{rst} No new commits found, but running post-update hooks as requested by the {opt}-u{rst}/{opt}--urge{rst} option."
-                fi
+          if (( ZINIT[annex-multi-flag:pull-active] >= 1 )) {
+              ICE=( "${(kv)ice[@]}" )
+              # Run annexes' atpull hooks (the before atpull-ice ones).
+              # The regular Git-plugins block.
+              reply=(
+                  ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]}
+                  ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
+                  ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-post <->]}
+              )
+              for key in "${reply[@]}"; do
+                  arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                  "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:git
+                  hook_rc=$?
+                  [[ "$hook_rc" -ne 0 ]] && {
+                      # note: this will effectively return the last != 0 rc
+                      retval="$hook_rc"
+                      builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
+                  }
+              done
+              ICE=()
+              (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} |& command grep -E -v '(FETCH_HEAD|up.to.date\.|From.*://)'
+          }
+          return ${ZINIT[annex-multi-flag:pull-active]}
+        )
+        ZINIT[annex-multi-flag:pull-active]=$?
+    }
+
+    if [[ -d $local_dir/.git ]]; then
+        (
+            builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
+            if (( OPTS[opt_-q,--quiet] )) {
+                command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} &> /dev/null
+            } else {
+                command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} |& command grep -E -v '(FETCH_HEAD|up.to.date\.|From.*://)'
             }
+        )
+    fi
+    if [[ -n ${(v)ice[(I)(mv|cp|atpull|ps-on-update|cargo)]} || $+ice[sbin]$+ice[make]$+ice[extract]$+ice[configure] -ne 0 ]] {
+        if (( !OPTS[opt_-q,--quiet] && ZINIT[annex-multi-flag:pull-active] == 1 )) {
+            if (( ${+ice[run-atpull]} )); then
+                +zi-log "{info}[{pre}update{info}]{rst} No new commits found, but running post-update hooks as requested by the {ice}run-atpull{apo}{rst} ice."
+            else
+                +zi-log "{info}[{pre}update{info}]{rst} No new commits found, but running post-update hooks as requested by the {opt}-u{rst}/{opt}--urge{rst} option."
+            fi
         }
+    }
 
+    # Run the user's atpull'' ice together with the annex atpull-*/
+    # atpull-post-* and the `always' %atpull-* hooks inside a single
+    # subshell – the same semantics as the atclone'' ice: environment
+    # changes are visible to the remaining hooks of the phase, but never
+    # leak into the interactive shell.
+    (
         # Any new commits?
         if (( ZINIT[annex-multi-flag:pull-active] >= 1  )) {
             ICE=( "${(kv)ice[@]}" )
@@ -3344,27 +3349,29 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
         # Store ices to disk at update of plugin
         .zinit-store-ices "$local_dir/._zinit" ice "" "" "" ""
-    fi
 
-    # Run annexes' atpull hooks (the `always' after atpull-ice ones)
-    # Block common for Git and gh-r plugins.
-    ICE=( "${(kv)ice[@]}" )
-    reply=(
-        ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
-        ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull-<-> <->]}
-        ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-post <->]}
+        # Run annexes' atpull hooks (the `always' after atpull-ice ones)
+        # Block common for Git and gh-r plugins.
+        ICE=( "${(kv)ice[@]}" )
+        reply=(
+            ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
+            ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull-<-> <->]}
+            ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-post <->]}
+        )
+        for key in "${reply[@]}"; do
+            arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+            "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:$ZINIT[annex-multi-flag:pull-active]
+            hook_rc=$?
+            [[ "$hook_rc" -ne 0 ]] && {
+                # note: this will effectively return the last != 0 rc
+                retval="$hook_rc"
+                builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
+            }
+        done
+        ICE=()
+        return "$retval"
     )
-    for key in "${reply[@]}"; do
-        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:$ZINIT[annex-multi-flag:pull-active]
-        hook_rc=$?
-        [[ "$hook_rc" -ne 0 ]] && {
-            # note: this will effectively return the last != 0 rc
-            retval="$hook_rc"
-            builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-        }
-    done
-    ICE=()
+    retval=$?
 
     typeset -ga INSTALLED_EXECS
     { INSTALLED_EXECS=( "${(@f)$(<${TMPDIR:-${TMPDIR:-/tmp}}/zinit-execs.$$.lst)}" ) } 2>/dev/null
