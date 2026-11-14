@@ -105,7 +105,7 @@ fi
 ZINIT[ice-list]="\
 \!bash|\!csh|\!ksh|\!sh|\
 aliases|as|atclone|atdelete|atinit|atload|atpull|autoload|\
-bash|binary|bindmap|blockf|bpick|build|\
+bash|binary|bindmap|blockf|bpick|build|checksum|\
 cloneonly|cloneopts|cmake|compile|completions|configure|countdown|cp|csh|\
 debug|depth|\
 extract|\
@@ -2383,6 +2383,18 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
                 "value {apo}\`{data}${ZINIT_ICES[depth]}{apo}\`{rst}." \
                 "Expected a positive integer."
         fi
+    fi
+    if (( $+ZINIT_ICES[checksum] )) && [[ -n ${ZINIT_ICES[checksum]} ]]; then
+        case ${ZINIT_ICES[checksum]} in
+            (auto|sha256:[0-9a-fA-F](#c64)|sha512:[0-9a-fA-F](#c128)|\
+                [0-9a-fA-F](#c64)|[0-9a-fA-F](#c128)|http://*|https://*|file://*) ;;
+            (*)
+                +zi-log "{warn}Warning{b-warn}:{rst} {ice}checksum{rst} ice received invalid" \
+                    "value {apo}\`{data}${ZINIT_ICES[checksum]}{apo}\`{rst}." \
+                    "Expected {data2}auto{rst}, {data2}sha256:<64 hex>{rst}," \
+                    "{data2}sha512:<128 hex>{rst}, a hex digest, or a checksum-file URL."
+                ;;
+        esac
     fi
 } # ]]]
 # FUNCTION: .zinit-pack-ice [[[
