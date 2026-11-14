@@ -3188,6 +3188,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
                     if ! .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version; then
                         ZINIT[annex-multi-flag:pull-active]=0
+                        (( retval )) || retval=1
                     fi
                     if (( OPTS[opt_-q,--quiet] != 1 )) {
                         builtin print

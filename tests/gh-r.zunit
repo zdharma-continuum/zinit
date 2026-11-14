@@ -882,6 +882,53 @@
   run "$bat" --version; assert $state equals 0
 }
 
+@test 'checksum sidecar with gh-r' { # checksum auto finds <asset>.sha256
+  local cpu asset
+  case $arch in
+    (arm64|aarch64) cpu=aarch64 ;;
+    (x86_64|amd64) cpu=x86_64 ;;
+    (*) skip "unsupported architecture: $arch" ;;
+  esac
+  case $os_type in
+    (darwin) asset="${cpu}-apple-darwin.tar.gz" ;;
+    (linux-gnu) asset="${cpu}-unknown-linux-musl.tar.gz" ;;
+    (*) skip "unsupported OS: $os_type" ;;
+  esac
+
+  run zinit from'gh-r' checksum'auto' lbin'!rg' bpick"*$asset" ver'15.2.0' \
+    id-as'ripgrep-checksum' for @BurntSushi/ripgrep
+  assert $state equals 0
+  assert $output does_not_contain 'checksum mismatch'
+  local rg="$ZBIN/rg"; assert "$rg" is_executable
+  run "$rg" --version; assert $state equals 0
+}
+@test 'checksum manifest with gh-r' { # checksum auto finds sha256sum.txt
+  [[ $os_type == linux-gnu && $arch == x86_64 ]] || \
+    skip "jq checksum manifest test is Linux x86_64 only"
+
+  run zinit from'gh-r' checksum'auto' lbin'!jq-linux-amd64 -> jq' \
+    bpick'jq-linux-amd64' ver'jq-1.8.2' id-as'jq-checksum' for @jqlang/jq
+  assert $state equals 0
+  assert $output does_not_contain 'checksum mismatch'
+  local jq="$ZBIN/jq"; assert "$jq" is_executable
+  run "$jq" --version; assert $state equals 0
+
+  # The persisted checksum ice must also be applied on update.
+  local plugin_dir="${ZINIT[PLUGINS_DIR]}/jq-checksum"
+  echo '/fake/old/release' >! "$plugin_dir/._zinit/is_release"
+  run zinit update jq-checksum
+  assert $state equals 0
+  assert $output does_not_contain 'checksum mismatch'
+
+  # A mismatch must make the update fail, not just print an error.
+  echo 'sha256:0000000000000000000000000000000000000000000000000000000000000000' \
+    >! "$plugin_dir/._zinit/checksum"
+  echo '/fake/older/release' >! "$plugin_dir/._zinit/is_release"
+  run zinit update jq-checksum
+  assert $state equals 1
+  assert $output contains 'checksum mismatch'
+}
+
 #=============
 # Flaky Tests
 #=============

@@ -33,6 +33,7 @@ jobs:
       matrix:
         zunit_test:
           - annexes
+          - checksum
           - commands
           - compile
           - config-zstyle

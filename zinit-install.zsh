@@ -389,6 +389,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                             return 1
                         }
                     }
+                    if [[ -n ${ICE[checksum]} ]] {
+                        if ! .zinit-gh-r-checksum-verify "$url" "${REPLY:t}" "${ICE[checksum]}"; then
+                            command rm -f "${REPLY:t}"
+                            return 1
+                        fi
+                    }
                     if .zinit-download-file-stdout "$url.sig" 2>/dev/null >! "${REPLY:t}.sig"; then
                         :
                     else
@@ -774,6 +780,254 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     }
 
     return 0
+} # ]]]
+# FUNCTION: .zinit-checksum-file [[[
+# Computes a cryptographic digest of a file.
+#
+# $1 - algorithm: sha256 or sha512
+# $2 - path to the file
+# $REPLY - lowercase hex digest
+.zinit-checksum-file() {
+    builtin emulate -LR zsh -o extendedglob
+    local algo="$1" file="$2" out digest
+
+    [[ -f $file ]] || {
+        +zi-log "{u-warn}ERROR{b-warn}:{rst} checksum: not a file: {file}$file{rst}."
+        return 1
+    }
+
+    case $algo in
+        (sha256|sha512) ;;
+        (*)
+            +zi-log "{u-warn}ERROR{b-warn}:{rst} checksum: unsupported algorithm:" \
+                "{data}$algo{rst} (expected {data}sha256{rst} or {data}sha512{rst})."
+            return 1
+            ;;
+    esac
+
+    if [[ $algo = sha256 ]] && (( ${+commands[sha256sum]} )); then
+        out=$(command sha256sum -- "$file") || return 1
+        digest=${out%%[[:space:]]*}
+    elif [[ $algo = sha512 ]] && (( ${+commands[sha512sum]} )); then
+        out=$(command sha512sum -- "$file") || return 1
+        digest=${out%%[[:space:]]*}
+    elif (( ${+commands[shasum]} )); then
+        out=$(command shasum -a "${algo#sha}" -- "$file") || return 1
+        digest=${out%%[[:space:]]*}
+    elif (( ${+commands[openssl]} )); then
+        out=$(command openssl dgst -"$algo" "$file" 2>/dev/null) || return 1
+        digest=${out##*[[:space:]]}
+    elif (( ${+commands[$algo]} )); then
+        out=$(command "$algo" -q "$file") || return 1
+        digest=${out%%[[:space:]]*}
+    elif (( ${+commands[certutil]} )); then
+        out=$(command certutil -hashfile "$file" "${algo:u}" 2>/dev/null) || return 1
+        digest=${${(f)out}[2]//[[:space:]]/}
+    else
+        +zi-log "{u-warn}ERROR{b-warn}:{rst} checksum: no usable hash tool found." \
+            "Install one of: {cmd}sha256sum{rst}, {cmd}sha512sum{rst}, {cmd}shasum{rst}," \
+            "{cmd}openssl{rst}, or {cmd}$algo{rst}."
+        return 1
+    fi
+
+    digest=${digest:l}
+    if [[ $algo = sha256 && $digest != [0-9a-f](#c64) ]] || \
+        [[ $algo = sha512 && $digest != [0-9a-f](#c128) ]]; then
+        +zi-log "{u-warn}ERROR{b-warn}:{rst} checksum: could not parse a valid" \
+            "{data}$algo{rst} digest from the hash tool output."
+        return 1
+    fi
+
+    REPLY=$digest
+    return 0
+} # ]]]
+# FUNCTION: .zinit-checksum-parse [[[
+# Extracts the digest for a given asset name from checksum-file contents.
+# Supports GNU (`hash  file', `hash *file'), BSD (`SHA256 (file) = hash'),
+# `file: hash', and hash-only sidecar files.
+#
+# $1 - checksum file contents
+# $2 - asset basename
+# $3 - accept hash-only contents (1) or not (0, default)
+# $REPLY - lowercase hex digest
+.zinit-checksum-parse() {
+    builtin emulate -LR zsh -o extendedglob
+    setopt localoptions noksharrays
+    local content="$1" name="$2" accept_hash_only="${3:-0}"
+    local line fname digest
+    local -a lines
+
+    lines=( ${(f)content} )
+    for line in "${lines[@]}"; do
+        line=${line%$'\r'}
+        line=${line#$'\xef\xbb\xbf'}
+        line=${line##[[:space:]]#}
+        line=${line%%[[:space:]]#}
+        [[ -z $line || $line == \#* ]] && continue
+
+        # BSD style: SHA256 (filename) = hash
+        if [[ $line =~ '^SHA(256|512)[[:space:]]*\((.+)\)[[:space:]]*=[[:space:]]*([0-9a-fA-F]+)$' ]]; then
+            fname=${match[2]:t}
+            [[ $fname = "$name" ]] && { REPLY=${match[3]:l}; return 0; }
+            continue
+        fi
+
+        # `filename: hash' style
+        if [[ $line =~ '^(.+):[[:space:]]+([0-9a-fA-F]+)$' ]]; then
+            fname=${match[1]:t}
+            [[ $fname = "$name" ]] && { REPLY=${match[2]:l}; return 0; }
+            continue
+        fi
+
+        # GNU style: hash [ *]filename
+        if [[ $line =~ '^([0-9a-fA-F]+)[[:space:]]+\*?(.+)$' ]]; then
+            digest=${match[1]:l}
+            fname=${match[2]:t}
+            [[ $fname = "$name" ]] && { REPLY=$digest; return 0; }
+            continue
+        fi
+
+        # `filename  hash' style
+        if [[ $line =~ '^(.+[^[:space:]])[[:space:]]+([0-9a-fA-F]{64,128})$' ]]; then
+            fname=${match[1]:t}
+            [[ $fname = "$name" ]] && { REPLY=${match[2]:l}; return 0; }
+            continue
+        fi
+
+        # Hash-only sidecar
+        if (( accept_hash_only )) && [[ $line =~ '^([0-9a-fA-F]+)$' ]]; then
+            REPLY=${match[1]:l}
+            return 0
+        fi
+    done
+
+    return 1
+} # ]]]
+# FUNCTION: .zinit-gh-r-checksum-discover [[[
+# Looks for a checksum sidecar or a checksum manifest next to a gh-r asset.
+# Sets $REPLY to the digest of the first matching entry.
+#
+# $1 - asset URL
+# $2 - asset basename
+.zinit-gh-r-checksum-discover() {
+    builtin emulate -LR zsh -o extendedglob
+    setopt localoptions noksharrays
+    local url="$1" name="$2" candidate content
+    local -a candidates tried
+    integer found=0
+
+    candidates=(
+        "$url.sha256"
+        "$url.sha256sum"
+        "$url.sha512"
+        "$url.sha512sum"
+        "${url:h}/SHA256SUMS"
+        "${url:h}/SHA256SUMS.txt"
+        "${url:h}/sha256sum.txt"
+        "${url:h}/sha256sums.txt"
+        "${url:h}/checksums.txt"
+        "${url:h}/checksums-sha256.txt"
+    )
+
+    for candidate in "${candidates[@]}"; do
+        tried+=( "${candidate:t}" )
+        content=$( { .zinit-download-file-stdout "$candidate" } 2>/dev/null ) || continue
+        found=1
+        if [[ $candidate == *.(sha256|sha256sum|sha512|sha512sum) ]]; then
+            .zinit-checksum-parse "$content" "$name" 1 && return 0
+        else
+            .zinit-checksum-parse "$content" "$name" 0 && return 0
+        fi
+    done
+
+    if (( found )) {
+        +zi-log "{u-warn}ERROR{b-warn}:{rst} {b}gh-r{rst}: a checksum file was found," \
+            "but it has no entry for {file}$name{rst}."
+    } else {
+        +zi-log "{u-warn}ERROR{b-warn}:{rst} {b}gh-r{rst}: no checksum file found for" \
+            "{file}$name{rst}. Tried: {file}${(j:,:)tried}{rst}." \
+            "Remove {ice}checksum'auto'{rst} or provide an explicit checksum."
+    }
+    return 1
+} # ]]]
+# FUNCTION: .zinit-gh-r-checksum-verify [[[
+# Verifies a downloaded gh-r asset against the checksum ice.
+#
+# $1 - asset URL
+# $2 - local asset path
+# $3 - checksum spec: auto, <algo>:<hex>, <hex>, or a manifest URL
+.zinit-gh-r-checksum-verify() {
+    builtin emulate -LR zsh -o extendedglob
+    setopt localoptions noksharrays
+    local url="$1" file="$2" spec="$3"
+    local name=${file:t} algo expected actual content
+    local ___saved_reply=${REPLY-}
+
+    {
+        case $spec in
+            (auto)
+                .zinit-gh-r-checksum-discover "$url" "$name" || return 1
+                expected=$REPLY
+                ;;
+            (sha256:*|sha512:*)
+                algo=${spec%%:*}
+                expected=${spec#*:}
+                expected=${expected:l}
+                if [[ $algo = sha256 && $expected != [0-9a-f](#c64) ]] || \
+                    [[ $algo = sha512 && $expected != [0-9a-f](#c128) ]]; then
+                    +zi-log "{u-warn}ERROR{b-warn}:{rst} {b}gh-r{rst}: invalid" \
+                        "{data}$algo{rst} digest in {ice}checksum{rst}:" \
+                        "{apo}\`{data}$expected{apo}\`{rst}."
+                    return 1
+                fi
+                ;;
+            ([0-9a-fA-F](#c64)|[0-9a-fA-F](#c128))
+                expected=${spec:l}
+                ;;
+            (http://*|https://*|file://*)
+                content=$( { .zinit-download-file-stdout "$spec" } 2>/dev/null ) || {
+                    +zi-log "{u-warn}ERROR{b-warn}:{rst} {b}gh-r{rst}: could not download" \
+                        "checksum file {url}$spec{rst}."
+                    return 1
+                }
+                .zinit-checksum-parse "$content" "$name" 1 || {
+                    +zi-log "{u-warn}ERROR{b-warn}:{rst} {b}gh-r{rst}: checksum file" \
+                        "{url}$spec{rst} has no entry for {file}$name{rst}."
+                    return 1
+                }
+                expected=$REPLY
+                ;;
+            (*)
+                +zi-log "{u-warn}ERROR{b-warn}:{rst} {b}gh-r{rst}: invalid" \
+                    "{ice}checksum{rst} value {apo}\`{data}$spec{apo}\`{rst}."
+                return 1
+                ;;
+        esac
+
+        case ${#expected} in
+            (64) algo=sha256 ;;
+            (128) algo=sha512 ;;
+            (*)
+                +zi-log "{u-warn}ERROR{b-warn}:{rst} {b}gh-r{rst}: unsupported checksum" \
+                    "length {num}${#expected}{rst} for {file}$name{rst}."
+                return 1
+                ;;
+        esac
+
+        .zinit-checksum-file "$algo" "$file" || return 1
+        actual=$REPLY
+        if [[ $actual != $expected ]]; then
+            +zi-log "{u-warn}ERROR{b-warn}:{rst} {b}gh-r{rst}: checksum mismatch for" \
+                "{file}$name{rst}. Expected {data}$algo:$expected{rst}," \
+                "got {data}$algo:$actual{rst}."
+            return 1
+        fi
+
+        +zi-log "{dbg} {b}gh-r{rst}: checksum OK ({data}$algo{rst}) for {file}$name{rst}."
+        return 0
+    } always {
+        REPLY=$___saved_reply
+    }
 } # ]]]
 # FUNCTION: .zinit-mirror-using-svn [[[
 # Used to clone subdirectories from Github. If in update mode

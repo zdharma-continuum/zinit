@@ -1,0 +1,191 @@
+#!/usr/bin/env zunit
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
+#
+# Tests for the gh-r checksum ice and its parsing/verification helpers.
+
+@setup {
+    typeset -g CK_DIR="$zi_test_dir/checksum"
+    typeset -g CK_ASSET="$CK_DIR/asset.bin"
+    typeset -g SHA256_ABC='ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'
+    typeset -g SHA512_ABC='ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f'
+    typeset -g ZERO64='0000000000000000000000000000000000000000000000000000000000000000'
+    typeset -g CK_URL="file://$CK_ASSET"
+
+    rm -rf "$CK_DIR"
+    mkdir -p "$CK_DIR"
+    builtin print -rn -- abc > "$CK_ASSET"
+}
+
+@test 'checksum-file sha256' {
+    .zinit-checksum-file sha256 "$CK_ASSET" >/dev/null 2>&1
+    local rc=$? digest=$REPLY
+
+    assert $rc equals 0
+    assert "$digest" same_as "$SHA256_ABC"
+}
+
+@test 'checksum-file sha512' {
+    .zinit-checksum-file sha512 "$CK_ASSET" >/dev/null 2>&1
+    local rc=$? digest=$REPLY
+
+    assert $rc equals 0
+    assert "$digest" same_as "$SHA512_ABC"
+}
+
+@test 'checksum-file rejects unsupported algorithm' {
+    run .zinit-checksum-file md5 "$CK_ASSET"
+    assert $state equals 1
+    assert $output contains 'unsupported algorithm'
+}
+
+@test 'parse GNU checksum' {
+    .zinit-checksum-parse "$SHA256_ABC  asset.bin" asset.bin >/dev/null 2>&1
+    local rc=$? digest=$REPLY
+
+    assert $rc equals 0
+    assert "$digest" same_as "$SHA256_ABC"
+}
+
+@test 'parse GNU checksum with binary marker' {
+    .zinit-checksum-parse "$SHA256_ABC *asset.bin" asset.bin >/dev/null 2>&1
+    local rc=$? digest=$REPLY
+
+    assert $rc equals 0
+    assert "$digest" same_as "$SHA256_ABC"
+}
+
+@test 'parse BSD checksum' {
+    .zinit-checksum-parse "SHA256 (asset.bin) = $SHA256_ABC" asset.bin >/dev/null 2>&1
+    local rc=$? digest=$REPLY
+
+    assert $rc equals 0
+    assert "$digest" same_as "$SHA256_ABC"
+}
+
+@test 'parse filename-colon-checksum' {
+    .zinit-checksum-parse "asset.bin: $SHA256_ABC" asset.bin >/dev/null 2>&1
+    local rc=$? digest=$REPLY
+
+    assert $rc equals 0
+    assert "$digest" same_as "$SHA256_ABC"
+}
+
+@test 'parse filename-first checksum' {
+    .zinit-checksum-parse "asset.bin  $SHA256_ABC" asset.bin >/dev/null 2>&1
+    local rc=$? digest=$REPLY
+
+    assert $rc equals 0
+    assert "$digest" same_as "$SHA256_ABC"
+}
+
+@test 'parse hash-only sidecar' {
+    .zinit-checksum-parse "$SHA256_ABC" asset.bin 1 >/dev/null 2>&1
+    local rc=$? digest=$REPLY
+
+    assert $rc equals 0
+    assert "$digest" same_as "$SHA256_ABC"
+}
+
+@test 'parse ignores other assets' {
+    run .zinit-checksum-parse "$SHA256_ABC  other.bin" asset.bin
+    assert $state equals 1
+}
+
+@test 'parse handles CRLF' {
+    .zinit-checksum-parse "$SHA256_ABC  asset.bin"$'\r\n' asset.bin >/dev/null 2>&1
+    local rc=$? digest=$REPLY
+
+    assert $rc equals 0
+    assert "$digest" same_as "$SHA256_ABC"
+}
+
+@test 'auto discovers sidecar' {
+    builtin print -r -- "$SHA256_ABC  asset.bin" > "$CK_ASSET.sha256"
+
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" auto
+    assert $state equals 0
+}
+
+@test 'auto discovers hash-only sidecar' {
+    builtin print -r -- "$SHA256_ABC" > "$CK_ASSET.sha256"
+
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" auto
+    assert $state equals 0
+}
+
+@test 'auto discovers manifest' {
+    builtin print -r -- "$SHA256_ABC  other.bin"$'\n'"$SHA256_ABC  asset.bin" > "$CK_DIR/SHA256SUMS"
+
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" auto
+    assert $state equals 0
+}
+
+@test 'auto fails when no checksum file exists' {
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" auto
+    assert $state equals 1
+    assert $output contains 'no checksum file found'
+}
+
+@test 'auto fails when manifest has no entry' {
+    builtin print -r -- "$SHA256_ABC  other.bin" > "$CK_DIR/SHA256SUMS"
+
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" auto
+    assert $state equals 1
+    assert $output contains 'no entry for'
+}
+
+@test 'explicit sha256 passes' {
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" "sha256:$SHA256_ABC"
+    assert $state equals 0
+}
+
+@test 'explicit sha256 mismatch fails' {
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" "sha256:$ZERO64"
+    assert $state equals 1
+    assert $output contains 'checksum mismatch'
+}
+
+@test 'explicit bare hash passes' {
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" "$SHA256_ABC"
+    assert $state equals 0
+}
+
+@test 'explicit manifest URL passes' {
+    builtin print -r -- "$SHA256_ABC  asset.bin" > "$CK_DIR/SHA256SUMS"
+
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" "file://$CK_DIR/SHA256SUMS"
+    assert $state equals 0
+}
+
+@test 'invalid checksum spec fails' {
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" banana
+    assert $state equals 1
+    assert $output contains 'invalid'
+    assert $output contains 'banana'
+}
+
+@test 'malformed explicit sha256 fails' {
+    run .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" 'sha256:1234'
+    assert $state equals 1
+    assert $output contains 'invalid'
+    assert $output contains '1234'
+}
+
+@test 'verify preserves caller REPLY' {
+    REPLY="$CK_ASSET"
+    .zinit-gh-r-checksum-verify "$CK_URL" "$CK_ASSET" "sha256:$SHA256_ABC" >/dev/null 2>&1
+    local rc=$?
+    local after=$REPLY
+
+    assert $rc equals 0
+    assert "$after" same_as "$CK_ASSET"
+}
+
+@test 'checksum ice validation' {
+    run zinit ice checksum'banana'
+    assert $state equals 0
+    assert $output contains 'checksum'
+    assert $output contains 'invalid'
+}
+
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
