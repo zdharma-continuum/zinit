@@ -703,6 +703,7 @@ You may safely assume a given ice works with both plugins and snippets unless ex
 | Modifier    | Description                                                                                                                                                                                                                                                                                                                                  |
 | :---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `bpick`     | Used to select which release from GitHub Releases to download, e.g. `zini ice from"gh-r" as"program" bpick"*Darwin*"; zini load docker/compose`. **Does not work with snippets.**                                                                                                                                                            |
+| `checksum`  | Verify a `from"gh-r"` download against a SHA-256/SHA-512 checksum. `auto` discovers `<asset>.sha256`/`.sha512` sidecars or `SHA256SUMS`/`checksums.txt` manifests; `sha256:<hex>`/`sha512:<hex>` verifies an explicit digest; a URL or `file://` path points to a manifest. Fails closed. **Does not work with snippets.**                 |
 | `cloneopts` | Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive`. I.e.: change cloning options. Pass empty ice to disable recursive cloning. **Does not work with snippets.**                                                                                                                                                      |
 | `depth`     | Pass `--depth` to `git`, i.e. limit how much of history to download. **Does not work with snippets.**                                                                                                                                                                                                                                        |
 | `from`      | Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for GitHub enterprise). **Does not work with snippets.**                                                        |
@@ -710,6 +711,28 @@ You may safely assume a given ice works with both plugins and snippets unless ex
 | `pullopts`  | Pass the contents of `pullopts` to `git pull` used when updating plugins. **Does not work with snippets.**                                                                                                                                                                                                                                   |
 | `svn`       | Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zinit ice svn; zinit snippet OMZP::git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). **Does not work with plugins.**                      |
 | `ver`       | Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"program"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. Works also with regular plugins and packages (`pack` ice) checkouts e.g. `ver"abranch"`, i.e. a specific version. **Does not work with snippets.** |
+
+### Verifying GitHub Releases downloads<a name="verifying-github-releases-downloads"></a>
+
+`from"gh-r"` downloads can be verified with the `checksum` ice:
+
+```zsh
+# Discover <asset>.sha256/.sha512 or a SHA256SUMS/checksums.txt manifest.
+zinit ice from"gh-r" checksum"auto"
+zinit light BurntSushi/ripgrep
+
+# Pin an explicit digest.
+zinit ice from"gh-r" checksum"sha256:<64 hex>"
+
+# Point at a specific checksum manifest.
+zinit ice from"gh-r" checksum"https://github.com/jqlang/jq/releases/download/jq-1.8.2/sha256sum.txt"
+```
+
+`auto` fails closed: if no checksum file, or no entry for the selected asset, is
+found, the install is aborted. A digest mismatch removes the downloaded file and
+aborts before extraction. The checksum is fetched from the same release, so it
+detects corrupted downloads and wrong-asset selection, but not a compromised
+upstream account.
 
 ### Selection of Files (To Source, …)<a name="selection-of-files-to-source-%E2%80%A6"></a>
 
