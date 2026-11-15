@@ -1,0 +1,74 @@
+#!/usr/bin/env zunit
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
+#
+# Tests for automatic plugin manpage installation.
+
+@setup {
+    typeset -g MP_ROOT="$zi_test_dir/manpages"
+    command rm -rf "$MP_ROOT"
+    command mkdir -p "$MP_ROOT"
+    # Remove only symlinks; keep Zinit's own regular zinit.1.
+    command rm -f "$ZINIT[MAN_DIR]"/man[1-9]/*(@N)
+
+    __make_mp_plugin() {
+        local dir="$1"
+        command mkdir -p "$dir/man" "$dir/doc/man1" "$dir/man/man8"
+        builtin print -r -- 'echo loaded' > "$dir/${dir:t}.plugin.zsh"
+        builtin print -r -- '.TH MP 1' > "$dir/mp.1"
+        builtin print -r -- '.TH MP 1 GZ' > "$dir/mp.1.gz"
+        builtin print -r -- '.TH ANOTHER 1' > "$dir/man/another.1"
+        builtin print -r -- '.TH THIRD 1' > "$dir/doc/man1/third.1"
+        builtin print -r -- '.TH EIGHT 8' > "$dir/man/man8/eight.8"
+    }
+}
+
+@teardown {
+    command rm -f "$ZINIT[MAN_DIR]"/man[1-9]/*(@N)
+    command rm -rf "$MP_ROOT"
+}
+
+@test 'installs plugin manpages from common directories' {
+    local dir="$MP_ROOT/plugin-basic"
+    __make_mp_plugin "$dir"
+
+    run zinit load "$dir"
+    assert $state equals 0
+    assert "$ZINIT[MAN_DIR]/man1/mp.1" is_link
+    assert "$ZINIT[MAN_DIR]/man1/mp.1.gz" is_link
+    assert "$ZINIT[MAN_DIR]/man1/another.1" is_link
+    assert "$ZINIT[MAN_DIR]/man1/third.1" is_link
+    assert "$ZINIT[MAN_DIR]/man8/eight.8" is_link
+}
+
+@test 'nomanpages disables installation and removes existing links' {
+    local dir="$MP_ROOT/plugin-nomanpages"
+    __make_mp_plugin "$dir"
+
+    run zinit load "$dir"
+    assert $state equals 0
+    assert "$ZINIT[MAN_DIR]/man1/mp.1" is_link
+
+    run zinit nomanpages for "$dir"
+    assert $state equals 0
+    run test -e "$ZINIT[MAN_DIR]/man1/mp.1"
+    assert $state equals 1
+}
+
+@test 'does not overwrite a regular file in MAN_DIR' {
+    local dir="$MP_ROOT/plugin-collision"
+    __make_mp_plugin "$dir"
+
+    command mkdir -p "$ZINIT[MAN_DIR]/man1"
+    builtin print -r -- 'original' > "$ZINIT[MAN_DIR]/man1/mp.1"
+
+    run zinit load "$dir"
+    assert $state equals 0
+    run cat "$ZINIT[MAN_DIR]/man1/mp.1"
+    assert $output contains 'original'
+    run test -L "$ZINIT[MAN_DIR]/man1/mp.1"
+    assert $state equals 1
+
+    command rm -f "$ZINIT[MAN_DIR]/man1/mp.1"
+}
+
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
