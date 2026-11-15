@@ -1605,14 +1605,14 @@ EOF
 —— ice <ice specification>       – add ICE to next command, argument is e.g. from\"gitlab\"
 —— light [-b] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}           – light plugin load, without reporting/tracking (-b – do track but bindkey-calls only)
 —— load ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                 – load plugin, can also receive absolute local path
-—— loaded|list {keyword}         – show what plugins are loaded (filter with \'keyword')
-—— ls                            – list snippets in formatted and colorized manner
+—— plugins|list-plugins|loaded|list {keyword} – list plugins with load status (filter with \'keyword')
+—— snippets|list-snippets|ls     – list snippets in formatted and colorized manner
 —— man                           – manual
 —— module                        – manage binary Zsh module shipped with Zinit, see \`zinit module help'
 —— recall ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL           – fetch saved ice modifiers and construct \`zinit ice ...' command
 —— recently ${ZINIT[col-info]}[time-spec]${ZINIT[col-rst]}          – show plugins that changed recently, argument is e.g. 1 month 2 days
 —— report ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – show plugin's report (or all plugins' if ——all passed)
-—— self-update                   – updates and compiles Zinit
+—— self-update                   – updates and compiles Zinit (also run automatically before a bulk update)
 —— snippet [-f] ${ZINIT[col-pname]}{url}${ZINIT[col-rst]}            – source local or remote file (by direct URL), -f: force – don't use cache
 —— srv {service-id} [cmd]        – control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
 —— status ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
@@ -1738,7 +1738,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 # FUNCTION: .zinit-list-snippets [[[
 .zinit-list-snippets() {
     (( ${+commands[tree]} )) || {
-        builtin print "${ZINIT[col-error]}No \`tree' program, it is required by the subcommand \`ls\'${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}No \`tree' program, it is required by the subcommand \`snippets\'${ZINIT[col-rst]}"
         builtin print "Download from: http://mama.indstate.edu/users/ice/tree/"
         builtin print "It is also available probably in all distributions and Homebrew, as package \`tree'"
     }

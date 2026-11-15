@@ -150,11 +150,11 @@ fpath|\
 glance|\
 help|--help|-h|\
 ice|\
-light|load|\
+light|load|loaded|list|\
 man|module|\
-plugins|\
+plugins|list-plugins|\
 recall|recently|report|run|\
-self-update|snippet|snippets|srv|status|stress|\
+self-update|snippet|snippets|list-snippets|ls|srv|status|stress|\
 times|\
 uncompile|unload|update|\
 version|\
@@ -3096,10 +3096,10 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                         .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
                     fi
                     ;;
-                (plugins)
+                (plugins|list-plugins|loaded|list)
                     .zinit-list-plugins "$2"
                     ;;
-                (snippets)
+                (snippets|list-snippets|ls)
                     .zinit-list-snippets "$2"
                     ;;
                 (completions) # Show installed, enabled or disabled, completions and detect stray and improper ones
@@ -3330,7 +3330,10 @@ zmodload -F zsh/stat b:zstat 2>/dev/null && ZINIT[HAVE_ZSTAT]=1
 
 # code [[[
 if [[ -z $ZINIT[NO_ALIASES] ]]; then
-    builtin alias zpl=zinit zplg=zinit zi=zinit zini=zinit
+    builtin alias zpl=zinit zplg=zinit zini=zinit
+    # Do not clobber an existing `zi' alias, function or command (e.g. zoxide).
+    (( ${+aliases[zi]} || ${+commands[zi]} || ${+functions[zi]} )) || \
+        builtin alias zi=zinit
 fi
 
 .zinit-prepare-home
