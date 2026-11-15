@@ -1169,7 +1169,7 @@ zplugin creinstall zsh-users/zsh-completions   # install
 <h3 id="listing_completions">Listing completions<a class="headerlink" href="#listing_completions" title="Permanent link">#</a></h3>
 <p>To see what completions <strong>all</strong> plugins provide, in tabular formatting
 and with name of each plugin, use:</p>
-<pre><code class="zsh">zplugin clist
+<pre><code class="zsh">zinit completions
 </code></pre>
 
 <p>This command is specially adapted for plugins like
@@ -1184,7 +1184,7 @@ cask, cf, chattr             zsh-users/zsh-completions
 </code></pre>
 
 <p>You can show more completions per line by providing an <strong>argument</strong> to
-<code>clist</code>, e.g. <code>zplugin clist 6</code>, will show:</p>
+<code>completions</code>, e.g. <code>zinit completions 6</code>, will show:</p>
 <pre><code class="zsh">...
 bundle, caffeinate, cap, cask, cf, chattr      zsh-users/zsh-completions
 cheat, choc, cmake, coffee, column, composer   zsh-users/zsh-completions
