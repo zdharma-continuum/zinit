@@ -522,6 +522,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     [[ (0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0) || 0 != ${+ICE[completions]} ]] && \
         .zinit-install-completions "$id_as" "" "0"
 
+    # Install or remove the plugin's manpages.
+    .zinit-install-manpages "$local_path" "$id_as"
+
     if [[ -e ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst || -e ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst ]] {
         typeset -ga INSTALLED_COMPS SKIPPED_COMPS
         { INSTALLED_COMPS=( "${(@f)$(<${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
@@ -621,6 +624,94 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     }
 
     .zinit-compinit 1 1 &>/dev/null
+} # ]]]
+# FUNCTION: .zinit-install-manpages [[[
+# Symlinks manpages found in a plugin into $ZINIT[MAN_DIR]/manN.
+#
+# $1 - plugin directory
+# $2 - plugin id (for messages)
+.zinit-install-manpages() {
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
+
+    local plugin_dir="${1%/}" id_as="${2:-${1%/}}"
+    local root manpage base section dest target
+    local -a roots manpages
+    integer installed=0 skipped=0
+
+    [[ -d $plugin_dir ]] || return 1
+
+    # nomanpages'' also removes links installed by an earlier configuration.
+    if (( ${+ICE[nomanpages]} )); then
+        .zinit-uninstall-manpages "$plugin_dir"
+        return 0
+    fi
+
+    command mkdir -p "${~ZINIT[MAN_DIR]}"/man{1..9} 2>/dev/null
+
+    roots=(
+        "$plugin_dir"
+        "$plugin_dir/man"
+        "$plugin_dir/doc"
+        "$plugin_dir"/man/man[1-9](N/)
+        "$plugin_dir"/share/man/man[1-9](N/)
+        "$plugin_dir"/doc/man[1-9](N/)
+        "$plugin_dir"/doc/man/man[1-9](N/)
+    )
+
+    for root in "$roots[@]"; do
+        manpages=(
+            "$root"/*.[1-9](N.)
+            "$root"/*.[1-9].gz(N.)
+        )
+        for manpage in "$manpages[@]"; do
+            base=${manpage:t}
+            if [[ $base == *.[1-9].gz ]]; then
+                section=${${base%.gz}##*.}
+            else
+                section=${base##*.}
+            fi
+            dest="${~ZINIT[MAN_DIR]}/man$section/$base"
+
+            if [[ -e $dest && ! -L $dest ]]; then
+                (( skipped++ ))
+                continue
+            fi
+            if [[ -L $dest ]]; then
+                target=${dest:A}
+                if [[ $target != ${manpage:A} ]]; then
+                    # Replace a stale link from this plugin; keep another plugin's link.
+                    if [[ $target != "$plugin_dir"/* && -e $target ]]; then
+                        (( skipped++ ))
+                        continue
+                    fi
+                fi
+            fi
+
+            command ln -sf "$manpage" "$dest" || continue
+            (( installed++ ))
+        done
+    done
+
+    (( installed )) && +zi-log "{dbg} {b}manpages{rst}: linked {num}$installed{rst} manpage${${installed:#1}:+s} for {pid}$id_as{rst}."
+    (( skipped )) && +zi-log "{dbg} {b}manpages{rst}: skipped {num}$skipped{rst} existing manpage${${skipped:#1}:+s} for {pid}$id_as{rst}."
+
+    return 0
+} # ]]]
+# FUNCTION: .zinit-uninstall-manpages [[[
+# Removes manpage symlinks that point into the given plugin directory.
+#
+# $1 - plugin directory
+.zinit-uninstall-manpages() {
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
+
+    local plugin_dir="${1%/}" link
+    [[ -d ${~ZINIT[MAN_DIR]} ]] || return 0
+    for link in "${~ZINIT[MAN_DIR]}"/man[1-9]/*(@N); do
+        [[ ${link:A} == "$plugin_dir"/* ]] && command rm -f "$link"
+    done
+    return 0
 } # ]]]
 # FUNCTION: .zinit-compinit [[[
 # User-exposed `compinit' frontend which first ensures that all
