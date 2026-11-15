@@ -417,7 +417,8 @@ zi snippet OMZP::ruby
 
 ### `zi` conflicts with zoxide<a name="zi-conflicts-with-zoxide"></a>
 
-Zinit creates the aliases `zi`, `zini`, `zpl`, and `zplg`. If another tool already uses `zi` — for example
+Zinit normally creates the aliases `zi`, `zini`, `zpl`, and `zplg`. If `zi` already exists as an alias, function, or
+command, Zinit leaves it alone. If another tool uses `zi` — for example
 [zoxide](https://github.com/ajeetdsouza/zoxide) — disable Zinit's aliases before sourcing `zinit.zsh`:
 
 ```zsh
