@@ -114,7 +114,7 @@ has|\
 id-as|if|install|is-snippet|\
 ksh|\
 light-mode|link|load|lucid|\
-make|multisrc|mv|nocd|nocompile|nocompletions|notify|null|\
+make|multisrc|mv|nocd|nocompile|nocompletions|nomanpages|notify|null|\
 on-update-of|opts|\
 pack|param|pick|proto|ps-on-unload|ps-on-update|pullopts|\
 reset|reset-prompt|run-atpull|\
@@ -134,7 +134,7 @@ is-snippet|\
 ksh|\
 light-mode|lucid|\
 make|\
-nocd|nocompile|nocompletions|notify|null|\
+nocd|nocompile|nocompletions|nomanpages|notify|null|\
 pullopts|\
 reset|run-atpull|\
 sh|silent|\
@@ -1740,6 +1740,12 @@ builtin setopt noaliases
         fi
         zle && ___rst=1
     }
+
+    if [[ $___user == % ]]; then
+        (( ${+functions[.zinit-install-manpages]} )) || \
+            builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
+        .zinit-install-manpages "$___pdir_path" "$___id_as"
+    fi
 
     ZINIT_SICE[$___id_as]=
     .zinit-pack-ice "$___id_as"

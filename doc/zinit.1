@@ -1130,6 +1130,10 @@ T{
 T}@T{
 T}
 T{
+\f[C]nomanpages\f[R]
+T}@T{
+T}
+T{
 \f[C]service\f[R]
 T}@T{
 T}
@@ -1762,6 +1766,33 @@ zinit as\[dq]null\[dq] wait\[dq]1\[dq] lucid for \[rs]
 .PP
 Target directory for installed files is \f[C]$ZPFX\f[R]
 (\f[C]\[ti]/.local/share/zinit/polaris\f[R] by default).
+.SH Manpages
+.PP
+Zinit automatically finds manpages shipped by plugins and symlinks them
+into \f[C]$ZINIT[MAN_DIR]/manN\f[R], where \f[C]N\f[R] is the manpage
+section (1-9).
+It looks in the plugin root, \f[C]man/\f[R], \f[C]doc/\f[R],
+\f[C]man/manN/\f[R], \f[C]share/man/manN/\f[R],
+\f[C]doc/manN/\f[R], and \f[C]doc/man/manN/\f[R], including
+\f[C].gz\f[R] variants.
+.PP
+Disable this for a plugin with \f[C]nomanpages\f[R]:
+.IP
+.nf
+\f[C]
+zinit ice nomanpages
+zinit load <plugin>
+\f[R]
+.fi
+.PP
+Make sure \f[C]man\f[R] can find \f[C]$ZINIT[MAN_DIR]\f[R]:
+.IP
+.nf
+\f[C]
+[[ -n $MANPATH ]] || export MANPATH="$(manpath 2>/dev/null)"
+export MANPATH="${MANPATH:+$MANPATH:}$ZINIT[MAN_DIR]"
+\f[R]
+.fi
 .SH Supporting
 .PP
 Zinit is a personal, free-time project with no funding and a huge
