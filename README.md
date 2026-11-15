@@ -57,6 +57,7 @@
   - [Customizing Paths](#customizing-paths)
   - [Non-GitHub (Local) Plugins](#non-github-local-plugins)
   - [Extending Git](#extending-git)
+  - [Manpages](#manpages)
 - [Changelog](#changelog)
 - [Support](#support)
 - [Getting Help and Community](#getting-help-and-community)
@@ -817,6 +818,7 @@ By default, Zinit turns off alias expansion while it loads a plugin. Your aliase
 | `service`      | Make following plugin or snippet a _service_, which will be ran in background, and only in single Zshell instance. See [the zservice-\* repositories](https://github.com/orgs/zdharma-continuum/repositories?q=zservice-).                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `light-mode`   | Load the plugin without tracking, i.e.: as if it would be loaded with the `light` command. Useful for the for-syntax, where there is no `load` nor `light` subcommand                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `nocompile`    | Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at the location of their installation).                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `nomanpages`   | Don't detect or install manpages provided by this plugin. By default Zinit symlinks plugin manpages into `$ZINIT[MAN_DIR]/manN`. |
 | `trackbinds`   | Shadow but only `bindkey` calls even with `zinit light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zinit light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**                                                                                                                                                                                                                                                                                                                                                                        |
 | `wrap-track`   | Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**                                                                           |
 | `reset-prompt` | Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
@@ -1263,6 +1265,26 @@ zi as'null' lucid sbin wait'1' for \
 ```
 
 Target directory for installed files is `$ZPFX` (`~/.local/share/zinit/polaris` by default).
+
+### Manpages<a name="manpages"></a>
+
+Zinit automatically finds manpages shipped by plugins and symlinks them into `$ZINIT[MAN_DIR]/manN`, where `N` is the
+manpage section (1–9). It looks in the plugin root, `man/`, `doc/`, `man/manN/`, `share/man/manN/`, `doc/manN/`, and
+`doc/man/manN/`, including `.gz` variants.
+
+Disable this for a plugin with `nomanpages`:
+
+```zsh
+zinit ice nomanpages
+zinit load <plugin>
+```
+
+Make sure `man` can find `$ZINIT[MAN_DIR]`:
+
+```zsh
+[[ -n $MANPATH ]] || export MANPATH="$(manpath 2>/dev/null)"
+export MANPATH="${MANPATH:+$MANPATH:}$ZINIT[MAN_DIR]"
+```
 
 ## Changelog<a name="changelog"></a>
 
