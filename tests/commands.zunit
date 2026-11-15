@@ -62,6 +62,32 @@
   assert $state equals 0
   assert $output contains "==> 4 Plugins matching 'zdharma'"
 }
+@test 'plugins aliases' {
+  for cmd in list-plugins loaded list; do
+    run zinit $cmd
+    assert $state equals 0
+    assert $output does_not_contain 'Unknown subcommand'
+  done
+}
+@test 'snippets aliases' {
+  for cmd in snippets list-snippets ls; do
+    run zinit $cmd
+    assert $state equals 0
+    assert $output does_not_contain 'Unknown subcommand'
+  done
+}
+@test 'existing zi alias is preserved' {
+  run zsh -f -c "alias zi='echo zoxide'; source ${(q)ZINIT[BIN_DIR]}/zinit.zsh >/dev/null 2>&1; alias zi"
+  assert $state equals 0
+  assert $output contains "zi='echo zoxide'"
+}
+@test 'help lists canonical listing commands' {
+  run zinit help
+  assert $state equals 0
+  assert $output contains 'plugins|list-plugins|loaded|list'
+  assert $output contains 'snippets|list-snippets|ls'
+  assert $output does_not_contain '—— ls '
+}
 
 @test 'self-update' {
   run zinit self-update

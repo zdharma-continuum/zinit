@@ -287,6 +287,12 @@ version of a snippet, or \f[C]zinit update {URL}\f[R].
 Can also use \f[C]zinit update --all\f[R] to update all snippets (and
 plugins).
 .PP
+To list installed plugins and snippets, use \f[C]zinit plugins\f[R] and
+\f[C]zinit snippets\f[R].
+The older \f[C]zinit ls\f[R], \f[C]list\f[R], \f[C]loaded\f[R],
+\f[C]list-plugins\f[R], and \f[C]list-snippets\f[R] names remain
+available as aliases.
+.PP
 \f[B]Example\f[R]
 .IP
 .nf
@@ -346,6 +352,13 @@ zinit update --parallel
 zinit update --parallel 40
 \f[R]
 .fi
+.PP
+A bulk update (\f[C]zinit update\f[R] without an object, or with
+\f[C]--all\f[R]/\f[C]--parallel\f[R]) first runs a quiet
+\f[C]zinit self-update\f[R] so that the newest Zinit code performs the
+update.
+Updating a single object with \f[C]zinit update <plugin>\f[R] does not
+self-update; use \f[C]zinit self-update\f[R] to update only Zinit.
 .SS Turbo and lucid
 .PP
 Turbo and lucid are the most used options.
@@ -799,7 +812,7 @@ zinit light vim/vim
 zinit ice as\[dq]program\[dq] pick\[dq]$ZPFX/bin/git-*\[dq] make\[dq]PREFIX=$ZPFX\[dq]
 zinit light tj/git-extras
 
-# Handle completions without loading any plugin, see \[dq]clist\[dq] command.
+# Handle completions without loading any plugin, see \[dq]completions\[dq] command.
 # This one is to be ran just once, in interactive session.
 zinit creinstall %HOME/my_completions
 \f[R]
@@ -1262,7 +1275,7 @@ Description
 T}
 _
 T{
-clist [\f[I]columns\f[R]], completions [\f[I]columns\f[R]]
+completions [\f[I]columns\f[R]]
 T}@T{
 T}
 T{
@@ -1362,11 +1375,11 @@ T{
 T}@T{
 T}
 T{
-\f[C]loaded [keyword], list [keyword]\f[R]
+\f[C]plugins [keyword], loaded [keyword], list [keyword], list-plugins [keyword]\f[R]
 T}@T{
 T}
 T{
-\f[C]ls\f[R]
+\f[C]snippets, ls, list-snippets\f[R]
 T}@T{
 T}
 T{

@@ -22,6 +22,7 @@
   - [Turbo and lucid](#turbo-and-lucid)
   - [Migration](#migration)
 - [Frequently Asked Questions](#frequently-asked-questions)
+  - [`zi` conflicts with zoxide](#zi-conflicts-with-zoxide)
   - [Use `zi ice svn` if a plugin/snippet requires an entire subdirectory](#use-zi-ice-svn-if-a-pluginsnippet-requires-an-entire-subdirectory)
   - [Use `zi ice as'completion'` to directly add single file completion snippets](#use-zi-ice-ascompletion-to-directly-add-single-file-completion-snippets)
   - [More Examples](#more-examples)
@@ -182,6 +183,9 @@ zinit snippet <URL>
 Such lines should be added to `.zshrc`. Snippets are cached locally. Use the `-f` option to download a new version of a
 snippet or `zinit update {URL}`. You can also use `zinit update --all` to update all snippets (and plugins).
 
+To list installed plugins and snippets, use `zinit plugins` and `zinit snippets`. The older `zinit ls`, `zinit list`,
+`zinit loaded`, `zinit list-plugins`, and `zinit list-snippets` names remain available as aliases.
+
 **Example**
 
 ```zsh
@@ -240,6 +244,10 @@ zinit update --parallel
 # Increase the number of jobs in a concurrent-set to 40
 zinit update --parallel 40
 ```
+
+A bulk update (`zinit update` without an object, or with `--all`/`--parallel`) first runs a quiet `zinit self-update`
+so that the newest Zinit code performs the update. Updating a single object with `zinit update <plugin>` does not
+self-update; use `zinit self-update` to update only Zinit.
 
 ### Turbo and lucid<a name="turbo-and-lucid"></a>
 
@@ -406,6 +414,20 @@ zi snippet OMZP::rake
 zi snippet OMZP::rbenv
 zi snippet OMZP::ruby
 ```
+
+### `zi` conflicts with zoxide<a name="zi-conflicts-with-zoxide"></a>
+
+Zinit normally creates the aliases `zi`, `zini`, `zpl`, and `zplg`. If `zi` already exists as an alias, function, or
+command, Zinit leaves it alone. If another tool uses `zi` — for example
+[zoxide](https://github.com/ajeetdsouza/zoxide) — disable Zinit's aliases before sourcing `zinit.zsh`:
+
+```zsh
+typeset -gA ZINIT
+ZINIT[NO_ALIASES]=1
+source "${ZINIT_HOME}/zinit.zsh"
+```
+
+Alternatively, define only the aliases you want after sourcing Zinit.
 
 ### Use `zi ice svn` if a plugin/snippet requires an entire subdirectory<a name="use-zi-ice-svn-if-a-pluginsnippet-requires-an-entire-subdirectory"></a>
 
@@ -867,7 +889,7 @@ Following commands are passed to `zinit ...` to obtain described effects.
 | `cdlist`                          | Show compdef replay list.                                                                                                                           |
 | `cdreplay [-q]`                   | Replay compdefs (to be done after compinit). `-q` – quiet.                                                                                          |
 | `cenable {cname}`                 | Enable completion `cname`.                                                                                                                          |
-| `completions \[*columns*\]`       | List completions in use, with <code>columns</code> completions per line. `zpl clist 5` will for example print 5 completions per line. Default is 3. |
+| `completions \[*columns*\]`       | List completions in use, with <code>columns</code> completions per line. `zinit completions 5` will for example print 5 completions per line. Default is 3. |
 | `compinit`                        | Refresh installed completions.                                                                                                                      |
 | `creinstall [-q] [-Q] {plg-spec}` | Install completions for plugin, can also receive absolute local path. `-q` – quiet. `-Q` - quiet all.                                               |
 | `csearch`                         | Search for available completions from any plugin.                                                                                                   |
@@ -888,8 +910,8 @@ Following commands are passed to `zinit ...` to obtain described effects.
 | Command                  | Description                                                                                                                                              |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `bindkeys`               | Lists bindkeys set up by each plugin.                                                                                                                    |
-| `list-plugins [keyword]` | Show what plugins are loaded (filter with 'keyword').                                                                                                    |
-| `list-snippets`          | List snippets in formatted and colorized manner. Requires `tree` program.                                                                                |
+| `plugins [keyword]`      | List plugins with their load status (`L`/`U`), optionally filtered with `keyword`. Aliases: `loaded`, `list`, `list-plugins`.                            |
+| `snippets`               | List snippets in formatted and colorized manner. Requires `tree` or a compatible `ZINIT[LIST_COMMAND]`. Aliases: `ls`, `list-snippets`.                  |
 | `recently [time-spec]`   | Show plugins that changed recently, argument is e.g. 1 month 2 days.                                                                                     |
 | `report {plg-spec}`      | Show plugin report. `--all` – do it for all plugins.                                                                                                     |
 | `status {plg-spec}`      | Git status for plugin or svn status for snippet. `--all` – do it for all plugins and snippets.                                                           |
@@ -960,7 +982,8 @@ zinit [options] uncompile PLUGIN
 To update Zinit issue `zinit self-update` in the command line. The changelog is shown in a pager – pass `-n`/`--no-pager` to print it to the terminal instead, or `-q`/`--quiet` to skip it.
 
 To update all plugins and snippets, issue `zinit update`. If you wish to update only a single plugin/snippet instead
-issue `zinit update NAME_OF_PLUGIN`. A list of commits will be shown:
+issue `zinit update NAME_OF_PLUGIN`. A bulk update first runs a quiet `zinit self-update` so the latest Zinit code
+handles the update; a single-object update does not self-update. A list of commits will be shown:
 
 <p align="center">
 <img alt="screenshot displaying zinit update tj/git-extras and its output" src="./doc/img/update.png" />
