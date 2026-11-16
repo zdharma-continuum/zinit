@@ -10,6 +10,64 @@
   zinit default-ice --quiet from'gh-r' lbin'!' null
 }
 
+# Offline tests for release-asset platform selection. These don't download
+# anything; they exercise the same filter used by .zinit-get-latest-gh-r-url-part.
+@test 'gh-r: macOS rejects a Linux-only release asset (#295)' {
+  run .zi::filter-gh-r-assets darwin x86_64 git-absorb-linux-x86_64
+  assert $state equals 1
+  assert "$output" is_empty
+}
+@test 'gh-r: macOS rejects Linux/Windows-only eza assets (#575)' {
+  local -a assets=(
+    aarch64-unknown-linux-gnu-eza
+    x86_64-pc-windows-gnu-eza.exe
+    x86_64-unknown-linux-gnu-eza
+  )
+  run .zi::filter-gh-r-assets darwin x86_64 "${assets[@]}"
+  assert $state equals 1
+  assert "$output" is_empty
+}
+@test 'gh-r: armv7l selects the ARM Linux asset (#352)' {
+  local -a assets=(
+    direnv.darwin-amd64 direnv.darwin-arm64
+    direnv.freebsd-386 direnv.freebsd-amd64 direnv.freebsd-arm
+    direnv.linux-386 direnv.linux-amd64 direnv.linux-arm direnv.linux-arm64
+    direnv.linux-mips direnv.linux-mips64 direnv.linux-mips64le direnv.linux-mipsle
+    direnv.linux-ppc64 direnv.linux-ppc64le direnv.linux-s390x
+    direnv.netbsd-386 direnv.netbsd-amd64 direnv.netbsd-arm
+    direnv.openbsd-386 direnv.openbsd-amd64
+    direnv.windows-386.exe direnv.windows-amd64.exe direnv.windows-arm64.exe
+  )
+  run .zi::filter-gh-r-assets linux armv7 "${assets[@]}"
+  assert $state equals 0
+  assert "$output" same_as 'direnv.linux-arm'
+}
+@test 'gh-r: x86_64 ignores foreign OS and CPU assets' {
+  local -a assets=(tool-darwin-amd64 tool-linux-arm64 tool-linux-amd64)
+  run .zi::filter-gh-r-assets linux x86_64 "${assets[@]}"
+  assert $state equals 0
+  assert "$output" same_as 'tool-linux-amd64'
+}
+@test 'gh-r: arm64 macOS prefers native over the Rosetta fallback' {
+  local -a assets=(tool-x86_64-apple-darwin.tar.gz tool-aarch64-apple-darwin.tar.gz)
+  run .zi::filter-gh-r-assets darwin aarch64 "${assets[@]}"
+  assert $state equals 0
+  local first=${${(f)output}[1]}
+  assert "$first" same_as 'tool-aarch64-apple-darwin.tar.gz'
+  assert "$output" contains 'tool-x86_64-apple-darwin.tar.gz'
+}
+@test 'gh-r: platform-neutral assets remain selectable' {
+  run .zi::filter-gh-r-assets linux x86_64 tool-1.2.3.tar.gz
+  assert $state equals 0
+  assert "$output" same_as 'tool-1.2.3.tar.gz'
+}
+@test 'gh-r: common OS and CPU aliases are recognized' {
+  local -a assets=(tool-win64.zip tool-linux_amd64.tar.gz tool-macosx_arm64.tar.gz)
+  run .zi::filter-gh-r-assets linux x86_64 "${assets[@]}"
+  assert $state equals 0
+  assert "$output" same_as 'tool-linux_amd64.tar.gz'
+}
+
 @test 'act' { # Run your GitHub Actions locally
   run zinit for @nektos/act; assert $state equals 0
   local act="$ZBIN/act"; assert "$act" is_executable

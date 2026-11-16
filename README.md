@@ -628,6 +628,8 @@ zi light junegunn/fzf
 # single version, for OS X, Linux and Windows – so ice-mod `bpick' is used to
 # select Linux package – in this case this is actually not needed, Zinit will
 # grep operating system name and architecture automatically when there's no `bpick'.
+# If no asset is compatible with the current OS/architecture, Zinit stops with an
+# error instead of installing a foreign binary; use `bpick' to override.
 zi ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"
 zi load docker/compose
 
