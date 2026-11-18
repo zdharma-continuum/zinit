@@ -486,11 +486,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 # Functions calls
                 "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_path" "${${key##(zinit|z-annex) hook:}%% <->}" load
                 hook_rc=$?
-                [[ "$hook_rc" -ne 0 ]] && {
+                if [[ "$hook_rc" -ne 0 ]]; then
                     # note: this will effectively return the last != 0 rc
                     retval="$hook_rc"
                     builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                }
+                fi
             done
 
             # Run annexes' atclone hooks (the after atclone-ice ones)
@@ -503,10 +503,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                 "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_path" "${${key##(zinit|z-annex) hook:}%% <->}"
                 hook_rc=$?
-                [[ "$hook_rc" -ne 0 ]] && {
+                if [[ "$hook_rc" -ne 0 ]]; then
                     retval="$hook_rc"
                     builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                }
+                fi
             done
         }
 
@@ -948,10 +948,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                             "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:svn
                             hook_rc=$?
-                            [[ "$hook_rc" -ne 0 ]] && {
+                            if [[ "$hook_rc" -ne 0 ]]; then
                                 retval="$hook_rc"
                                 builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                            }
+                            fi
                         done
 
                         if (( ZINIT[annex-multi-flag:pull-active] == 2 )) {
@@ -1042,10 +1042,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                             "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:url
                             hook_rc="$?"
-                            [[ "$hook_rc" -ne 0 ]] && {
+                            if [[ "$hook_rc" -ne 0 ]]; then
                                 retval="$hook_rc"
                                 builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                            }
+                            fi
                         done
                     }
 
@@ -1102,10 +1102,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                     "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:file
                     hook_rc="$?"
-                    [[ "$hook_rc" -ne 0 ]] && {
+                    if [[ "$hook_rc" -ne 0 ]]; then
                         retval="$hook_rc"
                         builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                    }
+                    fi
                 done
             }
 
@@ -1176,10 +1176,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                 "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:0
                 hook_rc="$?"
-                [[ "$hook_rc" -ne 0 ]] && {
+                if [[ "$hook_rc" -ne 0 ]]; then
                     retval="$hook_rc"
                     builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                }
+                fi
             done
 
             return $retval;
@@ -1197,10 +1197,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                 "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update
                 hook_rc=$?
-                [[ "$hook_rc" -ne 0 ]] && {
+                if [[ "$hook_rc" -ne 0 ]]; then
                     retval="$hook_rc"
                     builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                }
+                fi
             done
         } else {
             # Run annexes' atclone hooks (the before atclone-ice ones)
@@ -1239,10 +1239,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                     "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update
                     hook_rc=$?
-                    [[ "$hook_rc" -ne 0 ]] && {
+                    if [[ "$hook_rc" -ne 0 ]]; then
                         retval="$hook_rc"
                         builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                    }
+                    fi
                 done
             }
 
@@ -1257,12 +1257,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                 "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:$ZINIT[annex-multi-flag:pull-active]
                 hook_rc=$?
-                [[ "$hook_rc" -ne 0 ]] && {
+                if [[ "$hook_rc" -ne 0 ]]; then
                     retval="$hook_rc"
                     builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
-                }
+                fi
             done
         }
+        # 0-3 are pull-active status codes, only 4+ are real errors
+        if (( retval >= 4 )); then
+            return $retval
+        fi
     ) || return $?
 
     typeset -ga INSTALLED_EXECS
