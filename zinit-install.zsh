@@ -1679,11 +1679,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   local padded=" ${name//[^a-z0-9]/ } "
 
   # Checksums, signatures, metadata.
-  [[ $name == *.(sha[0-9](#c1,3)|md5|sum|sig|asc|pem|crt|key|json|jsonl|json5|yaml|yml|toml|txt|md|html|htm|xml|spdx|sbom|intoto|att|bom|vsix) ]] && return 0
+  [[ $name == *.(sha[0-9](#c1,3)|md5|sum|b3sum|sig|asc|pem|crt|key|json|jsonl|json5|yaml|yml|toml|txt|md|html|htm|xml|spdx|sbom|intoto|att|bom|vsix|b3) ]] && return 0
   # Shell/PowerShell/Python installers and helper scripts.
   [[ $name == *.(sh|bash|zsh|fish|ps1|psm1|psd1|bat|cmd|py|rb|pl|php) ]] && return 0
   # Distro packages and OS installers that zinit can't unpack as binaries.
-  [[ $name == *.(deb|rpm|apk|pkg|msi|dmg|nupkg|whl|jar|gem|snap|flatpak|desktop) ]] && return 0
+  # `.dmg' is intentionally allowed: ziextract supports it on macOS via hdiutil.
+  [[ $name == *.(deb|rpm|apk|pkg|msi|nupkg|whl|jar|gem|snap|flatpak|desktop) ]] && return 0
   [[ $name == *.pkg.tar.* ]] && return 0
   [[ $name == *.zst && $name != *.tar.zst ]] && return 0
 

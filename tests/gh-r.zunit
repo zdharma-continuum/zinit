@@ -106,6 +106,19 @@
   run .zi::gh-r-is-junk source.tar.gz; assert $state equals 0
   run .zi::gh-r-is-junk tool-linux-x86_64.tar.gz; assert $state equals 1
 }
+@test 'gh-r: sidecars and dmg installers are handled correctly' {
+  run .zi::gh-r-is-junk watchexec-2.8.0-x86_64-unknown-linux-gnu.deb.b3
+  assert $state equals 0
+  run .zi::gh-r-is-junk watchexec-2.8.0-x86_64-unknown-linux-gnu.tar.xz.b3
+  assert $state equals 0
+  run .zi::gh-r-is-junk Alacritty-v0.17.0.dmg
+  assert $state equals 1
+  run .zi::filter-gh-r-assets darwin aarch64 unknown \
+    Alacritty-v0.17.0.dmg alacritty.1.gz alacritty.bash
+  assert $state equals 0
+  local first=${${(f)output}[1]}
+  assert "$first" same_as 'Alacritty-v0.17.0.dmg'
+}
 
 @test 'act' { # Run your GitHub Actions locally
   run_gh_r for @nektos/act; assert $state equals 0
