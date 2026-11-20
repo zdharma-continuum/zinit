@@ -1454,10 +1454,39 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   esac
   echo "${_sys};${_cpu};${_os}"
 } # ]]]
+# FUNCTION: .zi::get-libc [[[
+# Prints the C library used by the host on Linux: `musl', `glibc' or
+# `unknown'. Release assets that name a libc are ranked by this value so that
+# e.g. an Alpine host prefers a musl build over a glibc build.
+.zi::get-libc () {
+  emulate -L zsh
+  setopt extendedglob noshortloops nowarncreateglobal
+
+  local -a musl_loaders
+
+  if [[ $OSTYPE != linux* && $(uname -s) != Linux ]]; then
+    print -r -- unknown
+    return 0
+  fi
+
+  musl_loaders=( /lib/ld-musl-*.so.1(N) /usr/lib/ld-musl-*.so.1(N) )
+  if (( ${#musl_loaders} )); then
+    print -r -- musl
+  elif (( ${+commands[ldd]} )) && ldd --version 2>&1 | command grep -qi musl; then
+    print -r -- musl
+  elif (( ${+commands[getconf]} )) && getconf GNU_LIBC_VERSION >/dev/null 2>&1; then
+    print -r -- glibc
+  elif (( ${+commands[ldd]} )) && ldd --version 2>&1 | command grep -qi 'gnu libc'; then
+    print -r -- glibc
+  else
+    print -r -- unknown
+  fi
+} # ]]]
 # FUNCTION: .zi::get-platform [[[
 # Prints the host platform as `os;arch'. Unlike .zi::get-architecture, which
 # returns glob fragments for the legacy asset-narrowing loop, these values can
-# be compared with the platform tokens found in release asset names.
+# be compared with the platform tokens found in release asset names. Android
+# (Termux) is reported separately from desktop Linux.
 .zi::get-platform () {
   emulate -L zsh
   setopt extendedglob noshortloops nowarncreateglobal
@@ -1475,6 +1504,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     (AIX) os=aix ;;
     (*) os=unknown ;;
   esac
+
+  if [[ $os == linux && ( $OSTYPE == linux-android* || ${PREFIX:-} == *com.termux* ) ]]; then
+    os=android
+  fi
 
   case "$(uname -m)" in
     (x86_64 | amd64 | x64 | i86pc) arch=x86_64 ;;
@@ -1512,6 +1545,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     os+=(linux)
   fi
   if [[ $padded == *" darwin "* || $padded == *" macos "* || $padded == *" macosx "* ||
+        $padded == *" macos64 "* || $padded == *" macosx64 "* || $padded == *" macos32 "* ||
         $padded == *" mac "* || $padded == *" osx "* || $padded == *" osx64 "* ||
         $padded == *" mac64 "* || $padded == *" apple "* || $padded == *" dmg "* ]]; then
     os+=(darwin)
@@ -1563,12 +1597,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   fi
   if [[ $padded == *" amd64 "* || $padded == *" x64 "* || $padded == *" intel "* ||
         $padded == *" linux64 "* || $padded == *" win64 "* || $padded == *" osx64 "* ||
-        $padded == *" mac64 "* ]]; then
+        $padded == *" mac64 "* || $padded == *" macos64 "* || $padded == *" macosx64 "* ]]; then
     arch+=(x86_64)
   fi
   if [[ $padded == *" 386 "* || $padded == *" i386 "* || $padded == *" i486 "* ||
         $padded == *" i586 "* || $padded == *" i686 "* || $padded == *" i786 "* ||
-        $padded == *" ia32 "* || $padded == *" linux32 "* || $padded == *" win32 "* ]]; then
+        $padded == *" ia32 "* || $padded == *" linux32 "* || $padded == *" win32 "* ||
+        $padded == *" macos32 "* ]]; then
     arch+=(i386)
   fi
   # Bare "x86" means 32-bit, but it is also split out of x86_64 by the token
@@ -1608,6 +1643,62 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
   (( ${#arch} )) && print -rl -- "${arch[@]}"
   return 0
+} # ]]]
+# FUNCTION: .zi::gh-r-asset-libc [[[
+# Prints the C library named by a release asset, one per line. Prints nothing
+# when the asset name doesn't identify a libc.
+.zi::gh-r-asset-libc () {
+  emulate -L zsh
+  setopt extendedglob noshortloops nowarncreateglobal
+
+  local name=${(L)1}
+  local padded=" ${name//[^a-z0-9]/ } "
+  local -a libc
+
+  if [[ $padded == *" musl "* || $padded == *" musleabi"* || $padded == *" muslstatic "* ]]; then
+    libc+=(musl)
+  fi
+  if [[ $padded == *" glibc "* || $padded == *" gnu "* || $padded == *" gnueabi"* ]]; then
+    libc+=(glibc)
+  fi
+
+  (( ${#libc} )) && print -rl -- "${libc[@]}"
+  return 0
+} # ]]]
+# FUNCTION: .zi::gh-r-is-junk [[[
+# Returns 0 when a release asset is not a usable program archive/binary:
+# checksums, signatures, metadata, installers, scripts, distro packages and
+# similar side artifacts. This keeps platform-neutral files such as
+# `tool-1.2.3.tar.gz' selectable while rejecting e.g. `.jsonl' provenance
+# files, PowerShell installers or npm/Python SDK tarballs.
+.zi::gh-r-is-junk () {
+  emulate -L zsh
+  setopt extendedglob noshortloops nowarncreateglobal
+
+  local name=${(L)${1:t}}
+  local padded=" ${name//[^a-z0-9]/ } "
+
+  # Checksums, signatures, metadata.
+  [[ $name == *.(sha[0-9](#c1,3)|md5|sum|sig|asc|pem|crt|key|json|jsonl|json5|yaml|yml|toml|txt|md|html|htm|xml|spdx|sbom|intoto|att|bom|vsix) ]] && return 0
+  # Shell/PowerShell/Python installers and helper scripts.
+  [[ $name == *.(sh|bash|zsh|fish|ps1|psm1|psd1|bat|cmd|py|rb|pl|php) ]] && return 0
+  # Distro packages and OS installers that zinit can't unpack as binaries.
+  [[ $name == *.(deb|rpm|apk|pkg|msi|dmg|nupkg|whl|jar|gem|snap|flatpak|desktop) ]] && return 0
+  [[ $name == *.pkg.tar.* ]] && return 0
+  [[ $name == *.zst && $name != *.tar.zst ]] && return 0
+
+  # Non-binary extras that are often platform-neutral by name.
+  if [[ $padded == *" checksum "* || $padded == *" checksums "* ||
+        $padded == *" b3sums "* || $padded == *" sha256sums "* ||
+        $padded == *" sha512sums "* || $padded == *" dist manifest "* ||
+        $padded == *" source "* || $padded == *" src "* ||
+        $padded == *" sdk "* || $padded == *" completion "* ||
+        $padded == *" completions "* || $padded == *" manpage "* ||
+        $padded == *" manpages "* || $padded == *" choco "* ]]; then
+    return 0
+  fi
+
+  return 1
 } # ]]]
 # FUNCTION: .zi::gh-r-arch-score [[[
 # $1 - host OS, $2 - host arch, $3 - asset arch family. Prints 0 when the
@@ -1654,22 +1745,28 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   return 0
 } # ]]]
 # FUNCTION: .zi::gh-r-asset-score [[[
-# $1 - host OS, $2 - host arch, $3 - release asset. Prints 0 when the asset
-# explicitly targets another platform, otherwise a score where a higher value
-# is a better match. Assets without OS/CPU tokens are platform-neutral and
-# remain candidates.
+# $1 - host OS, $2 - host arch, $3 - host libc, $4 - release asset. Prints 0
+# when the asset explicitly targets another platform, otherwise a score where
+# a higher value is a better match. Assets without OS/CPU/libc tokens are
+# platform-neutral and remain candidates.
 .zi::gh-r-asset-score () {
   emulate -L zsh
   setopt extendedglob noshortloops nowarncreateglobal
-  local host_os=$1 host_arch=$2 name=$3
-  local -a asset_os asset_arch
-  local arch score os_score=1 arch_score=1 best_arch=0
+  local host_os=$1 host_arch=$2 host_libc=$3 name=$4
+  local -a asset_os asset_arch asset_libc
+  local arch score os_score=1 arch_score=1 libc_score=1 best_arch=0
 
   asset_os=( ${(f)"$(.zi::gh-r-asset-os "$name")"} )
   asset_arch=( ${(f)"$(.zi::gh-r-asset-arch "$name")"} )
+  asset_libc=( ${(f)"$(.zi::gh-r-asset-libc "$name")"} )
 
   if [[ $host_os != unknown ]] && (( ${#asset_os} )); then
     (( ${asset_os[(Ie)$host_os]} )) || { print -r -- 0; return 0 }
+    # `linux-android' targets Android, not a desktop Linux userland.
+    if [[ $host_os != android ]] && (( ${asset_os[(Ie)android]} )); then
+      print -r -- 0
+      return 0
+    fi
     os_score=2
   fi
 
@@ -1682,17 +1779,28 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     arch_score=$best_arch
   fi
 
-  print -r -- $(( os_score + arch_score ))
+  # Prefer the host libc when the asset names one. A mismatch is not fatal:
+  # e.g. static Go binaries tagged `gnu' usually still run on musl.
+  if [[ $host_os == linux && $host_libc != unknown ]] && (( ${#asset_libc} )); then
+    if (( ${asset_libc[(Ie)$host_libc]} )); then
+      libc_score=2
+    else
+      libc_score=0
+    fi
+  fi
+
+  print -r -- $(( os_score + arch_score + libc_score ))
   return 0
 } # ]]]
 # FUNCTION: .zi::filter-gh-r-assets [[[
-# $1 - host OS, $2 - host arch, rest - release asset URLs. Prints compatible
-# assets, best match first. Returns 1 when none of the assets are compatible.
+# $1 - host OS, $2 - host arch, $3 - host libc, rest - release asset URLs.
+# Prints compatible assets, best match first. Returns 1 when none of the
+# assets are compatible.
 .zi::filter-gh-r-assets () {
   emulate -L zsh
   setopt extendedglob noshortloops nowarncreateglobal
-  local host_os=$1 host_arch=$2
-  shift 2
+  local host_os=$1 host_arch=$2 host_libc=$3
+  shift 3
   local -a assets scores
   local score found=0 bucket i
 
@@ -1700,14 +1808,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
   assets=( "$@" )
   for (( i = 1; i <= ${#assets}; i++ )); do
-    score=$(.zi::gh-r-asset-score "$host_os" "$host_arch" "${assets[i]}")
+    score=$(.zi::gh-r-asset-score "$host_os" "$host_arch" "$host_libc" "${assets[i]}")
     scores[i]=$score
     (( score > 0 )) && found=1
   done
   (( found )) || return 1
 
-  # Scores range from 2 (neutral OS and CPU) to 5 (exact OS and CPU).
-  for bucket in 5 4 3 2 1; do
+  # Scores range from 2 (neutral OS/CPU, mismatched libc) to 7 (exact
+  # OS/CPU/libc match).
+  for bucket in {7..1}; do
     for (( i = 1; i <= ${#assets}; i++ )); do
       (( scores[i] == bucket )) && print -r -- "${assets[i]}"
     done
@@ -1726,6 +1835,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   parts=(${(@s:;:)$(.zi::get-architecture)})
   local host_platform=$(.zi::get-platform)
   local host_os=${host_platform%%;*} host_arch=${host_platform#*;}
+  local host_libc=$(.zi::get-libc)
   if [[ -z $urlpart ]]; then
     local tag_version=${ICE[ver]}
     if [[ -z $tag_version ]]; then
@@ -1766,20 +1876,30 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         +zi-log "{e} {b}gh-r{rst}: {ice}bpick{rst} ice found no release assets To fix, modify the {ice}bpick{rst} glob pattern {glob}$bpick{rst}"
       fi
     else
-      local junk='*((s(ha256|ig|um)|386|asc|md5|txt|vsix)*|(apk|b3|deb|json|pkg|rpm|sh)(#e))|*.pkg.tar.zst|(*.zst~*.tar.zst)';
-      # print -l ${${(m@)list:#${~junk}}:t}
-      filtered=( ${(m@)list:#(#i)${~junk}} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+      # Drop checksums, signatures, installers, scripts, distro packages and
+      # other side artifacts. Keep the list empty if everything was junk so a
+      # foreign/neutral script is never installed as the program.
+      local asset
+      local -a kept
+      for asset in "${list[@]}"; do
+        .zi::gh-r-is-junk "$asset" || kept+=( "$asset" )
+      done
+      list=( "${kept[@]}" )
 
       # Reject assets that explicitly target another OS or CPU architecture.
       # Without this, the narrowing below silently keeps the unfiltered list
       # when nothing matches and installs a foreign binary.
       if (( $#list > 0 )); then
-        local compatible
-        if { ! compatible=$(.zi::filter-gh-r-assets "$host_os" "$host_arch" "${list[@]}") }; then
-          +zi-log "{e} {b}gh-r{rst}: No release asset is compatible with" \
-                  "{obj}${host_os}/${host_arch}{rst} for {glob}${tag_version:-$url}{rst}." \
+        local compatible rc
+        compatible=$( .zi::filter-gh-r-assets "$host_os" "$host_arch" "$host_libc" "${list[@]}" )
+        rc=$?
+        if (( rc != 0 )); then
+          +zi-log "{u-warn}Warning{b-warn}:{rst} {b}gh-r{rst}: No release asset is" \
+                  "compatible with {obj}${host_os}/${host_arch}${host_libc:+/$host_libc}{rst}" \
+                  "for {glob}${tag_version:-$url}{rst}. Skipping the install." \
                   "Use the {ice}bpick{rst} ice to select an asset explicitly."
-          return 1
+          reply=()
+          return 2
         fi
         list=( ${(f)compatible} )
       fi
