@@ -42,6 +42,7 @@ jobs:
           - ices
           - plugins
           - snippets
+          - svn
         os: [macos, ubuntu]
         include:
           - os: macos

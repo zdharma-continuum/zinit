@@ -775,46 +775,318 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     return 0
 } # ]]]
-# FUNCTION: .zinit-mirror-using-svn [[[
-# Used to clone subdirectories from Github. If in update mode
-# (see $2), then invokes `svn update', in normal mode invokes
-# `svn checkout --non-interactive -q <URL>'. In test mode only
-# compares remote and local revision and outputs true if update
-# is needed.
+# FUNCTION: .zinit-parse-svn-url [[[
+# Splits a Subversion-style repository URL into the git triple used by the
+# directory-snippet backend: the clone URL, the ref to fetch and the
+# sub-directory within the repository.
+#
+# The `/trunk/' segment is kept because it is baked into ZINIT_1MAP, into the
+# on-disk directory names of every existing installation and into the reverse
+# display-mapping. It now simply means: "the default branch, a sub-directory
+# follows".
 #
 # $1 - URL
-# $2 - mode, "" - normal, "-u" - update, "-t" - test
-# $3 - subdirectory (not path) with working copy, needed for -t and -u
-.zinit-mirror-using-svn() {
-    setopt localoptions extendedglob warncreateglobal
-    local url="$1" update="$2" directory="$3"
+# $reply - reply=( repository ref subdirectory )
+.zinit-parse-svn-url() {
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    setopt extendedglob warncreateglobal typesetsilent
 
-    (( ${+commands[svn]} )) || \
-        builtin print -Pr -- "${ZINIT[col-error]}Warning:%f%b Subversion not found" \
-            ", please install it to use \`${ZINIT[col-obj]}svn%f%b' ice."
+    local url=${1%/} repo ref subpath rest marker
 
-    if [[ "$update" = "-t" ]]; then
-        (
-            .zinit-cd-quiet "$directory"
-            local -a out1 out2
-            out1=( "${(f@)"$(LANG=C svn info -r HEAD)"}" )
-            out2=( "${(f@)"$(LANG=C svn info)"}" )
-
-            out1=( "${(M)out1[@]:#Revision:*}" )
-            out2=( "${(M)out2[@]:#Revision:*}" )
-            [[ "${out1[1]##[^0-9]##}" != "${out2[1]##[^0-9]##}" ]] && return 0
-            return 1
-        )
-        return $?
-    fi
-    if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]]; then
-        ( .zinit-cd-quiet "$directory"
-          command svn update
-          return $? )
+    # The split is anchored at the FIRST marker segment: `%%' strips the
+    # longest matching suffix, which leaves the shortest prefix. A greedy
+    # (*)/trunk match would split on the LAST one, so a repository or
+    # sub-directory literally named `trunk' (e.g. OMZP::trunk) would derive a
+    # nonexistent repository URL.
+    #
+    # /branches/ and /tags/ were legal spellings of the retired bridge, so a
+    # hand-written URL in somebody's .zshrc may still use them. Only the first
+    # path segment after the marker is taken as the ref name: a ref containing
+    # a slash cannot be told apart from the sub-directory that follows it
+    # without asking the remote.
+    if [[ $url == */trunk(|/*) ]]; then
+        repo=${url%%/trunk(|/*)} ref=HEAD
+        subpath=${${url#$repo/trunk}#/}
+    elif [[ $url == */(branches|tags)/[^/]##(|/*) ]]; then
+        [[ $url == */tags/* ]] && marker=tags || marker=branches
+        repo=${url%%/$marker/*}
+        rest=${url#$repo/$marker/}
+        ref=refs/${marker/branches/heads}/${rest%%/*}
+        subpath=${${rest#${rest%%/*}}#/}
+    elif [[ $url == */(tree|blob)/* ]]; then
+        # GitHub "tree" URLs are a convenient way to point at a sub-directory.
+        # A blob URL is parsed too, so that the type check below can report a
+        # helpful "this is a file" error instead of a confusing fetch failure.
+        repo=${url%%/(tree|blob)/*}
+        rest=${url#$repo/(tree|blob)/}
+        ref=${rest%%/*}
+        subpath=${${rest#${rest%%/*}}#/}
     else
-        command svn checkout --non-interactive -q "$url" "$directory"
+        repo=$url ref=HEAD subpath=
     fi
-    return $?
+
+    typeset -ga reply
+    reply=( "$repo" "$ref" "$subpath" )
+    return 0
+} # ]]]
+# FUNCTION: .zinit-mirror-using-git [[[
+# Downloads a sub-directory of a repository. The public `svn' ice keeps its
+# name for backward compatibility, but it is now implemented with native git –
+# GitHub retired its Subversion bridge on 2024-01-08.
+#
+# A plain sparse-checkout cannot be used: cone mode also materializes the
+# repository root (zinit would then source e.g. Oh-My-Zsh's own oh-my-zsh.sh),
+# and no sparse mode strips the leading path, so the payload would land nested
+# at $directory/<subpath>/ instead of flat. Instead the sub-directory's *tree*
+# object is committed as a root commit and checked out, which reproduces the
+# flat layout `svn checkout' gave, with a clean `git status'.
+#
+# $1 - URL
+# $2 - "-t" to only test whether an update is available, "" to download
+# $3 - path of the working copy; absolute, so that neither the caller's cwd nor
+#      an ice that moves it can redirect git somewhere else
+#
+# Returns 0 on success, 4 on error, 5 when an update was skipped because the
+# working copy has local modifications (in which case nothing was changed).
+.zinit-mirror-using-git() {
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    setopt extendedglob warncreateglobal typesetsilent noautopushd
+
+    local url="$1" update="$2" directory="$3"
+    local -x GIT_TERMINAL_PROMPT=0
+
+    # `git config' is the one git command that honours GIT_CONFIG, and when it
+    # is set it fills the same slot as `--file': the write goes to the file it
+    # names – typically the user's own configuration – whatever `-C' says.  The
+    # rest are exported into every shell git itself spawns (hooks, `rebase
+    # --exec'), and would aim this function's plumbing at that repository
+    # instead. `local' without -x hides them from the git processes below.
+    local GIT_CONFIG GIT_CONFIG_PARAMETERS GIT_CONFIG_COUNT \
+        GIT_DIR GIT_COMMON_DIR GIT_WORK_TREE GIT_INDEX_FILE \
+        GIT_OBJECT_DIRECTORY GIT_ALTERNATE_OBJECT_DIRECTORIES
+
+    # The snippet directory is zinit's bookkeeping, not a checkout the user
+    # configured, so their sparse-checkout, hooks and fsck strictness don't
+    # apply to it – fsck because zinit mirrors third-party repositories that
+    # don't necessarily pass it (same as .zinit-setup-plugin-dir).
+    local -a gitopts=(
+        -c core.sparseCheckout=false -c core.hooksPath=/dev/null
+        -c core.autocrlf=false -c core.eol=lf
+        -c fetch.fsckobjects=false -c transfer.fsckobjects=false
+        -c receive.fsckobjects=false
+    )
+
+    (( ${+commands[git]} )) || {
+        +zi-log "{ehi}ERROR:{error} Git not found, it is required by the" \
+            "{apo}\`{ice}svn{apo}\`{error} ice.{rst}"
+        # In -t mode 0 means "an update is available"; anything else reads as
+        # "up to date" and would swallow this failure silently.
+        [[ $update = -t ]] && return 0 || return 4
+    }
+
+    .zinit-parse-svn-url "$url"
+    local repo="$reply[1]" ref="$reply[2]" subpath="$reply[3]"
+
+    # Is an update available? One ref-advertisement round trip, no objects.
+    # The freshly parsed $repo is queried rather than the stored remote, so a
+    # snippet re-pointed at a fork (teleid'') isn't compared against its old
+    # upstream and then reported as up to date forever. A directory without
+    # .git is a Subversion-era working copy or an aborted download – both need
+    # a full download. That guard doubles as a safety belt: `git -C' on a
+    # directory that has no repository of its own walks up to the enclosing one.
+    if [[ $update = -t ]]; then
+        [[ -d $directory/.git ]] || return 0
+        command git -C "$directory" rev-parse -q --verify HEAD &>/dev/null || return 0
+        # The intermediate array matters: in ${${(f)…}[1]} the subscript would
+        # index characters, not lines, and yield the sha's first digit.
+        local -a advertised
+        local remote_sha local_sha
+        advertised=( ${(f)"$(command git $gitopts ls-remote --quiet "$repo" "$ref" 2>/dev/null)"} )
+        remote_sha=${advertised[1]%%[[:space:]]*}
+        local_sha=$(command git -C "$directory" rev-parse -q --verify refs/zinit/upstream 2>/dev/null)
+        [[ -z $remote_sha || $remote_sha != $local_sha ]]
+        return
+    fi
+
+    # A failed *first* download must leave nothing behind, so that the caller's
+    # rmdir cleanup isn't defeated by .git and no ._zinit metadata is written
+    # for a snippet that doesn't exist. A failed migration of an existing
+    # Subversion working copy, on the other hand, must keep the old files – the
+    # `.svn' directory is only removed after a successful checkout.
+    integer fresh=0 created_git=0 applied=0 skipped=0 ret=0
+    [[ -e $directory ]] || fresh=1
+    [[ -e $directory/.git ]] || created_git=1
+
+    {
+        command mkdir -p "$directory" || return 4
+
+        if (( ! fresh )) && [[ -d $directory/.svn ]]; then
+            +zi-log "{msg2}Migrating {file}${directory:t}{msg2} from Subversion to git{…}{rst}" \
+                "{nl}{note}Note:{rst} local modifications to tracked files are overwritten;" \
+                "files removed upstream since the last update may linger as untracked."
+        fi
+
+        # `init' creates $directory and is idempotent. The guard is what keeps
+        # every `git -C' below inside the snippet: on a directory that has no
+        # repository of its own, `-C' walks up to the *enclosing* one.
+        command git $gitopts -c init.templateDir= init -q "$directory" || return 4
+        [[ -e $directory/.git ]] || return 4
+
+        # zinit's own bookkeeping is untracked by construction; without this
+        # `git status' (and so `zinit status') reports every pristine snippet
+        # as dirty, hiding the files the user actually changed. The mkdir is
+        # needed because an empty init.templateDir leaves no .git/info.
+        command mkdir -p "$directory/.git/info" && \
+            builtin print -rl -- '._zinit/' '._zplugin/' '.svn/' '*.zwc' \
+                >! "$directory/.git/info/exclude"
+
+        # `git config' is avoided on purpose (see the GIT_CONFIG note above);
+        # `git remote' writes the repository's own config and nothing else.
+        # set-url fails when the remote is absent, add when it is present.
+        command git -C "$directory" remote set-url origin "$repo" 2>/dev/null || \
+            command git -C "$directory" remote add origin "$repo" || return 4
+
+        # Remember where the upstream ref pointed before this attempt. If the
+        # fetch succeeds but the update is skipped or fails, the ref must go
+        # back – otherwise the next `-t' probe would compare the *new* remote
+        # sha with the already-updated ref and report "up to date", losing the
+        # update (and the chance to run reset''/-r before it).
+        local old_upstream
+        old_upstream=$(command git -C "$directory" rev-parse -q --verify refs/zinit/upstream 2>/dev/null)
+
+        local fetch_out
+        if ! fetch_out=$(command git -C "$directory" $gitopts \
+                fetch -q --depth=1 --filter=blob:none --no-tags origin \
+                "+${ref}:refs/zinit/upstream" 2>&1); then
+            # Some servers don't support partial clone; a plain shallow fetch is
+            # still much cheaper than cloning the whole repository.
+            if ! fetch_out=$(command git -C "$directory" $gitopts \
+                    fetch -q --depth=1 --no-tags origin \
+                    "+${ref}:refs/zinit/upstream" 2>&1); then
+                # Finally, servers that reject shallow requests altogether.
+                if ! fetch_out=$(command git -C "$directory" $gitopts \
+                        fetch -q --no-tags origin \
+                        "+${ref}:refs/zinit/upstream" 2>&1); then
+                    +zi-log "{ehi}ERROR:{error} Couldn't fetch {url}$repo{error}.{rst}"
+                    [[ -n $fetch_out ]] && builtin print -r -- "$fetch_out"
+                    return 4
+                fi
+            fi
+        fi
+
+        # Resolve the sub-directory's tree object. `git sparse-checkout set'
+        # accepts a non-existent path and silently produces an empty working
+        # tree – rev-parse fails cleanly instead, so the error can be reported
+        # and the directory removed before any ._zinit metadata is written.
+        local tree parent cdate commit
+        tree=$(command git -C "$directory" rev-parse -q --verify \
+            "refs/zinit/upstream^{tree}${subpath:+:$subpath}" 2>/dev/null) || {
+            +zi-log "{ehi}ERROR:{error} The path {file}${subpath:-/}{error} doesn't exist in" \
+                "{url}$repo{error}.{rst}"
+            return 4
+        }
+        if [[ $(command git -C "$directory" cat-file -t "$tree" 2>/dev/null) != tree ]]; then
+            +zi-log "{ehi}ERROR:{error} The path {file}$subpath{error} is a file, not a" \
+                "directory – drop the {apo}\`{ice}svn{apo}\`{error} ice to download it.{rst}"
+            return 4
+        fi
+
+        local head_tree old_head
+        (( fresh )) || head_tree=$(command git -C "$directory" rev-parse -q --verify 'HEAD^{tree}' 2>/dev/null)
+        (( fresh )) || old_head=$(command git -C "$directory" rev-parse -q --verify HEAD 2>/dev/null)
+
+        # An unchanged sub-tree is a no-op. This keeps a forced re-download
+        # from minting a commit per run and, importantly, means local edits are
+        # untouched when upstream didn't move.
+        if [[ -n $head_tree && $head_tree = $tree ]]; then
+            [[ -d $directory/.svn ]] && command rm -rf -- "$directory/.svn"
+            return 0
+        fi
+
+        # Don't silently discard edits to tracked files on an update. `reset''`
+        # or `zinit update -r` is the explicit way to throw them away. Only
+        # applies when there is a HEAD: a Subversion-era working copy has none.
+        if [[ -n $head_tree ]] && \
+            ! command git -C "$directory" diff-index --quiet HEAD -- 2>/dev/null
+        then
+            +zi-log "{warn}WARNING:{msg2} {file}${directory:t}{msg2} has local modifications;" \
+                "skipping the update. Use {cmd}reset''{msg2} or {cmd}zinit update -r{msg2}" \
+                "to discard them.{rst}"
+            skipped=1
+            return 5
+        fi
+
+        # Commit the sub-tree as the root tree, so that the checkout is flat.
+        # Each update chains onto the previous commit, so `git log' inside a
+        # snippet directory shows what changed.
+        (( fresh )) || parent="$old_head"
+        if (( fresh )) || [[ $head_tree != $tree ]]; then
+            # ^{commit} is required: for an annotated tag (what /tags/ URLs
+            # normally point at) `show -s --format' prints the whole tag header
+            # block first, and commit-tree would reject that as the date.
+            cdate=$(command git -C "$directory" show -s --format=%cI \
+                'refs/zinit/upstream^{commit}' 2>/dev/null)
+            [[ -n $cdate ]] || cdate=$(command date -u +%Y-%m-%dT%H:%M:%SZ)
+            commit=$(GIT_AUTHOR_DATE=$cdate GIT_COMMITTER_DATE=$cdate \
+                command git -C "$directory" -c user.name=zinit -c user.email=zinit@localhost \
+                -c commit.gpgsign=false \
+                commit-tree "$tree" ${parent:+-p} $parent \
+                -m "zinit: ${repo:t}${subpath:+ $subpath}") || return 4
+            command git -C "$directory" update-ref HEAD "$commit" || return 4
+            # Only when the sub-tree actually moved. `checkout -f' discards
+            # local modifications to tracked files, so running it on every
+            # update would silently revert a user's edits even when upstream
+            # hasn't changed – destroying them is `reset''/-r's job, not this.
+            # The diff-index check above already refuses a normal update with
+            # modified tracked files; `-f' is needed because HEAD was moved
+            # behind the index's back by update-ref.
+            command git -C "$directory" $gitopts checkout -q -f || return 4
+            applied=1
+        fi
+
+        # The migration is complete only now: the old Subversion metadata is
+        # useless and would confuse directory-snippet detection.
+        [[ -d $directory/.svn ]] && command rm -rf -- "$directory/.svn"
+        return 0
+    } always {
+        ret=$?
+        if (( ret )); then
+            if (( fresh )); then
+                command rm -rf -- "$directory"
+            else
+                # Roll the working copy and the upstream ref back, so that the
+                # next attempt still sees the pending update. A skipped update
+                # must keep the user's edits, so it resets the ref only.
+                if (( ! applied && ! skipped )) && [[ -n $old_head ]] && [[ -d $directory/.git ]]; then
+                    command git -C "$directory" reset -q --hard "$old_head" 2>/dev/null
+                fi
+                if (( ! applied )) && [[ -d $directory/.git ]]; then
+                    if [[ -n $old_upstream ]]; then
+                        command git -C "$directory" update-ref refs/zinit/upstream \
+                            "$old_upstream" 2>/dev/null
+                    else
+                        command git -C "$directory" update-ref -d refs/zinit/upstream 2>/dev/null
+                    fi
+                fi
+                if (( created_git )); then
+                    # Keep the files of an existing (e.g. Subversion-era)
+                    # snippet; only remove the half-initialized repository.
+                    command rm -rf -- "$directory/.git"
+                fi
+            fi
+        fi
+    }
+    return $ret
+} # ]]]
+# FUNCTION: .zinit-mirror-using-svn [[[
+# Backward-compatible name for the directory-snippet backend. It no longer
+# invokes Subversion; see .zinit-mirror-using-git.
+#
+# $1 - URL
+# $2 - "-t" to only test for an update, otherwise download/update
+# $3 - path of the working copy
+.zinit-mirror-using-svn() {
+    .zinit-mirror-using-git "$@"
 } # ]]]
 # FUNCTION: .zinit-forget-completion [[[
 # Implements alternation of Zsh state so that already initialized
@@ -846,10 +1118,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # FUNCTION: .zinit-download-snippet [[[
 # Downloads snippet
 #   file – with curl, wget, lftp or lynx,
-#   directory, with Subversion – when svn-ICE is active.
+#   directory – when the svn-ICE is active, via .zinit-mirror-using-git.
 #
-#   Github supports Subversion protocol and allows to clone subdirectories.
-#   This is used to provide a layer of support for Oh-My-Zsh and Prezto.
+#   The historical `svn' ice now downloads a repository sub-directory with
+#   native git. This is used to provide a layer of support for Oh-My-Zsh and
+#   Prezto, and no Subversion binary is required.
+#
+# Returns 4 on error; 0-3 otherwise, carrying the annexes' pull-active level
+# (see the ZINIT[annex-multi-flag:pull-active] comment in the body). Both
+# callers – .zinit-load-snippet and .zinit-update-snippet – rely on that split.
 .zinit-download-snippet() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent
@@ -865,6 +1142,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         local sname=${(M)teleid_clean##*://[^/]##(/[^/]##)(#c0,4)} || \
         local sname=${${teleid_clean:h}:t}/${teleid_clean:t}
     [[ $sname = */trunk* ]] && sname=${${ICE[teleid]%%/trunk*}:t}/${ICE[teleid]:t}
+    [[ -z $sname ]] && sname=${teleid_clean:t}
     sname=${sname#./}
 
     if (( ${+ICE[svn]} )) {
@@ -917,16 +1195,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     ZINIT[annex-multi-flag:pull-active]=${${${(M)update:#-u}:+${ZINIT[annex-multi-flag:pull-active]}}:-2}
 
     (
-        if [[ $url = (ftp(|s)|http(|s)|scp)://* ]] {
+        if [[ $url = (ftp(|s)|http(|s)|scp)://* ||
+              ( ${+ICE[svn]} -eq 1 && ( $url = (file|ssh|git)://* || $url = *@*:* ) ) ]] {
             (
                 .zinit-cd-quiet "$local_dir" || return 4
 
-                (( !OPTS[opt_-q,--quiet] )) && +zi-log "{i} Downloading {file}$sname{rst} ${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{rst}"
+                (( !OPTS[opt_-q,--quiet] )) && +zi-log "{i} Downloading {file}$sname{rst} ${${ICE[svn]+" (with git)"}:-" (with curl, wget, lftp)"}{rst}"
 
                 if (( ${+ICE[svn]} )) {
                     if [[ $update = -u ]] {
                         # Test if update available
-                        if ! .zinit-mirror-using-svn "$url" "-t" "$dirname"; then
+                        if ! .zinit-mirror-using-git "$url" "-t" "$local_dir/$dirname"; then
                             if (( ${+ICE[run-atpull]} || OPTS[opt_-u,--urge] )) {
                                 ZINIT[annex-multi-flag:pull-active]=1
                             } else { return 0; } # Will return when no updates so atpull''
@@ -938,7 +1217,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                         fi
 
                         # Run annexes' atpull hooks (the before atpull-ice ones).
-                        # The SVN block.
+                        # The directory-snippet block.
                         reply=(
                             ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]}
                             ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
@@ -961,15 +1240,28 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                             if (( OPTS[opt_-q,--quiet] )); then
                                 local id_msg_part="{…} (identified as{ehi}: {id-as}$id_as{rst})"
                                 +zi-log "{nl}{info2}Updating snippet {url}${sname}{rst}${ICE[id-as]:+$id_msg_part}"
-                                +zi-log "Downloading {apo}\`{rst}$sname{apo}\`{rst} (with Subversion){…}"
+                                +zi-log "Downloading {apo}\`{rst}$sname{apo}\`{rst} (with git){…}"
                             fi
-                            .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 4
+                            integer mirror_rc
+                            .zinit-mirror-using-git "$url" "-u" "$local_dir/$dirname"
+                            mirror_rc=$?
+                            if (( mirror_rc == 5 )); then
+                                # Local modifications – nothing was changed;
+                                # don't run the post-update hooks either.
+                                ZINIT[annex-multi-flag:pull-active]=0
+                                return 0
+                            fi
+                            (( mirror_rc == 0 )) || return 4
                         }
                     } else {
-                        .zinit-mirror-using-svn "$url" "" "$dirname" || return 4
+                        integer mirror_rc
+                        .zinit-mirror-using-git "$url" "" "$local_dir/$dirname"
+                        mirror_rc=$?
+                        (( mirror_rc == 5 )) && mirror_rc=0
+                        (( mirror_rc == 0 )) || return 4
                     }
 
-                    # Redundant code, just to compile SVN snippet
+                    # Redundant code, just to compile the directory snippet
                     if [[ ${ICE[as]} != command ]]; then
                         if [[ -n ${ICE[pick]} ]]; then
                             list=( ${(M)~ICE[pick]##/*}(DN) $local_dir/$dirname/${~ICE[pick]}(DN) )
@@ -2041,10 +2333,31 @@ zimv() {
         }
         if [[ $type == snippet ]] {
             if (( $+ICE[svn] )) {
-                if [[ $skip_pull -eq 0 && -d $filename/.svn ]] {
-                    (( !OPTS[opt_-q,--quiet] )) && +zi-log "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) with command: {rst}svn revert --recursive {…}/{file}$filename/.{rst} {…}"
-                    command svn revert --recursive $filename/.
-                }
+                # $dir is the correctly-scoped snippet directory; using it also
+                # keeps `git -C' from walking up into an enclosing repository.
+                # A subshell, not an anonymous function: the latter scopes
+                # options and locals but not $PWD, so both the cd and whatever
+                # `reset'' evaluates to would move the caller.
+                #
+                # The hook is registered twice – once for -r/--reset and once
+                # for the reset'' ice – so with -r given the body runs on both
+                # passes. $option distinguishes them: without it the user's
+                # reset'' code would be evaluated twice and the hard reset -r
+                # promises would never run.
+                if [[ ${skip_pull:-0} -eq 0 && -d $dir/.git ]] && \
+                    command git -C "$dir" rev-parse -q --verify HEAD &>/dev/null
+                then
+                    if (( option )); then
+                        (( !OPTS[opt_-q,--quiet] )) && +zi-log "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} git reset --hard HEAD {…}"
+                        command git -C "$dir" reset -q --hard HEAD
+                    else
+                        (( !OPTS[opt_-q,--quiet] )) && +zi-log "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} ${ICE[reset]:-git reset --hard HEAD} {…}"
+                        ( builtin cd -q "$dir" && builtin eval "${ICE[reset]:-command git reset -q --hard HEAD}" )
+                    fi
+                elif [[ ${skip_pull:-0} -eq 0 && -d $dir/.svn ]]; then
+                    +zi-log "{pre}reset ($msg_bit): {msg2}Skipping – {file}${dir:t}{msg2} hasn't been migrated" \
+                        "from Subversion yet; it will be re-downloaded by this update.{rst}"
+                fi
             } else {
                 if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
                     if (( !OPTS[opt_-q,--quiet] )) {
