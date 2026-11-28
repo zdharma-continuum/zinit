@@ -1512,6 +1512,12 @@ builtin setopt noaliases
         retval=$?
     }
 
+    # 4 is .zinit-download-snippet's error code; any other non-zero value is
+    # the annex pull-active flag, i.e. a successful download. Restricted to the
+    # svn'' ice on purpose: the single-file paths also use 4 for a failed
+    # zcompile or copy, and those have always been non-fatal to `zinit snippet'.
+    (( retval == 4 && ${+ICE[svn]} )) && return 1
+
     (( ${+ICE[cloneonly]} || retval )) && return 0
 
     ZINIT_SNIPPETS[$id_as]="$id_as <${${ICE[svn]+svn}:-single file}>"
@@ -1598,7 +1604,7 @@ builtin setopt noaliases
     elif [[ -n ${opts[(r)--command]} || ${ICE[as]} = command ]]; then
         [[ ${+ICE[pick]} = 1 && -z ${ICE[pick]} ]] && \
             ICE[pick]="${id_as:t}"
-        # Subversion - directory and multiple files possible.
+        # Directory snippet - multiple files possible.
         if (( ${+ICE[svn]} )); then
             if [[ -n ${ICE[pick]} ]]; then
                 list=( ${(M)~ICE[pick]##/*}(DN) $local_dir/$dirname/${~ICE[pick]}(DN) )

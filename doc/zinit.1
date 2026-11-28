@@ -530,10 +530,12 @@ zinit snippet OMZP::ruby
 .fi
 .PP
 Use \f[C]zinit ice svn\f[R] if multiple files require an entire
-subdirectory.
+subdirectory. Despite the historical name, this is implemented with
+native git; no \f[C]svn\f[R] binary is required (GitHub retired its
+Subversion bridge on 2024-01-08).
 Like
 gitfast (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitfast),
-osx (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/osx):
+macos (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/macos):
 .IP
 .nf
 \f[C]
@@ -541,7 +543,7 @@ zinit ice svn
 zinit snippet OMZP::gitfast
 
 zinit ice svn
-zinit snippet OMZP::osx
+zinit snippet OMZP::macos
 \f[R]
 .fi
 .PP
@@ -603,8 +605,8 @@ zinit snippet PZTM::terminal
 \f[R]
 .fi
 .PP
-Use \f[C]zinit ice svn\f[R] if multiple files require an entire
-subdirectory.
+Use \f[C]zinit ice svn\f[R] (a git-backed directory checkout) if
+multiple files require an entire subdirectory.
 Like
 docker (https://github.com/sorin-ionescu/prezto/tree/master/modules/docker),
 git (https://github.com/sorin-ionescu/prezto/tree/master/modules/git):

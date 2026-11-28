@@ -1,0 +1,380 @@
+#!/usr/bin/env zunit
+#
+# Coverage for the `svn'' ice – directory (sub-directory) snippets.
+#
+# GitHub retired its Subversion bridge in January 2024. The ice keeps its
+# name, but is implemented on top of native git: a blobless, depth-1 fetch
+# whose sub-tree is checked out at the working-tree root. These tests pin down
+# the on-disk contract and the load semantics using local `file://' fixtures,
+# so they never touch the network.
+#
+# ERR_EXIT
+#   zunit runs every @test body with `setopt ERR_EXIT'. Several zinit entry
+#   points return non-zero on success – `zinit light' returns 1 on the first
+#   load of a shell, `zinit update <id>' returns 1 even when it worked – and a
+#   bare `zinit ice svn' aborts the test with no output at all. So every
+#   zinit invocation below is either wrapped in `run' or placed in an `||'
+#   list.
+
+@setup {
+  typeset -gx HOME="$zi_test_dir"
+
+  # The download backend lives in zinit-install.zsh, which is sourced lazily.
+  (( ${+functions[.zinit-mirror-using-git]} )) || \
+    builtin source "$ZINIT[BIN_DIR]/zinit-install.zsh"
+
+  function _zunit_assert_not_exists() {
+    [[ ! -e $1 ]] && return 0
+    echo "'$1' exists but should not"
+    exit 1
+  }
+
+  # Creates an isolated bare repository with a multi-file sub-directory, a
+  # tag and a branch. Prints the bare repository path (the only output).
+  make_repo() {
+    local name=$1
+    local f="$zi_test_dir/svn-fixtures/$name"
+
+    command rm -rf -- "$f"
+    command mkdir -p "$f"
+    command git init --bare -q "$f/remote.git" || return 1
+    command git clone -q "$f/remote.git" "$f/work" 2>/dev/null || return 1
+
+    (
+      builtin cd -q "$f/work" || exit 1
+      command mkdir -p plugins/foo
+      builtin print -r -- 'builtin print -r -- "foo plugin"' > plugins/foo/foo.plugin.zsh
+      builtin print -r -- 'builtin print -r -- "foo helper"' > plugins/foo/helper.zsh
+      builtin print -r -- 'builtin print -r -- "foo pick"' > plugins/foo/picked.zsh
+      builtin print -r -- 'builtin print -r -- "foo src"' > plugins/foo/src.zsh
+      builtin print -r -- 'builtin print -r -- "foo multi1"' > plugins/foo/multi1.zsh
+      builtin print -r -- 'builtin print -r -- "foo multi2"' > plugins/foo/multi2.zsh
+      builtin print -r -- 'readme' > README.md
+
+      command git add -A || exit 1
+      command git -c user.name=zinit -c user.email=zinit@example.com \
+        commit -q -m initial || exit 1
+      command git -c user.name=zinit -c user.email=zinit@example.com \
+        tag -a v1 -m v1 || exit 1
+      command git push -q origin HEAD:main --tags || exit 1
+
+      command git checkout -q -b dev || exit 1
+      builtin print -r -- 'builtin print -r -- "foo dev"' > plugins/foo/foo.plugin.zsh
+      command git add -A || exit 1
+      command git -c user.name=zinit -c user.email=zinit@example.com \
+        commit -q -m dev || exit 1
+      command git push -q origin dev || exit 1
+    ) >/dev/null 2>&1 || return 1
+
+    command git -C "$f/remote.git" symbolic-ref HEAD refs/heads/main || return 1
+    builtin print -r -- "$f/remote.git"
+  }
+
+  # $1 - id-as, $2 - bare repo path, $3 - extra ice string (optional)
+  install_foo() {
+    local -a extra
+    [[ -n $3 ]] && eval "extra=($3)"
+    zinit ice svn id-as"$1" nocompile "${extra[@]}" || true
+    zinit snippet "file://$2/trunk/plugins/foo"
+  }
+
+  # $1 - id-as, $2 - bare repo path, $3 - extra ice string, $4 - sub-directory
+  install_path() {
+    local -a extra
+    [[ -n $3 ]] && eval "extra=($3)"
+    zinit ice svn id-as"$1" nocompile "${extra[@]}" || true
+    zinit snippet "file://$2/trunk/$4"
+  }
+
+  cleanup_snippet() {
+    zinit delete --yes "$1" &>/dev/null || true
+  }
+
+  cleanup_repo() {
+    command rm -rf -- "$zi_test_dir/svn-fixtures/$1"
+  }
+}
+
+@test 'svn: downloads a repository subdirectory flat' {
+  local repo id="svn-flat-$RANDOM" dir
+  repo=$(make_repo flat) || { echo 'fixture failed'; exit 1; }
+
+  run install_foo "$id" "$repo"
+  assert $state equals 0
+
+  dir="$ZINIT[SNIPPETS_DIR]/$id"
+  assert "$dir/foo.plugin.zsh" is_file
+  assert "$dir/helper.zsh" is_file
+  assert "$dir/plugins" not_exists
+  assert "$(<$dir/._zinit/mode)" same_as '1'
+  assert "$dir/._zinit/svn" is_file
+
+  cleanup_snippet "$id"
+  cleanup_repo flat
+}
+
+@test 'svn: pick and src source only the selected files' {
+  local repo id="svn-pick-$RANDOM"
+  repo=$(make_repo pick) || { echo 'fixture failed'; exit 1; }
+
+  run install_foo "$id" "$repo" "pick'picked.zsh' src'src.zsh'"
+  assert $state equals 0
+
+  assert "$output" contains 'foo pick'
+  assert "$output" contains 'foo src'
+  assert "$output" does_not_contain 'foo plugin'
+  assert "$output" does_not_contain 'foo helper'
+
+  cleanup_snippet "$id"
+  cleanup_repo pick
+}
+
+@test 'svn: multisrc sources the requested files' {
+  local repo id="svn-multi-$RANDOM"
+  repo=$(make_repo multi) || { echo 'fixture failed'; exit 1; }
+
+  run install_foo "$id" "$repo" "pick'picked.zsh' multisrc'multi1.zsh multi2.zsh'"
+  assert $state equals 0
+
+  assert "$output" contains 'foo pick'
+  assert "$output" contains 'foo multi1'
+  assert "$output" contains 'foo multi2'
+  assert "$output" does_not_contain 'foo helper'
+
+  cleanup_snippet "$id"
+  cleanup_repo multi
+}
+
+@test 'svn: tag, branch and tree URLs are supported' {
+  local repo root="$zi_test_dir/svn-refs-$RANDOM"
+  repo=$(make_repo refs) || { echo 'fixture failed'; exit 1; }
+  command rm -rf -- "$root"
+  command mkdir -p "$root"
+
+  run .zinit-mirror-using-git "file://$repo/tags/v1/plugins/foo" "" "$root/tag"
+  assert $state equals 0
+  assert "$(<$root/tag/foo.plugin.zsh)" contains 'foo plugin'
+
+  run .zinit-mirror-using-git "file://$repo/branches/dev/plugins/foo" "" "$root/branch"
+  assert $state equals 0
+  assert "$(<$root/branch/foo.plugin.zsh)" contains 'foo dev'
+
+  run .zinit-mirror-using-git "file://$repo/tree/main/plugins/foo" "" "$root/tree"
+  assert $state equals 0
+  assert "$(<$root/tree/foo.plugin.zsh)" contains 'foo plugin'
+
+  # A tag does not move, so the update probe must report "up to date".
+  run .zinit-mirror-using-git "file://$repo/tags/v1/plugins/foo" "-t" "$root/tag"
+  assert $state equals 1
+
+  command rm -rf -- "$root"
+  cleanup_repo refs
+}
+
+@test 'svn: zinit update downloads new commits' {
+  local repo id="svn-update-$RANDOM" dir
+  repo=$(make_repo update) || { echo 'fixture failed'; exit 1; }
+  dir="$ZINIT[SNIPPETS_DIR]/$id"
+
+  run install_foo "$id" "$repo"
+  assert $state equals 0
+  assert "$(<$dir/foo.plugin.zsh)" contains 'foo plugin'
+
+  (
+    builtin cd -q "$repo/../work" || exit 1
+    builtin print -r -- 'builtin print -r -- "foo v2"' > plugins/foo/foo.plugin.zsh
+    builtin print -r -- 'new' > plugins/foo/new.zsh
+    command git add -A || exit 1
+    command git -c user.name=zinit -c user.email=zinit@example.com \
+      commit -q -m second || exit 1
+    command git push -q origin HEAD:main || exit 1
+  ) >/dev/null 2>&1 || { echo 'upstream update failed'; exit 1; }
+
+  # `zinit update <id>' returns 1 even on a successful update.
+  run zinit update "$id"
+  assert "$output" contains 'Updating snippet'
+  assert "$(<$dir/foo.plugin.zsh)" contains 'foo v2'
+  assert "$dir/new.zsh" is_file
+  assert "$(<$dir/._zinit/mode)" same_as '1'
+
+  cleanup_snippet "$id"
+  cleanup_repo update
+}
+
+@test 'svn: zinit status reports clean, modified and pre-git snippets' {
+  local repo id="svn-status-$RANDOM" dir
+  repo=$(make_repo status) || { echo 'fixture failed'; exit 1; }
+  dir="$ZINIT[SNIPPETS_DIR]/$id"
+
+  run install_foo "$id" "$repo"
+  assert $state equals 0
+
+  run zinit status "$id"
+  assert "$output" contains 'Status for'
+  assert "$output" contains 'Up to date.'
+
+  builtin print -r -- 'builtin print -r -- "local edit"' > "$dir/foo.plugin.zsh"
+  run zinit status "$id"
+  assert "$output" contains ' M foo.plugin.zsh'
+
+  command rm -rf -- "$dir/.git"
+  command mkdir -p "$dir/.svn"
+  run zinit status "$id"
+  assert "$output" contains 'Not migrated from Subversion'
+
+  cleanup_snippet "$id"
+  cleanup_repo status
+}
+
+@test 'svn: update -r discards local modifications' {
+  local repo id="svn-reset-$RANDOM" dir
+  repo=$(make_repo reset) || { echo 'fixture failed'; exit 1; }
+  dir="$ZINIT[SNIPPETS_DIR]/$id"
+
+  run install_foo "$id" "$repo"
+  assert $state equals 0
+
+  builtin print -r -- 'builtin print -r -- "local edit"' > "$dir/foo.plugin.zsh"
+  (
+    builtin cd -q "$repo/../work" || exit 1
+    builtin print -r -- 'builtin print -r -- "foo v2"' > plugins/foo/foo.plugin.zsh
+    command git add -A || exit 1
+    command git -c user.name=zinit -c user.email=zinit@example.com \
+      commit -q -m second || exit 1
+    command git push -q origin HEAD:main || exit 1
+  ) >/dev/null 2>&1 || { echo 'upstream update failed'; exit 1; }
+
+  run zinit update -r "$id"
+  assert "$output" contains 'Resetting the repository'
+  assert "$(<$dir/foo.plugin.zsh)" contains 'foo v2'
+
+  cleanup_snippet "$id"
+  cleanup_repo reset
+}
+
+@test 'svn: local modifications skip a normal update' {
+  local repo id="svn-local-$RANDOM" dir
+  repo=$(make_repo local) || { echo 'fixture failed'; exit 1; }
+  dir="$ZINIT[SNIPPETS_DIR]/$id"
+
+  run install_foo "$id" "$repo"
+  assert $state equals 0
+
+  builtin print -r -- 'builtin print -r -- "local edit"' > "$dir/foo.plugin.zsh"
+  (
+    builtin cd -q "$repo/../work" || exit 1
+    builtin print -r -- 'builtin print -r -- "foo v2"' > plugins/foo/foo.plugin.zsh
+    command git add -A || exit 1
+    command git -c user.name=zinit -c user.email=zinit@example.com \
+      commit -q -m second || exit 1
+    command git push -q origin HEAD:main || exit 1
+  ) >/dev/null 2>&1 || { echo 'upstream update failed'; exit 1; }
+
+  run zinit update "$id"
+  assert "$output" contains 'has local modifications'
+  assert "$(<$dir/foo.plugin.zsh)" contains 'local edit'
+
+  # The pending update must still be visible after the skipped attempt.
+  run zinit status "$id"
+  assert "$output" contains 'An update is available.'
+
+  cleanup_snippet "$id"
+  cleanup_repo local
+}
+
+@test 'svn: a .svn working copy is migrated in place' {
+  local repo id="svn-migrate-$RANDOM" dir
+  repo=$(make_repo migrate) || { echo 'fixture failed'; exit 1; }
+  dir="$ZINIT[SNIPPETS_DIR]/$id"
+
+  run install_foo "$id" "$repo"
+  assert $state equals 0
+
+  command rm -rf -- "$dir/.git"
+  command mkdir -p "$dir/.svn"
+  builtin print -r -- 'entries' > "$dir/.svn/entries"
+  builtin print -r -- 'stale' > "$dir/stale.zsh"
+
+  (
+    builtin cd -q "$repo/../work" || exit 1
+    builtin print -r -- 'builtin print -r -- "foo v2"' > plugins/foo/foo.plugin.zsh
+    command git add -A || exit 1
+    command git -c user.name=zinit -c user.email=zinit@example.com \
+      commit -q -m second || exit 1
+    command git push -q origin HEAD:main || exit 1
+  ) >/dev/null 2>&1 || { echo 'upstream update failed'; exit 1; }
+
+  run zinit update "$id"
+  assert "$output" contains 'Migrating'
+  assert "$dir/.svn" not_exists
+  assert "$dir/.git" is_dir
+  assert "$(<$dir/foo.plugin.zsh)" contains 'foo v2'
+
+  cleanup_snippet "$id"
+  cleanup_repo migrate
+}
+
+@test 'svn: a failed migration keeps the old working copy' {
+  local repo id="svn-migrate-fail-$RANDOM" dir
+  repo=$(make_repo migrate-fail) || { echo 'fixture failed'; exit 1; }
+  dir="$ZINIT[SNIPPETS_DIR]/$id"
+
+  run install_foo "$id" "$repo"
+  assert $state equals 0
+
+  command rm -rf -- "$dir/.git"
+  command mkdir -p "$dir/.svn"
+  builtin print -r -- 'entries' > "$dir/.svn/entries"
+  builtin print -r -- 'keep' > "$dir/keep.zsh"
+
+  run .zinit-mirror-using-git "file://$zi_test_dir/does-not-exist.git" "" "$dir"
+  assert $state equals 4
+  assert "$dir/.svn" is_dir
+  assert "$dir/.git" not_exists
+  assert "$(<$dir/keep.zsh)" same_as 'keep'
+
+  cleanup_snippet "$id"
+  cleanup_repo migrate-fail
+}
+
+@test 'svn: a missing subdirectory fails cleanly' {
+  local repo id="svn-missing-$RANDOM"
+  repo=$(make_repo missing) || { echo 'fixture failed'; exit 1; }
+
+  run install_path "$id" "$repo" "" "plugins/nope"
+  assert $state is_greater_than 0
+  assert "$output" contains "doesn't exist"
+  assert "$ZINIT[SNIPPETS_DIR]/$id" not_exists
+
+  cleanup_repo missing
+}
+
+@test 'svn: a file path is rejected' {
+  local repo id="svn-file-$RANDOM"
+  repo=$(make_repo file) || { echo 'fixture failed'; exit 1; }
+
+  run install_path "$id" "$repo" "" "README.md"
+  assert $state is_greater_than 0
+  assert "$output" contains 'is a file, not a directory'
+  assert "$ZINIT[SNIPPETS_DIR]/$id" not_exists
+
+  cleanup_repo file
+}
+
+@test 'svn: zinit delete removes a directory snippet' {
+  local repo id="svn-delete-$RANDOM" dir
+  repo=$(make_repo delete) || { echo 'fixture failed'; exit 1; }
+  dir="$ZINIT[SNIPPETS_DIR]/$id"
+
+  run install_foo "$id" "$repo"
+  assert $state equals 0
+  assert "$dir" is_dir
+
+  run zinit delete --yes "$id"
+  assert $state equals 0
+  assert "$dir" not_exists
+
+  cleanup_repo delete
+}
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=@test,}:foldmethod=marker
